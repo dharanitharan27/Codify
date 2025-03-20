@@ -17,7 +17,7 @@ const corsOption = {
     // origin:"https://bitwise-learning.netlify.app",
     origin:process.env.CLIENT_CORS,
     methods:"POST , PUT , GET , DELETE , PATCH ,HEAD",
-    credentials:true
+    credentials:false
 }
 app.use(cors(corsOption));
 // https://bitwise-backend.onrender.com/api/v1/auth/login
