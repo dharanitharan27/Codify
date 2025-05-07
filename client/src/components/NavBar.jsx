@@ -1,23 +1,36 @@
-import React, { useState, useEffect, useRef } from "react";
-// import "../App.css";
-import "./css/Navbar.css";
+import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../store/auth";
+import { useTheme } from "../context/ThemeContext";
 import { RiCloseLargeLine, RiMenu3Fill } from "react-icons/ri";
+import { FaGraduationCap } from "react-icons/fa";
 import ThemeSwitcher from "./ThemeSwitcher";
+import ThemeColorSelector from "./ThemeColorSelector";
+
 function NavBar() {
   const { isLoggedIn, userdata } = useAuth();
+  const { theme } = useTheme();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 1024);
-  const nav = useRef();
+  const [scrolled, setScrolled] = useState(false);
+  const isDark = theme === 'dark';
+
   // Function to handle resizing the window
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 1024); // Updated to 1024px
+      setIsMobile(window.innerWidth <= 1024);
     };
+
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10);
+    };
+
     window.addEventListener("resize", handleResize);
+    window.addEventListener("scroll", handleScroll);
+
     return () => {
       window.removeEventListener("resize", handleResize);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
@@ -25,85 +38,385 @@ function NavBar() {
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+
   return (
-    <nav>
-      <h3 className="logo">
-        <NavLink to="/"> <img src="favicon.png" height={"auto"} width={40} alt="Logo Codify" /> Codify</NavLink>
-      </h3>
-      <div className="nav-btns" >
-      <ThemeSwitcher/>
-      <span className="open" id="open" onClick={toggleMenu}>
-        <RiMenu3Fill />
-      </span>
-      </div>
-      <ul
-        id="nav"
-        onClick={toggleMenu}
-        className={isMenuOpen ? "side-nav show" : "side-nav"}
-      >
-        <li>
-          <span className="close" id="close" onClick={toggleMenu}>
-            <RiCloseLargeLine />
-          </span>
-        </li>
-        <li>
-          <NavLink className="link" to="/">
-            Home
-          </NavLink>
-        </li>
-        <li>
-          <NavLink className="link" to="/about">
-            About
-          </NavLink>
-        </li>
-        <li>
-          <NavLink className="link" to="/courses">
-            Courses
-          </NavLink>
-        </li>
-        <li>
-          <NavLink className="link" to="/roadmap">
-            Roadmaps
-          </NavLink>
-        </li>
-        <li>
-          <NavLink className="link" to="/contact">
-            Contact Us
-          </NavLink>
-        </li>
-        {isLoggedIn ? (
-          <>
-            <li>
+    <nav className={`
+      sticky top-0 z-50 w-full transition-all duration-300
+      ${scrolled
+        ? `${isDark ? 'bg-dark-bg-primary/95' : 'bg-white/95'} shadow-nav backdrop-blur-sm`
+        : `${isDark ? 'bg-primary/90' : 'bg-primary/90'}`}
+      ${isDark ? 'text-dark-text-primary' : 'text-white'}
+    `}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
+          {/* Logo */}
+          <div className="flex-shrink-0 flex items-center">
+            <NavLink to="/" className="flex items-center space-x-2 font-bold text-xl">
+              <FaGraduationCap className="text-2xl" />
+              <span className="font-righteous">Codify</span>
+            </NavLink>
+          </div>
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:block">
+            <div className="ml-10 flex items-center space-x-4">
               <NavLink
-                to="/dashboard"
-                onClick={toggleMenu}
-                className="link"
+                to="/"
+                className={({ isActive }) => `
+                  px-3 py-2 rounded-md text-sm font-medium transition-colors
+                  ${isActive
+                    ? 'bg-white/20 text-white'
+                    : 'text-white/90 hover:bg-white/10 hover:text-white'}
+                `}
               >
-                Dashboard
+                Home
               </NavLink>
-            </li>
-            {userdata.isAdmin && (
-              <li>
-                <NavLink className="link" to="/admin">Admin Panel</NavLink>
-              </li>
-            )}
-            <li>
-              <NavLink className="link" to="/logout">
-                Logout
+
+              <NavLink
+                to="/about"
+                className={({ isActive }) => `
+                  px-3 py-2 rounded-md text-sm font-medium transition-colors
+                  ${isActive
+                    ? 'bg-white/20 text-white'
+                    : 'text-white/90 hover:bg-white/10 hover:text-white'}
+                `}
+              >
+                About
               </NavLink>
-            </li>
-          </>
-        ) : (
-          <>
-            <li>
-              <NavLink to="/login" className="link" >Login</NavLink>
-            </li>
-            <li>
-              <NavLink to="/signup" className="link" >Signup</NavLink>
-            </li>
-          </>
-        )}
-      </ul>
+
+              <NavLink
+                to="/courses"
+                className={({ isActive }) => `
+                  px-3 py-2 rounded-md text-sm font-medium transition-colors
+                  ${isActive
+                    ? 'bg-white/20 text-white'
+                    : 'text-white/90 hover:bg-white/10 hover:text-white'}
+                `}
+              >
+                Courses
+              </NavLink>
+
+              <NavLink
+                to="/roadmap"
+                className={({ isActive }) => `
+                  px-3 py-2 rounded-md text-sm font-medium transition-colors
+                  ${isActive
+                    ? 'bg-white/20 text-white'
+                    : 'text-white/90 hover:bg-white/10 hover:text-white'}
+                `}
+              >
+                Roadmaps
+              </NavLink>
+
+              <NavLink
+                to="/contact"
+                className={({ isActive }) => `
+                  px-3 py-2 rounded-md text-sm font-medium transition-colors
+                  ${isActive
+                    ? 'bg-white/20 text-white'
+                    : 'text-white/90 hover:bg-white/10 hover:text-white'}
+                `}
+              >
+                Contact
+              </NavLink>
+
+              {isLoggedIn ? (
+                <>
+                  <NavLink
+                    to="/dashboard"
+                    className={({ isActive }) => `
+                      px-3 py-2 rounded-md text-sm font-medium transition-colors
+                      ${isActive
+                        ? 'bg-white/20 text-white'
+                        : 'text-white/90 hover:bg-white/10 hover:text-white'}
+                    `}
+                  >
+                    Dashboard
+                  </NavLink>
+
+                  {userdata?.isAdmin && (
+                    <NavLink
+                      to="/admin"
+                      className={({ isActive }) => `
+                        px-3 py-2 rounded-md text-sm font-medium transition-colors
+                        ${isActive
+                          ? 'bg-white/20 text-white'
+                          : 'text-white/90 hover:bg-white/10 hover:text-white'}
+                      `}
+                    >
+                      Admin
+                    </NavLink>
+                  )}
+
+                  <NavLink
+                    to="/logout"
+                    className="px-3 py-2 rounded-md text-sm font-medium bg-white/10 text-white hover:bg-white/20 transition-colors"
+                  >
+                    Logout
+                  </NavLink>
+                </>
+              ) : (
+                <>
+                  <NavLink
+                    to="/login"
+                    className="px-3 py-2 rounded-md text-sm font-medium text-white hover:bg-white/10 transition-colors"
+                  >
+                    Login
+                  </NavLink>
+
+                  <NavLink
+                    to="/signup"
+                    className="px-3 py-2 rounded-md text-sm font-medium bg-white/20 text-white hover:bg-white/30 transition-colors"
+                  >
+                    Sign Up
+                  </NavLink>
+                </>
+              )}
+            </div>
+          </div>
+
+          {/* Theme Controls */}
+          <div className="hidden md:flex items-center space-x-3">
+            <ThemeSwitcher />
+            <ThemeColorSelector />
+          </div>
+
+          {/* Mobile menu button */}
+          <div className="flex md:hidden items-center space-x-3">
+            <ThemeSwitcher />
+            <ThemeColorSelector />
+            <button
+              onClick={toggleMenu}
+              className="inline-flex items-center justify-center p-2 rounded-md text-white hover:bg-white/10 focus:outline-none"
+            >
+              <span className="sr-only">Open main menu</span>
+              <RiMenu3Fill className="block h-6 w-6" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile menu */}
+      <div
+        className={`
+          md:hidden fixed inset-0 z-50 transform transition-transform duration-300 ease-in-out
+          ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}
+        `}
+      >
+        <div className="relative h-full w-full">
+          {/* Overlay */}
+          <div
+            className="absolute inset-0 bg-black/50"
+            onClick={toggleMenu}
+          ></div>
+
+          {/* Menu panel */}
+          <div className={`
+            absolute right-0 top-0 h-full w-64 overflow-y-auto
+            ${isDark ? 'bg-dark-bg-primary' : 'bg-white'}
+            ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'}
+            shadow-lg
+          `}>
+            <div className="px-4 pt-5 pb-6 space-y-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <FaGraduationCap className={`text-2xl ${isDark ? 'text-primary' : 'text-primary'}`} />
+                  <span className="ml-2 font-righteous text-xl">Codify</span>
+                </div>
+                <button
+                  onClick={toggleMenu}
+                  className={`
+                    rounded-md p-2 focus:outline-none transition-colors
+                    ${isDark
+                      ? 'text-dark-text-primary hover:bg-dark-bg-tertiary'
+                      : 'text-light-text-primary hover:bg-light-bg-tertiary'}
+                  `}
+                >
+                  <span className="sr-only">Close menu</span>
+                  <RiCloseLargeLine className="h-6 w-6" />
+                </button>
+              </div>
+
+              <div className="mt-6">
+                <nav className="grid gap-y-2">
+                  <NavLink
+                    to="/"
+                    onClick={toggleMenu}
+                    className={({ isActive }) => `
+                      px-3 py-2 rounded-md text-base font-medium transition-colors
+                      ${isActive
+                        ? isDark
+                          ? 'bg-dark-bg-tertiary text-primary'
+                          : 'bg-light-bg-tertiary text-primary'
+                        : isDark
+                          ? 'text-dark-text-primary hover:bg-dark-bg-tertiary'
+                          : 'text-light-text-primary hover:bg-light-bg-tertiary'
+                      }
+                    `}
+                  >
+                    Home
+                  </NavLink>
+
+                  <NavLink
+                    to="/about"
+                    onClick={toggleMenu}
+                    className={({ isActive }) => `
+                      px-3 py-2 rounded-md text-base font-medium transition-colors
+                      ${isActive
+                        ? isDark
+                          ? 'bg-dark-bg-tertiary text-primary'
+                          : 'bg-light-bg-tertiary text-primary'
+                        : isDark
+                          ? 'text-dark-text-primary hover:bg-dark-bg-tertiary'
+                          : 'text-light-text-primary hover:bg-light-bg-tertiary'
+                      }
+                    `}
+                  >
+                    About
+                  </NavLink>
+
+                  <NavLink
+                    to="/courses"
+                    onClick={toggleMenu}
+                    className={({ isActive }) => `
+                      px-3 py-2 rounded-md text-base font-medium transition-colors
+                      ${isActive
+                        ? isDark
+                          ? 'bg-dark-bg-tertiary text-primary'
+                          : 'bg-light-bg-tertiary text-primary'
+                        : isDark
+                          ? 'text-dark-text-primary hover:bg-dark-bg-tertiary'
+                          : 'text-light-text-primary hover:bg-light-bg-tertiary'
+                      }
+                    `}
+                  >
+                    Courses
+                  </NavLink>
+
+                  <NavLink
+                    to="/roadmap"
+                    onClick={toggleMenu}
+                    className={({ isActive }) => `
+                      px-3 py-2 rounded-md text-base font-medium transition-colors
+                      ${isActive
+                        ? isDark
+                          ? 'bg-dark-bg-tertiary text-primary'
+                          : 'bg-light-bg-tertiary text-primary'
+                        : isDark
+                          ? 'text-dark-text-primary hover:bg-dark-bg-tertiary'
+                          : 'text-light-text-primary hover:bg-light-bg-tertiary'
+                      }
+                    `}
+                  >
+                    Roadmaps
+                  </NavLink>
+
+                  <NavLink
+                    to="/contact"
+                    onClick={toggleMenu}
+                    className={({ isActive }) => `
+                      px-3 py-2 rounded-md text-base font-medium transition-colors
+                      ${isActive
+                        ? isDark
+                          ? 'bg-dark-bg-tertiary text-primary'
+                          : 'bg-light-bg-tertiary text-primary'
+                        : isDark
+                          ? 'text-dark-text-primary hover:bg-dark-bg-tertiary'
+                          : 'text-light-text-primary hover:bg-light-bg-tertiary'
+                      }
+                    `}
+                  >
+                    Contact
+                  </NavLink>
+
+                  {isLoggedIn ? (
+                    <>
+                      <NavLink
+                        to="/dashboard"
+                        onClick={toggleMenu}
+                        className={({ isActive }) => `
+                          px-3 py-2 rounded-md text-base font-medium transition-colors
+                          ${isActive
+                            ? isDark
+                              ? 'bg-dark-bg-tertiary text-primary'
+                              : 'bg-light-bg-tertiary text-primary'
+                            : isDark
+                              ? 'text-dark-text-primary hover:bg-dark-bg-tertiary'
+                              : 'text-light-text-primary hover:bg-light-bg-tertiary'
+                          }
+                        `}
+                      >
+                        Dashboard
+                      </NavLink>
+
+                      {userdata?.isAdmin && (
+                        <NavLink
+                          to="/admin"
+                          onClick={toggleMenu}
+                          className={({ isActive }) => `
+                            px-3 py-2 rounded-md text-base font-medium transition-colors
+                            ${isActive
+                              ? isDark
+                                ? 'bg-dark-bg-tertiary text-primary'
+                                : 'bg-light-bg-tertiary text-primary'
+                              : isDark
+                                ? 'text-dark-text-primary hover:bg-dark-bg-tertiary'
+                                : 'text-light-text-primary hover:bg-light-bg-tertiary'
+                            }
+                          `}
+                        >
+                          Admin Panel
+                        </NavLink>
+                      )}
+
+                      <NavLink
+                        to="/logout"
+                        onClick={toggleMenu}
+                        className={`
+                          px-3 py-2 rounded-md text-base font-medium transition-colors
+                          ${isDark
+                            ? 'bg-primary/10 text-primary hover:bg-primary/20'
+                            : 'bg-primary/10 text-primary hover:bg-primary/20'}
+                        `}
+                      >
+                        Logout
+                      </NavLink>
+                    </>
+                  ) : (
+                    <>
+                      <NavLink
+                        to="/login"
+                        onClick={toggleMenu}
+                        className={`
+                          px-3 py-2 rounded-md text-base font-medium transition-colors
+                          ${isDark
+                            ? 'text-dark-text-primary hover:bg-dark-bg-tertiary'
+                            : 'text-light-text-primary hover:bg-light-bg-tertiary'}
+                        `}
+                      >
+                        Login
+                      </NavLink>
+
+                      <NavLink
+                        to="/signup"
+                        onClick={toggleMenu}
+                        className={`
+                          px-3 py-2 rounded-md text-base font-medium transition-colors
+                          ${isDark
+                            ? 'bg-primary text-white hover:bg-primary-dark'
+                            : 'bg-primary text-white hover:bg-primary-dark'}
+                        `}
+                      >
+                        Sign Up
+                      </NavLink>
+                    </>
+                  )}
+                </nav>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </nav>
   );
 }

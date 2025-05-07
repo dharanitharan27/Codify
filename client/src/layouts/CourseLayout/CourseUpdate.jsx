@@ -5,7 +5,6 @@ import { useParams } from "react-router";
 import { toast } from "react-toastify";
 import CardBody from "../../components/CardBody";
 import { useLoading } from "../../components/loadingContext";
-import "../../components/css/CourseUpdate.css";
 const CourseUpdate = () => {
     const { setIsLoading } = useLoading();
     const [preview, setPreview] = useState(false);

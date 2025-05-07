@@ -4,7 +4,6 @@ import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import SearchBar from "../../components/SearchBar";
 import CardBody from "../../components/CardBody";
-import "../../components/css/Admin.css";
 import { useLoading } from "../../components/loadingContext";
 function AdminCourses() {
   const { authorizationToken, API, coursesData } = useAuth();

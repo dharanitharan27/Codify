@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../store/auth';
 import CardBody from '../components/CardBody';
-import "../components/css/Dashboard.css";
 function Dashboard() {
   const { userdata, API } = useAuth();
   const [watchlist, setWatchlist] = useState([]);

@@ -1,11 +1,12 @@
 import React from "react";
-import "../App.css";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useAuth } from "../store/auth";
+import { useTheme } from "../context/ThemeContext";
 import { toast } from "react-toastify";
-import { AiOutlineEye , AiOutlineEyeInvisible} from "react-icons/ai";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { useLoading } from "../components/loadingContext";
+
 function Signup() {
   const [user, setUser] = useState({
     username: "",
@@ -13,10 +14,13 @@ function Signup() {
     phone: "",
     password: "",
   });
-  const [show , setShow]=useState(false);
+  const [show, setShow] = useState(false);
   const [errMessage, setErrMessage] = useState("");
   const { storeTokenInLS, API } = useAuth();
   const { setIsLoading } = useLoading();
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+
   const handleChange = (e) => {
     const name = e.target.name;
     const value = e.target.value;
@@ -25,6 +29,7 @@ function Signup() {
       [name]: value,
     });
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -37,12 +42,11 @@ function Signup() {
         body: JSON.stringify(user),
       });
       const res_data = await response.json();
-      storeTokenInLS(res_data.token);
+
       if (response.ok) {
+        storeTokenInLS(res_data.token);
         toast.success("Registration successfully :)");
         window.location.href = "/";
-        // to refresh the page and navigate to home page
-        // navigate("/");
       } else {
         setErrMessage(res_data);
         toast.warn(
@@ -55,78 +59,132 @@ function Signup() {
       setIsLoading(false);
     }
   };
+
   return (
-    <div className="container form-page register ">
-      <div className="gradient-background"></div>
-      <div className="page-heading">Registration Page</div>
-      <div className="left">
-        <img src="signup.svg" alt="image for signup" />
-      </div>
-      <div className="right">
-        <form className="register form" onSubmit={handleSubmit}>
-          <div className="inputs">
-            <label htmlFor="username">UserName : </label>
-            <input
-              type="text"
-              id="username"
-              name="username"
-              required
-              placeholder="Enter your name"
-              value={user.username}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="inputs">
-            <label htmlFor="email">Email : </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              required
-              placeholder="Enter your email"
-              value={user.email}
-              onChange={handleChange}
-            />
-          </div>
+    <div className={`relative min-h-screen-minus-nav flex flex-col md:flex-row items-center justify-center p-6 overflow-hidden z-10 ${isDark ? 'bg-dark-bg-primary text-dark-text-primary' : 'bg-light-bg-primary text-light-text-primary'}`}>
+      {/* Background with gradient */}
+      <div className={`absolute top-0 left-0 w-full h-full -z-10 bg-[size:30px_30px] ${isDark ? 'bg-grid-pattern-dark' : 'bg-grid-pattern-light'}`}></div>
 
-          <div className="inputs">
-            <label htmlFor="phone">Phone No : </label>
-            <input
-              type="number"
-              id="phone"
-              name="phone"
-              required
-              placeholder="Enter your phone"
-              value={user.phone}
-              onChange={handleChange}
-            />
-          </div>
+      <div className="w-full max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8 md:gap-16">
+        {/* Page heading - visible only on mobile */}
+        <h1 className="text-4xl font-righteous tracking-wider mb-8 md:hidden">
+          Registration
+        </h1>
 
-          <div className="inputs">
-            <label htmlFor="password">password : </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              required
-              placeholder="Enter your password"
-              value={user.password}
-              onChange={handleChange}
-            />
-            <div
-              id="show"
-              onClick={() => {
-                password.type =
-                  password.type == "password" ? "text" : "password";
-                setShow(!show);
-              }}
-              >{
-                show ? <AiOutlineEyeInvisible/> : <AiOutlineEye/>
-              }
+        {/* Left side - Image */}
+        <div className="w-full md:w-1/2 flex justify-center">
+          <img
+            src="signup.svg"
+            alt="Signup illustration"
+            className="w-full max-w-md"
+          />
+        </div>
+
+        {/* Right side - Form */}
+        <div className="w-full md:w-1/2 flex flex-col items-center">
+          {/* Page heading - visible only on desktop */}
+          <h1 className="hidden md:block text-4xl font-righteous tracking-wider mb-8">
+            Registration
+          </h1>
+
+          <form
+            onSubmit={handleSubmit}
+            className={`w-full max-w-md p-8 rounded-lg shadow-lg ${isDark ? 'bg-dark-bg-secondary border border-dark-border' : 'bg-light-bg-secondary border border-light-border'}`}
+          >
+            <div className="mb-5">
+              <label
+                htmlFor="username"
+                className={`block mb-2 text-sm font-medium ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'}`}
+              >
+                Username
+              </label>
+              <input
+                type="text"
+                id="username"
+                name="username"
+                required
+                placeholder="Enter your name"
+                value={user.username}
+                onChange={handleChange}
+                className={`w-full px-4 py-3 rounded-lg ${isDark ? 'bg-dark-bg-tertiary text-dark-text-primary border-dark-border' : 'bg-light-bg-tertiary text-light-text-primary border-light-border'} border focus:outline-none focus:ring-2 focus:ring-primary`}
+              />
             </div>
-          </div>
-          <button type="submit">Submit</button>
-        </form>
+
+            <div className="mb-5">
+              <label
+                htmlFor="email"
+                className={`block mb-2 text-sm font-medium ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'}`}
+              >
+                Email
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                required
+                placeholder="Enter your email"
+                value={user.email}
+                onChange={handleChange}
+                className={`w-full px-4 py-3 rounded-lg ${isDark ? 'bg-dark-bg-tertiary text-dark-text-primary border-dark-border' : 'bg-light-bg-tertiary text-light-text-primary border-light-border'} border focus:outline-none focus:ring-2 focus:ring-primary`}
+              />
+            </div>
+
+            <div className="mb-5">
+              <label
+                htmlFor="phone"
+                className={`block mb-2 text-sm font-medium ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'}`}
+              >
+                Phone Number
+              </label>
+              <input
+                type="number"
+                id="phone"
+                name="phone"
+                required
+                placeholder="Enter your phone"
+                value={user.phone}
+                onChange={handleChange}
+                className={`w-full px-4 py-3 rounded-lg ${isDark ? 'bg-dark-bg-tertiary text-dark-text-primary border-dark-border' : 'bg-light-bg-tertiary text-light-text-primary border-light-border'} border focus:outline-none focus:ring-2 focus:ring-primary`}
+              />
+            </div>
+
+            <div className="mb-8 relative">
+              <label
+                htmlFor="password"
+                className={`block mb-2 text-sm font-medium ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'}`}
+              >
+                Password
+              </label>
+              <input
+                type={show ? "text" : "password"}
+                id="password"
+                name="password"
+                required
+                placeholder="Enter your password"
+                value={user.password}
+                onChange={handleChange}
+                className={`w-full px-4 py-3 rounded-lg ${isDark ? 'bg-dark-bg-tertiary text-dark-text-primary border-dark-border' : 'bg-light-bg-tertiary text-light-text-primary border-light-border'} border focus:outline-none focus:ring-2 focus:ring-primary`}
+              />
+              <div
+                className="absolute right-3 top-[42px] cursor-pointer text-xl"
+                onClick={() => {
+                  const passwordInput = document.getElementById('password');
+                  passwordInput.type = passwordInput.type === "password" ? "text" : "password";
+                  setShow(!show);
+                }}
+              >
+                {show ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              className="w-full py-3 px-4 bg-primary hover:bg-primary-dark text-white font-medium rounded-lg transition-colors duration-300"
+            >
+              Register
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );
