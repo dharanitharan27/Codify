@@ -61,8 +61,10 @@ export default {
             tertiary: '#e2e8f0',  // Darker tertiary background
           },
           text: {
-            primary: '#1a202c',   // Darker text for better contrast
+            primary: '#1c1c1c',   // Darker text for better contrast
+            // primary: '#1a202c',   // Darker text for better contrast
             secondary: '#4a5568', // Darker secondary text
+            secondary: '#3b3b3b', // Darker secondary text
           },
           border: '#cbd5e0',      // Slightly darker border
           form: 'rgba(0, 0, 0, 0.05)',
