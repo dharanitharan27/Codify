@@ -131,12 +131,13 @@ const Courses = () => {
         <div className="flex flex-wrap justify-center gap-8">
           {filteredCourses.length > 0 ? (
             filteredCourses.map(course => (
-              <CardBody
-                key={course._id}
-                course={course}
-                watchlist={watchlist}
-                updateWatchlist={updateWatchlist}
-              />
+              <div key={course._id}>
+                <CardBody
+                  course={course}
+                  watchlist={watchlist}
+                  updateWatchlist={updateWatchlist}
+                />
+              </div>
             ))
           ) : (
             <div className={`w-[300px] border rounded-md overflow-hidden shadow-md

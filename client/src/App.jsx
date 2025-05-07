@@ -12,6 +12,7 @@ import { useAuth } from "./store/auth";
 import Loader from "./components/Loader";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
+import CoursePlayer from "./pages/CoursePlayer";
 import CourseUpdate from "./layouts/CourseLayout/CourseUpdate";
 import Roadmap from "./pages/Roadmap";
 import AdminLayout from "./layouts/AdminLayout";
@@ -40,6 +41,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/about" element={<About />} />
               <Route path="/courses" element={<Courses />} />
+              <Route path="/courses/:courseId" element={<CoursePlayer />} />
               <Route path="/roadmap" element={<Roadmap />} />
               <Route path="/contact" element={<ContactUs />} />
               <Route path="/signup" element={<Signup />} />

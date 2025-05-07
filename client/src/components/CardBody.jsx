@@ -2,17 +2,39 @@ import React from 'react';
 import { useAuth } from '../store/auth';
 import { useTheme } from '../context/ThemeContext';
 import { toast } from 'react-toastify';
-import { MdBookmarkBorder, MdBookmarkAdded, MdEdit } from "react-icons/md";
-import { Link } from 'react-router-dom';
+import { MdBookmarkBorder, MdBookmarkAdded, MdEdit, MdPlayCircleOutline } from "react-icons/md";
+import { Link, useNavigate } from 'react-router-dom';
 import { useLoading } from './loadingContext';
+import { getYouTubeUrlType } from '../utils/youtubeUtils';
 
-const CardBody = ({ course, watchlist = [], updateWatchlist }) => {
+const CardBody = ({ course, watchlist = [], updateWatchlist, onClick }) => {
   const { setIsLoading } = useLoading();
   const { course_title, creator_youtube_link, creator_name, creator_image, course_image } = course;
   const { API, userdata } = useAuth();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const token = localStorage.getItem('token');
+  const navigate = useNavigate();
+
+  // Analyze YouTube link type
+  const youtubeUrlInfo = getYouTubeUrlType(creator_youtube_link);
+
+  // Handle card click
+  const handleCardClick = (e) => {
+    // Don't navigate if clicking on buttons or links
+    if (e.target.closest('button') || e.target.closest('a')) {
+      return;
+    }
+
+    // If onClick prop is provided, use it
+    if (onClick) {
+      onClick(course);
+      return;
+    }
+
+    // Otherwise navigate to course player page
+    navigate(`/courses/${course._id}`);
+  };
 
   const isInWatchlist = watchlist.some(item => item._id === course._id);
 
@@ -51,18 +73,26 @@ const CardBody = ({ course, watchlist = [], updateWatchlist }) => {
   };
 
   return (
-    <div className={`
-      w-[300px] border rounded-md overflow-hidden shadow-md transition-all duration-200
-      ${isDark
-        ? 'bg-dark-bg-secondary border-dark-border'
-        : 'bg-light-bg-secondary border-light-border'}
-      hover:scale-[1.02] hover:shadow-lg
-    `}>
-      <img
-        src={course_image}
-        alt={course_title}
-        className="w-full h-[180px] object-cover"
-      />
+    <div
+      className={`
+        w-[300px] border rounded-md overflow-hidden shadow-md transition-all duration-200
+        ${isDark
+          ? 'bg-dark-bg-secondary border-dark-border'
+          : 'bg-light-bg-secondary border-light-border'}
+        hover:scale-[1.02] hover:shadow-lg cursor-pointer
+      `}
+      onClick={handleCardClick}
+    >
+      <div className="relative">
+        <img
+          src={course_image}
+          alt={course_title}
+          className="w-full h-[180px] object-cover"
+        />
+        <div className="absolute inset-0 bg-black/30 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+          <MdPlayCircleOutline className="text-white text-5xl" />
+        </div>
+      </div>
 
       <div className="p-4 flex flex-col gap-5 relative">
         <h3 className={`text-lg font-medium ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'}`}>
@@ -86,17 +116,18 @@ const CardBody = ({ course, watchlist = [], updateWatchlist }) => {
         </div>
 
         <div className="flex justify-between items-center">
-          <a
-            href={creator_youtube_link}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/courses/${course._id}`);
+            }}
             className={`
               py-2 px-5 rounded-full flex items-center justify-center text-white transition-colors
-              ${isDark ? 'bg-youtube-DEFAULT hover:bg-red-700' : 'bg-youtube-light hover:bg-red-600'}
+              ${isDark ? 'bg-primary hover:bg-primary-dark' : 'bg-primary hover:bg-primary-dark'}
             `}
-            target="_blank"
-            rel="noopener noreferrer"
           >
-            Visit Now
-          </a>
+            Watch Now
+          </button>
 
           <div className="flex gap-2">
             <button

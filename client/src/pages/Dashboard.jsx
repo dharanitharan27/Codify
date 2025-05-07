@@ -2,7 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../store/auth';
 import { useTheme } from '../context/ThemeContext';
 import CardBody from '../components/CardBody';
-import { FaBookmark, FaGraduationCap, FaChartLine, FaCalendarAlt, FaClock } from 'react-icons/fa';
+import YouTubePlayer from '../components/YouTubePlayer';
+import CourseModules from '../components/CourseModules';
+import UserActivity from '../components/UserActivity';
+import ContinueWatching from '../components/ContinueWatching';
+import { FaBookmark, FaGraduationCap, FaChartLine, FaClock } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 function Dashboard() {
@@ -14,13 +18,13 @@ function Dashboard() {
     coursesInProgress: 0,
     coursesCompleted: 0,
     totalHoursLearned: 0,
-    lastActive: '2023-06-15' // Placeholder date
+    lastActive: new Date().toISOString()
   });
-  const [recentActivity, setRecentActivity] = useState([
-    { id: 1, action: 'Started course', course: 'React Fundamentals', date: '2 days ago' },
-    { id: 2, action: 'Completed module', course: 'JavaScript Basics', module: 'Functions & Objects', date: '3 days ago' },
-    { id: 3, action: 'Added to watchlist', course: 'Node.js for Beginners', date: '1 week ago' }
-  ]);
+  const [activities, setActivities] = useState([]);
+  const [courseProgress, setCourseProgress] = useState([]);
+  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [selectedCourseProgress, setSelectedCourseProgress] = useState(null);
+  const [continueWatchingCourses, setContinueWatchingCourses] = useState([]);
   const token = localStorage.getItem('token');
 
   // Fetch user's watchlist
@@ -55,13 +59,154 @@ function Dashboard() {
     }
   };
 
+  // Fetch user's progress data
+  const fetchUserProgress = async () => {
+    try {
+      const response = await fetch(`${API}/progress`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setCourseProgress(data.progress || []);
+
+        // Calculate stats based on progress
+        let inProgress = 0;
+        let completed = 0;
+        let totalHours = 0;
+
+        // Filter courses in progress for "Continue Watching" section
+        const inProgressCourses = [];
+
+        data.progress.forEach(course => {
+          if (course.status === 'in-progress') {
+            inProgress++;
+            // Add to continue watching if it has a courseId reference
+            if (course.courseId && typeof course.courseId === 'object') {
+              inProgressCourses.push({
+                ...course,
+                lastWatched: course.lastAccessedAt,
+                progress: course.progress || 0
+              });
+            }
+          } else if (course.status === 'completed') {
+            completed++;
+          }
+          totalHours += course.totalHoursSpent || 0;
+        });
+
+        // Sort by last accessed (most recent first)
+        inProgressCourses.sort((a, b) =>
+          new Date(b.lastWatched) - new Date(a.lastWatched)
+        );
+
+        setContinueWatchingCourses(inProgressCourses);
+
+        setStats(prev => ({
+          ...prev,
+          coursesInProgress: inProgress,
+          coursesCompleted: completed,
+          totalHoursLearned: Math.round(totalHours)
+        }));
+
+        // If there's at least one course in progress, select it
+        if (inProgressCourses.length > 0) {
+          setSelectedCourse(inProgressCourses[0].courseId);
+          setSelectedCourseProgress(inProgressCourses[0]);
+        } else if (data.progress && data.progress.length > 0) {
+          const firstCourse = data.progress[0].courseId;
+          setSelectedCourse(firstCourse);
+          setSelectedCourseProgress(data.progress[0]);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching user progress:', error);
+    }
+  };
+
+  // Fetch user's activity
+  const fetchUserActivity = async () => {
+    try {
+      const response = await fetch(`${API}/progress/activity`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setActivities(data.activities || []);
+
+        // Update last active date
+        if (data.activities && data.activities.length > 0) {
+          setStats(prev => ({
+            ...prev,
+            lastActive: data.activities[0].timestamp
+          }));
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching user activity:', error);
+    }
+  };
+
+  // Handle course selection
+  const handleCourseSelect = (course) => {
+    setSelectedCourse(course);
+
+    // Find progress for this course
+    const progress = courseProgress.find(p => p.courseId._id === course._id);
+    setSelectedCourseProgress(progress || null);
+  };
+
+  // Handle progress update
+  const handleProgressUpdate = (updatedProgress) => {
+    // Update the progress in the courseProgress array
+    setCourseProgress(prev => {
+      const newProgress = prev.map(p =>
+        p._id === updatedProgress._id ? updatedProgress : p
+      );
+
+      // Update continue watching courses
+      const updatedContinueWatching = newProgress
+        .filter(course => course.status === 'in-progress' && course.courseId)
+        .map(course => ({
+          ...course,
+          lastWatched: course.lastAccessedAt,
+          progress: course.progress || 0
+        }))
+        .sort((a, b) => new Date(b.lastWatched) - new Date(a.lastWatched));
+
+      setContinueWatchingCourses(updatedContinueWatching);
+
+      return newProgress;
+    });
+
+    // Update selected course progress if it's the current course
+    if (selectedCourseProgress && selectedCourseProgress._id === updatedProgress._id) {
+      setSelectedCourseProgress(updatedProgress);
+    }
+
+    // Refresh activity data
+    fetchUserActivity();
+  };
+
   useEffect(() => {
     fetchWatchlist();
+    fetchUserProgress();
+    fetchUserActivity();
   }, [API, token]);
 
   // Handle watchlist update in CardBody
   const updateWatchlist = () => {
     fetchWatchlist();
+    fetchUserActivity(); // Refresh activity after watchlist changes
   };
 
   return (
@@ -125,80 +270,110 @@ function Dashboard() {
 
         {/* Main Dashboard Content */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Watchlist Section */}
-          <div className="lg:col-span-2">
-            <div className="mb-8 flex justify-between items-center">
-              <h2 className={`text-2xl font-bold ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'}`}>
-                Your Watchlist
-              </h2>
-              <Link
-                to="/courses"
-                className="text-primary hover:text-primary-dark transition-colors"
-              >
-                Browse more courses
-              </Link>
+          {/* Left Column - Current Course & Modules */}
+          <div className="lg:col-span-2 space-y-8">
+            {/* Current Course Section */}
+            <div>
+              <div className="mb-4 flex justify-between items-center">
+                <h2 className={`text-2xl font-bold ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'}`}>
+                  Continue Learning
+                </h2>
+              </div>
+
+              {selectedCourse ? (
+                <div className="space-y-6">
+                  <YouTubePlayer
+                    videoUrl={selectedCourse.creator_youtube_link}
+                    courseId={selectedCourse._id}
+                    onProgressUpdate={handleProgressUpdate}
+                  />
+
+                  <CourseModules
+                    courseId={selectedCourse._id}
+                    progress={selectedCourseProgress}
+                    onModuleComplete={handleProgressUpdate}
+                  />
+                </div>
+              ) : (
+                <div className={`p-12 rounded-xl ${isDark ? 'bg-dark-bg-secondary border-dark-border' : 'bg-light-bg-secondary border-light-border'} border shadow-md text-center`}>
+                  <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
+                    <FaGraduationCap className="text-primary text-2xl" />
+                  </div>
+                  <h3 className={`text-xl font-semibold mb-3 ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'}`}>
+                    No courses in progress
+                  </h3>
+                  <p className={`mb-6 ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>
+                    Start learning by adding courses to your watchlist.
+                  </p>
+                  <Link
+                    to="/courses"
+                    className="py-2 px-6 bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors"
+                  >
+                    Explore Courses
+                  </Link>
+                </div>
+              )}
             </div>
 
-            {watchlist.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {watchlist.map(course => (
-                  <CardBody
-                    key={course._id}
-                    course={course}
-                    watchlist={watchlist}
-                    updateWatchlist={updateWatchlist}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className={`p-12 rounded-xl ${isDark ? 'bg-dark-bg-secondary border-dark-border' : 'bg-light-bg-secondary border-light-border'} border shadow-md text-center`}>
-                <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
-                  <FaBookmark className="text-primary text-2xl" />
-                </div>
-                <h3 className={`text-xl font-semibold mb-3 ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'}`}>
-                  Your watchlist is empty
-                </h3>
-                <p className={`mb-6 ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>
-                  Save courses to watch later and track your learning progress.
-                </p>
+            {/* Watchlist Section */}
+            <div>
+              <div className="mb-4 flex justify-between items-center">
+                <h2 className={`text-2xl font-bold ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'}`}>
+                  Your Watchlist
+                </h2>
                 <Link
                   to="/courses"
-                  className="py-2 px-6 bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors"
+                  className="text-primary hover:text-primary-dark transition-colors"
                 >
-                  Explore Courses
+                  Browse more courses
                 </Link>
               </div>
-            )}
+
+              {watchlist.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {watchlist.map(course => (
+                    <div key={course._id}>
+                      <CardBody
+                        course={course}
+                        watchlist={watchlist}
+                        updateWatchlist={updateWatchlist}
+                        onClick={handleCourseSelect}
+                      />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className={`p-8 rounded-xl ${isDark ? 'bg-dark-bg-secondary border-dark-border' : 'bg-light-bg-secondary border-light-border'} border shadow-md text-center`}>
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
+                    <FaBookmark className="text-primary text-xl" />
+                  </div>
+                  <h3 className={`text-lg font-semibold mb-2 ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'}`}>
+                    Your watchlist is empty
+                  </h3>
+                  <p className={`mb-4 ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>
+                    Save courses to watch later and track your learning progress.
+                  </p>
+                  <Link
+                    to="/courses"
+                    className="py-2 px-4 bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors text-sm"
+                  >
+                    Explore Courses
+                  </Link>
+                </div>
+              )}
+            </div>
           </div>
 
-          {/* Activity & Recommendations */}
+          {/* Right Column - Stats & Activity */}
           <div className="space-y-8">
-            {/* Recent Activity */}
-            <div className={`p-6 rounded-xl ${isDark ? 'bg-dark-bg-secondary border-dark-border' : 'bg-light-bg-secondary border-light-border'} border shadow-md`}>
-              <h3 className={`text-xl font-bold mb-4 ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'}`}>
-                Recent Activity
-              </h3>
+            {/* Continue Watching Section */}
+            <ContinueWatching
+              courses={continueWatchingCourses}
+              onCourseSelect={handleCourseSelect}
+            />
 
-              <div className="space-y-4">
-                {recentActivity.map(activity => (
-                  <div
-                    key={activity.id}
-                    className={`p-3 rounded-lg ${isDark ? 'bg-dark-bg-tertiary' : 'bg-light-bg-tertiary'} border ${isDark ? 'border-dark-border' : 'border-light-border'}`}
-                  >
-                    <div className="flex justify-between items-start mb-1">
-                      <span className="font-medium text-primary">{activity.action}</span>
-                      <span className={`text-xs ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>{activity.date}</span>
-                    </div>
-                    <p className={`${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'}`}>{activity.course}</p>
-                    {activity.module && (
-                      <p className={`text-sm ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>
-                        Module: {activity.module}
-                      </p>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
+            {/* User Activity */}
+            <UserActivity activities={activities} />
 
             {/* Learning Recommendations */}
             <div className={`p-6 rounded-xl ${isDark ? 'bg-dark-bg-secondary border-dark-border' : 'bg-light-bg-secondary border-light-border'} border shadow-md`}>
@@ -207,7 +382,10 @@ function Dashboard() {
               </h3>
 
               <div className="space-y-4">
-                <div className={`p-3 rounded-lg ${isDark ? 'bg-dark-bg-tertiary' : 'bg-light-bg-tertiary'} border ${isDark ? 'border-dark-border' : 'border-light-border'} hover:border-primary transition-colors cursor-pointer`}>
+                <div
+                  className={`p-3 rounded-lg ${isDark ? 'bg-dark-bg-tertiary' : 'bg-light-bg-tertiary'} border ${isDark ? 'border-dark-border' : 'border-light-border'} hover:border-primary transition-colors cursor-pointer`}
+                  onClick={() => window.open("https://www.youtube.com/watch?v=8zKuNo4ay8E", "_blank")}
+                >
                   <h4 className={`font-medium ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'}`}>Advanced JavaScript Concepts</h4>
                   <p className={`text-sm ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'} mb-2`}>
                     Take your JS skills to the next level
@@ -218,7 +396,10 @@ function Dashboard() {
                   </div>
                 </div>
 
-                <div className={`p-3 rounded-lg ${isDark ? 'bg-dark-bg-tertiary' : 'bg-light-bg-tertiary'} border ${isDark ? 'border-dark-border' : 'border-light-border'} hover:border-primary transition-colors cursor-pointer`}>
+                <div
+                  className={`p-3 rounded-lg ${isDark ? 'bg-dark-bg-tertiary' : 'bg-light-bg-tertiary'} border ${isDark ? 'border-dark-border' : 'border-light-border'} hover:border-primary transition-colors cursor-pointer`}
+                  onClick={() => window.open("https://www.youtube.com/watch?v=7A5X_iwWdvw", "_blank")}
+                >
                   <h4 className={`font-medium ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'}`}>React Performance Optimization</h4>
                   <p className={`text-sm ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'} mb-2`}>
                     Learn techniques to optimize React apps
@@ -229,7 +410,10 @@ function Dashboard() {
                   </div>
                 </div>
 
-                <div className={`p-3 rounded-lg ${isDark ? 'bg-dark-bg-tertiary' : 'bg-light-bg-tertiary'} border ${isDark ? 'border-dark-border' : 'border-light-border'} hover:border-primary transition-colors cursor-pointer`}>
+                <div
+                  className={`p-3 rounded-lg ${isDark ? 'bg-dark-bg-tertiary' : 'bg-light-bg-tertiary'} border ${isDark ? 'border-dark-border' : 'border-light-border'} hover:border-primary transition-colors cursor-pointer`}
+                  onClick={() => window.open("https://www.youtube.com/watch?v=ktjafK4SgWM", "_blank")}
+                >
                   <h4 className={`font-medium ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'}`}>Full Stack Development with MERN</h4>
                   <p className={`text-sm ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'} mb-2`}>
                     Build complete web applications
