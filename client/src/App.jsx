@@ -12,6 +12,7 @@ import { useAuth } from "./store/auth";
 import Loader from "./components/Loader";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
+import CoursePlayer from "./pages/CoursePlayer";
 import CourseUpdate from "./layouts/CourseLayout/CourseUpdate";
 import Roadmap from "./pages/Roadmap";
 import AdminLayout from "./layouts/AdminLayout";
@@ -22,36 +23,44 @@ import AdminUpdate from "./layouts/AdminUpdate";
 import AddNewCourse from "./layouts/CourseLayout/AddNewCourse.jsx";
 import Footer from "./components/Footer.jsx";
 import { LoadingProvider } from "./components/loadingContext.jsx";
+import { useTheme } from "./context/ThemeContext";
+import 'react-toastify/ReactToastify.css'
 function App() {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+
   return (
     <Router>
       <LoadingProvider>
-      <header>
-        <NavBar />
-      </header>
-      <main>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/courses" element={<Courses />} />
-          <Route path="/roadmap" element={<Roadmap />} />
-          <Route path="/contact" element={<ContactUs />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/logout" element={<LogOut />} />
-          <Route path="*" element={<ErrorPage />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route path="users" element={<AdminUsers />} />
-            <Route path="users/:id/edit" element={<AdminUpdate />} />
-            <Route path="contacts" element={<AdminContacts />} />
-            <Route path="courses" element={<AdminCourses />} />
-            <Route path="courses/add" element={<AddNewCourse />} />
-            <Route path="courses/update/:id" element={<CourseUpdate />} />
-          </Route>
-        </Routes>
-      </main>
-      <Footer />
+        <div className={`flex flex-col min-h-screen ${isDark ? 'bg-dark-bg-primary text-dark-text-primary' : 'bg-light-bg-primary text-light-text-primary'}`}>
+          <header className="fixed top-0 z-50 w-full">
+            <NavBar />
+          </header>
+          <main className="flex-grow pt-16">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/courses" element={<Courses />} />
+              <Route path="/courses/:courseId" element={<CoursePlayer />} />
+              <Route path="/roadmap" element={<Roadmap />} />
+              <Route path="/contact" element={<ContactUs />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/logout" element={<LogOut />} />
+              <Route path="*" element={<ErrorPage />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/admin" element={<AdminLayout />}>
+                <Route path="users" element={<AdminUsers />} />
+                <Route path="users/:id/edit" element={<AdminUpdate />} />
+                <Route path="contacts" element={<AdminContacts />} />
+                <Route path="courses" element={<AdminCourses />} />
+                <Route path="courses/add" element={<AddNewCourse />} />
+                <Route path="courses/update/:id" element={<CourseUpdate />} />
+              </Route>
+            </Routes>
+          </main>
+          <Footer />
+        </div>
       </LoadingProvider>
     </Router>
   );

@@ -1,5 +1,6 @@
 import User from "../models/userSchema.js";
 import Course from "../models/courseSchema.js";
+import UserActivity from "../models/userActivitySchema.js";
 export const toggleWatchlist = async (req, res) => {
   const { courseId } = req.body;
   const userId = req.user.id; // Assuming you're using authMiddleware to get the user
@@ -19,11 +20,29 @@ export const toggleWatchlist = async (req, res) => {
       // If course is not in the watchlist, add it
       user.watchlist.push(courseId);
       await user.save();
+
+      // Create activity for adding to watchlist
+      const activity = new UserActivity({
+        userId,
+        courseId,
+        activityType: 'added_to_watchlist'
+      });
+      await activity.save();
+
       res.status(200).json({ message: "Course added to watchlist" });
     } else {
       // If course is in the watchlist, remove it
       user.watchlist.splice(courseIndex, 1);
       await user.save();
+
+      // Create activity for removing from watchlist
+      const activity = new UserActivity({
+        userId,
+        courseId,
+        activityType: 'removed_from_watchlist'
+      });
+      await activity.save();
+
       res.status(200).json({ message: "Course removed from watchlist" });
     }
   } catch (error) {

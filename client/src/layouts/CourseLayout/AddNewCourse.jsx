@@ -1,13 +1,22 @@
-import { BiCloudLightRain } from "react-icons/bi";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../store/auth";
-import "../../components/css/AddNewCourse.css";
-import { useEffect, useState } from "react";
-import {toast} from "react-toastify";
-import CourseForm from "./CourseForm";
+import { toast } from "react-toastify";
 import { useLoading } from "../../components/loadingContext";
+import { useTheme } from "../../context/ThemeContext";
+import { FaArrowLeft, FaEye, FaEyeSlash, FaPlus } from "react-icons/fa";
+import { MdVideoLibrary } from "react-icons/md";
+import CourseForm from "./CourseForm";
+import CardBody from "../../components/CardBody";
+
 const AddNewCourse = () => {
-    const {API , coursesData , authorizationToken} = useAuth();
+    const { API, authorizationToken } = useAuth();
     const { setIsLoading } = useLoading();
+    const { theme } = useTheme();
+    const isDark = theme === 'dark';
+    const navigate = useNavigate();
+    const [preview, setPreview] = useState(false);
+
     const [newCourse, setNewCourse] = useState({
         course_category: "",
         creator_name: "",
@@ -17,9 +26,11 @@ const AddNewCourse = () => {
         creator_youtube_link: "",
         description: "",
     });
+
     const handleChange = (e) => {
         setNewCourse({ ...newCourse, [e.target.name]: e.target.value });
     }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -34,14 +45,12 @@ const AddNewCourse = () => {
             });
 
             if (!response.ok) {
-                console.log(response);   
-                
-                throw new Error('Failed to add course');
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to add course');
             }
 
             const data = await response.json();
-            // toast.success(data.message);
-            console.log(data.message);
+
             // Reset form
             setNewCourse({
                 course_category: "",
@@ -53,22 +62,136 @@ const AddNewCourse = () => {
                 description: "",
             });
 
-            // You might want to show a success message to the user
             toast.success('Course added successfully!');
-            
+            navigate('/admin/courses');
+
         } catch (error) {
             console.error('Error adding course:', error);
-            toast.error('Failed to add course. Please try again.');
+            toast.error(error.message || 'Failed to add course. Please try again.');
         } finally {
             setIsLoading(false);
         }
     }
+
     return (
-        <>
-            <h2 className="page-heading">Add New <span style={{color: "var(--bg_buttons)"}}>Course</span></h2>
-            <CourseForm handleSubmit={handleSubmit} handleChange={handleChange} newCourse={newCourse}/>
-        </>
-    )
+        <div className="p-6">
+            {/* Header with breadcrumb */}
+            <div className="mb-8">
+                <div className="flex items-center gap-2 text-sm mb-2">
+                    <span
+                        className={`cursor-pointer hover:text-primary ${
+                            isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'
+                        }`}
+                        onClick={() => navigate("/admin/courses")}
+                    >
+                        Courses
+                    </span>
+                    <span className={isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}>
+                        /
+                    </span>
+                    <span className="text-primary">Add New Course</span>
+                </div>
+
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <h2 className="text-2xl font-righteous flex items-center gap-2">
+                        <MdVideoLibrary className="text-primary" />
+                        <span className={isDark ? 'text-dark-text-primary' : 'text-light-text-primary'}>
+                            Add New
+                        </span>
+                        <span className="text-primary">Course</span>
+                    </h2>
+
+                    <div className="flex items-center gap-3">
+                        <button
+                            onClick={() => navigate("/admin/courses")}
+                            className={`
+                                flex items-center gap-2 px-4 py-2 rounded-lg transition-colors
+                                ${isDark
+                                    ? 'bg-dark-bg-tertiary hover:bg-primary/20 text-dark-text-primary'
+                                    : 'bg-light-bg-tertiary hover:bg-primary/20 text-light-text-primary'
+                                }
+                            `}
+                        >
+                            <FaArrowLeft />
+                            <span>Back to Courses</span>
+                        </button>
+
+                        <button
+                            onClick={() => setPreview(!preview)}
+                            className={`
+                                flex items-center gap-2 px-4 py-2 rounded-lg transition-colors
+                                ${isDark
+                                    ? 'bg-dark-bg-tertiary hover:bg-primary/20 text-dark-text-primary'
+                                    : 'bg-light-bg-tertiary hover:bg-primary/20 text-light-text-primary'
+                                }
+                            `}
+                        >
+                            {preview ? <FaEyeSlash /> : <FaEye />}
+                            <span>{preview ? "Hide Preview" : "Show Preview"}</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Form */}
+                <div className={`lg:col-span-2 p-6 rounded-xl shadow-lg ${
+                    isDark ? 'bg-dark-bg-secondary border border-dark-border' : 'bg-light-bg-secondary border border-light-border'
+                }`}>
+                    <div className={`mb-4 pb-4 border-b border-dashed flex items-center gap-2 ${
+                        isDark ? 'border-dark-border' : 'border-light-border'
+                    }`}>
+                        <FaPlus className="text-primary" />
+                        <h3 className={`text-xl font-medium ${
+                            isDark ? 'text-dark-text-primary' : 'text-light-text-primary'
+                        }`}>
+                            Course Information
+                        </h3>
+                    </div>
+
+                    <CourseForm
+                        handleSubmit={handleSubmit}
+                        handleChange={handleChange}
+                        newCourse={newCourse}
+                        isDark={isDark}
+                    />
+                </div>
+
+                {/* Preview */}
+                <div className={`${preview ? 'block' : 'hidden lg:block'} lg:col-span-1`}>
+                    <div className={`sticky top-24 p-6 rounded-xl shadow-lg ${
+                        isDark ? 'bg-dark-bg-secondary border border-dark-border' : 'bg-light-bg-secondary border border-light-border'
+                    }`}>
+                        <div className={`mb-4 pb-4 border-b border-dashed flex items-center gap-2 ${
+                            isDark ? 'border-dark-border' : 'border-light-border'
+                        }`}>
+                            <FaEye className="text-primary" />
+                            <h3 className={`text-xl font-medium ${
+                                isDark ? 'text-dark-text-primary' : 'text-light-text-primary'
+                            }`}>
+                                Preview
+                            </h3>
+                        </div>
+
+                        {Object.values(newCourse).some(value => value.trim() !== '') ? (
+                            <div className="overflow-hidden rounded-lg">
+                                <CardBody course={newCourse} />
+                            </div>
+                        ) : (
+                            <div className={`p-6 rounded-lg text-center ${
+                                isDark ? 'bg-dark-bg-tertiary text-dark-text-secondary' : 'bg-light-bg-tertiary text-light-text-secondary'
+                            }`}>
+                                <div className="flex flex-col items-center gap-3">
+                                    <FaEye className="text-4xl opacity-30" />
+                                    <p>Fill in the form to see a preview of your course</p>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 }
 
 export default AddNewCourse;

@@ -1,12 +1,15 @@
 // src/components/Courses.jsx
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../store/auth';
+import { useTheme } from '../context/ThemeContext';
 import SearchBar from '../components/SearchBar';
 import CardBody from '../components/CardBody';
-import '../components/css/Courses.css';
 import { useLoading } from '../components/loadingContext';
+
 const Courses = () => {
   const { fetchCoursesData, coursesData, API } = useAuth();
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [categories, setCategories] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -79,40 +82,79 @@ const Courses = () => {
   };
 
   return (
-    <div className="courses-page container">
-      <div className="gradient-background"></div>
-      <h2 className='course-heading page-heading'>{selectedCategory || 'All Courses'}</h2>
-      <SearchBar className="searchbar-st" searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-      <div className="categories">
-        <button
-          className={`category-button ${selectedCategory === null ? 'active' : ''}`}
-          onClick={() => handleCategorySelect('All')}
-        >
-          All
-        </button>
-        {categories.map((category, index) => (
+    <div className={`relative min-h-screen-minus-nav p-6 overflow-hidden z-10 ${isDark ? 'bg-dark-bg-primary' : 'bg-light-bg-primary'}`}>
+      {/* Background with gradient */}
+      <div className={`absolute top-0 left-0 w-full h-full -z-10 bg-[size:30px_30px] ${isDark ? 'bg-grid-pattern-dark' : 'bg-grid-pattern-light'}`}></div>
+
+      {/* Main content */}
+      <div className="relative z-20 max-w-7xl mx-auto">
+        <h2 className={`w-full text-center text-4xl font-black font-righteous tracking-wider mb-8 ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'}`}>
+          {selectedCategory || 'All Courses'}
+        </h2>
+
+        <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+
+        {/* Categories */}
+        <div className="flex flex-wrap justify-center gap-3 mb-10 sticky top-[85px] bg-opacity-80 backdrop-blur-sm py-4 z-30
+          ${isDark ? 'bg-dark-bg-primary' : 'bg-light-bg-primary'}">
           <button
-            key={index}
-            className={`category-button ${selectedCategory === category ? 'active' : ''}`}
-            onClick={() => handleCategorySelect(category)}
+            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors
+              ${selectedCategory === null
+                ? `bg-primary text-white`
+                : `${isDark
+                    ? 'bg-dark-bg-tertiary text-dark-text-primary hover:bg-dark-bg-secondary'
+                    : 'bg-light-bg-tertiary text-light-text-primary hover:bg-light-bg-secondary'}`
+              }`}
+            onClick={() => handleCategorySelect('All')}
           >
-            {category}
+            All
           </button>
-        ))}
-      </div>
-      <div className="courses">
-        {filteredCourses.length > 0 ? (
-          filteredCourses.map(course => (
-            <CardBody key={course._id} course={course} watchlist={watchlist} updateWatchlist={updateWatchlist} />
-          ))
-        ) : (
-          <div className="card">
-            <img src="https://img.freepik.com/free-vector/hand-drawn-no-data-illustration_23-2150544961.jpg?t=st=1729403294~exp=1729406894~hmac=ec87d355b9eaf1e9d5530b62be453b683494fbbe2bfe9cbde000ce01fe8e1037&w=1060" alt="No Course Found" className="course-image" />
-            <div className="card-content">
-              <h3 className="course-title">No Courses Found {selectedCategory ? `in ${selectedCategory}` : ''}</h3>
+
+          {categories.map((category, index) => (
+            <button
+              key={index}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors
+                ${selectedCategory === category
+                  ? `bg-primary text-white`
+                  : `${isDark
+                      ? 'bg-dark-bg-tertiary text-dark-text-primary hover:bg-dark-bg-secondary'
+                      : 'bg-light-bg-tertiary text-light-text-primary hover:bg-light-bg-secondary'}`
+                }`}
+              onClick={() => handleCategorySelect(category)}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+
+        {/* Courses grid */}
+        <div className="flex flex-wrap justify-center gap-8">
+          {filteredCourses.length > 0 ? (
+            filteredCourses.map(course => (
+              <div key={course._id}>
+                <CardBody
+                  course={course}
+                  watchlist={watchlist}
+                  updateWatchlist={updateWatchlist}
+                />
+              </div>
+            ))
+          ) : (
+            <div className={`w-[300px] border rounded-md overflow-hidden shadow-md
+              ${isDark ? 'bg-dark-bg-secondary border-dark-border' : 'bg-light-bg-secondary border-light-border'}`}>
+              <img
+                src="https://img.freepik.com/free-vector/hand-drawn-no-data-illustration_23-2150544961.jpg?t=st=1729403294~exp=1729406894~hmac=ec87d355b9eaf1e9d5530b62be453b683494fbbe2bfe9cbde000ce01fe8e1037&w=1060"
+                alt="No Course Found"
+                className="w-full h-[180px] object-cover"
+              />
+              <div className="p-4">
+                <h3 className={`text-lg font-medium ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'}`}>
+                  No Courses Found {selectedCategory ? `in ${selectedCategory}` : ''}
+                </h3>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

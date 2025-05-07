@@ -1,23 +1,39 @@
-import React, { useState, useEffect, useRef } from "react";
-// import "../App.css";
-import "./css/Navbar.css";
+import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../store/auth";
-import { RiCloseLargeLine, RiMenu3Fill } from "react-icons/ri";
+import { useTheme } from "../context/ThemeContext";
+import { RiMenu3Fill } from "react-icons/ri";
+import { FaGraduationCap } from "react-icons/fa";
 import ThemeSwitcher from "./ThemeSwitcher";
+import ThemeColorSelector from "./ThemeColorSelector";
+import MobileMenu from "./MobileMenu";
+
 function NavBar() {
   const { isLoggedIn, userdata } = useAuth();
+  const { theme } = useTheme();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 1024);
-  const nav = useRef();
-  // Function to handle resizing the window
+  const [scrolled, setScrolled] = useState(false);
+  const isDark = theme === 'dark';
+
+  // Function to handle scrolling
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 1024); // Updated to 1024px
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10);
     };
+
+    // Close mobile menu when window is resized to desktop size
+    const handleResize = () => {
+      if (window.innerWidth > 768) {
+        setIsMenuOpen(false);
+      }
+    };
+
     window.addEventListener("resize", handleResize);
+    window.addEventListener("scroll", handleScroll);
+
     return () => {
       window.removeEventListener("resize", handleResize);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
@@ -25,85 +41,177 @@ function NavBar() {
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+
   return (
-    <nav>
-      <h3 className="logo">
-        <NavLink to="/"> <img src="favicon.png" height={"auto"} width={40} alt="Logo Codify" /> Codify</NavLink>
-      </h3>
-      <div className="nav-btns" >
-      <ThemeSwitcher/>
-      <span className="open" id="open" onClick={toggleMenu}>
-        <RiMenu3Fill />
-      </span>
-      </div>
-      <ul
-        id="nav"
-        onClick={toggleMenu}
-        className={isMenuOpen ? "side-nav show" : "side-nav"}
-      >
-        <li>
-          <span className="close" id="close" onClick={toggleMenu}>
-            <RiCloseLargeLine />
-          </span>
-        </li>
-        <li>
-          <NavLink className="link" to="/">
-            Home
-          </NavLink>
-        </li>
-        <li>
-          <NavLink className="link" to="/about">
-            About
-          </NavLink>
-        </li>
-        <li>
-          <NavLink className="link" to="/courses">
-            Courses
-          </NavLink>
-        </li>
-        <li>
-          <NavLink className="link" to="/roadmap">
-            Roadmaps
-          </NavLink>
-        </li>
-        <li>
-          <NavLink className="link" to="/contact">
-            Contact Us
-          </NavLink>
-        </li>
-        {isLoggedIn ? (
-          <>
-            <li>
+    <nav 
+    // className={`
+    //   sticky top-0 z-50 w-full transition-all duration-300 ${isDark ? 'bg-dark-bg-primary/95' : 'bg-light-bg-primary/95'} shadow-nav backdrop-blur-sm
+    //   ${isDark ? 'text-dark-text-primary' : 'text-white'}
+    // `}
+    className={`
+      sticky top-0 z-50 w-full transition-all duration-300
+      ${scrolled
+        ? `${isDark ? 'bg-dark-bg-primary/70 border-white/50' : 'bg-light-bg-primary/70 border-black/50'} border-b-2 shadow-nav backdrop-blur-sm`
+        : `${isDark ? 'border-white' : ' border-black'} border-0`}
+      ${isDark ? 'text-dark-text-primary' : 'text-white'}
+    `}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
+          {/* Logo */}
+          <div className="flex-shrink-0 flex items-center">
+            <NavLink to="/" className={`flex items-center space-x-2 font-bold text-xl text-primary-500 transition-colors`}>
+              <FaGraduationCap className="text-2xl" />
+              <span className="font-righteous">Codify</span>
+            </NavLink>
+          </div>
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:block">
+            <div className="ml-10 flex items-center space-x-4">
               <NavLink
-                to="/dashboard"
-                onClick={toggleMenu}
-                className="link"
+                to="/"
+                className={({ isActive }) => `
+                  px-3 py-2 rounded-md text-sm font-medium transition-colors
+                  ${isActive
+                    ? 'bg-primary text-white'
+                    : `${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'} hover:bg-primary-400 hover:text-white`}
+                `}
               >
-                Dashboard
+                Home
               </NavLink>
-            </li>
-            {userdata.isAdmin && (
-              <li>
-                <NavLink className="link" to="/admin">Admin Panel</NavLink>
-              </li>
-            )}
-            <li>
-              <NavLink className="link" to="/logout">
-                Logout
+
+              <NavLink
+                to="/about"
+                className={({ isActive }) => `
+                  px-3 py-2 rounded-md text-sm font-medium transition-colors
+                  ${isActive
+                    ? 'bg-primary text-white'
+                    : `${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'} hover:bg-primary-400 hover:text-white`}
+                `}
+              >
+                About
               </NavLink>
-            </li>
-          </>
-        ) : (
-          <>
-            <li>
-              <NavLink to="/login" className="link" >Login</NavLink>
-            </li>
-            <li>
-              <NavLink to="/signup" className="link" >Signup</NavLink>
-            </li>
-          </>
-        )}
-      </ul>
+
+              <NavLink
+                to="/courses"
+                className={({ isActive }) => `
+                  px-3 py-2 rounded-md text-sm font-medium transition-colors
+                  ${isActive
+                    ? 'bg-primary text-white'
+                    : `${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'} hover:bg-primary-400 hover:text-white`}
+                `}
+              >
+                Courses
+              </NavLink>
+
+              <NavLink
+                to="/roadmap"
+                className={({ isActive }) => `
+                  px-3 py-2 rounded-md text-sm font-medium transition-colors
+                  ${isActive
+                    ? 'bg-primary text-white'
+                    : `${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'} hover:bg-primary-400 hover:text-white`}
+                `}
+              >
+                Roadmaps
+              </NavLink>
+
+              <NavLink
+                to="/contact"
+                className={({ isActive }) => `
+                  px-3 py-2 rounded-md text-sm font-medium transition-colors
+                  ${isActive
+                    ? 'bg-primary text-white'
+                    : `${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'} hover:bg-primary-400 hover:text-white`}
+                `}
+              >
+                Contact
+              </NavLink>
+
+              {isLoggedIn ? (
+                <>
+                  <NavLink
+                    to="/dashboard"
+                    className={({ isActive }) => `
+                      px-3 py-2 rounded-md text-sm font-medium transition-colors
+                      ${isActive
+                        ? 'bg-primary text-white'
+                        : `${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'} hover:bg-primary-400 hover:text-white`}
+                    `}
+                  >
+                    Dashboard
+                  </NavLink>
+
+                  {userdata?.isAdmin && (
+                    <NavLink
+                      to="/admin"
+                      className={({ isActive }) => `
+                        px-3 py-2 rounded-md text-sm font-medium transition-colors
+                        ${isActive
+                          ? 'bg-primary text-white'
+                    : `${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'} hover:bg-primary-400 hover:text-white`}
+                      `}
+                    >
+                      Admin
+                    </NavLink>
+                  )}
+
+                  <NavLink
+                    to="/logout"
+                    className={`px-3 py-2 rounded-md text-sm font-medium ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary '} hover:bg-primary-400 hover:text-white transition-colors`}
+                  >
+                    Logout
+                  </NavLink>
+                </>
+              ) : (
+                <>
+                  <NavLink
+                    to="/login"
+                    className={`px-3 py-2 rounded-md text-sm font-medium ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary '} hover:bg-primary-400 hover:text-white transition-colors`}
+                  >
+                    Login
+                  </NavLink>
+
+                  <NavLink
+                    to="/signup"
+                    className={`px-3 py-2 rounded-md text-sm font-medium ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary '} hover:bg-primary-400 hover:text-white transition-colors`}
+                  >
+                    Sign Up
+                  </NavLink>
+                </>
+              )}
+            </div>
+          </div>
+
+          {/* Theme Controls */}
+          <div className="hidden md:flex items-center space-x-3">
+            <ThemeSwitcher />
+            <ThemeColorSelector />
+          </div>
+
+          {/* Mobile menu button */}
+          <div className="flex md:hidden items-center space-x-3">
+            <ThemeSwitcher />
+            <ThemeColorSelector />
+            <button
+              onClick={toggleMenu}
+              className="inline-flex items-center justify-center p-2 rounded-md text-white hover:bg-white/10 focus:outline-none"
+            >
+              <span className="sr-only">Open main menu</span>
+              <RiMenu3Fill className="block h-6 w-6" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile menu */}
+      <MobileMenu
+        isOpen={isMenuOpen}
+        onClose={toggleMenu}
+        isLoggedIn={isLoggedIn}
+        userdata={userdata}
+      />
     </nav>
   );
 }
