@@ -57,9 +57,19 @@ const courseProgressSchema = mongoose.Schema({
     type: Number,
     default: 0
   },
+  currentVideoId: {
+    type: String,
+    default: ''
+  },
   totalHoursSpent: {
     type: Number,
     default: 0
+  },
+  // Store progress for each video in a playlist as a regular object
+  // Using Mixed type instead of Map for better JSON serialization
+  videoProgress: {
+    type: mongoose.Schema.Types.Mixed,
+    default: {}
   },
   modules: [moduleSchema]
 });

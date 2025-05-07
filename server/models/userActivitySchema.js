@@ -8,7 +8,17 @@ const userActivitySchema = mongoose.Schema({
   },
   activityType: {
     type: String,
-    enum: ['started_course', 'completed_module', 'completed_course', 'added_to_watchlist', 'removed_from_watchlist'],
+    enum: [
+      'started_course',
+      'completed_module',
+      'completed_course',
+      'added_to_watchlist',
+      'removed_from_watchlist',
+      'watchlist_update',
+      'video_change',
+      'course_select',
+      'progress_update'
+    ],
     required: true
   },
   courseId: {
@@ -23,6 +33,11 @@ const userActivitySchema = mongoose.Schema({
   moduleName: {
     type: String,
     default: null
+  },
+  // Additional details for the activity (flexible schema)
+  details: {
+    type: Object,
+    default: {}
   },
   timestamp: {
     type: Date,

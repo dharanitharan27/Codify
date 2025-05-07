@@ -18,14 +18,18 @@ const YouTubePlaylist = ({ playlistId, apiKey, onVideoSelect }) => {
 
   // Memoize the handleVideoSelect function to prevent unnecessary re-renders
   const handleVideoSelect = useCallback((video) => {
+    if (!video || !video.id) {
+      return;
+    }
+
     setSelectedVideoId(video.id);
+
     if (onVideoSelect) {
       // Ensure the video has a proper videoUrl with a valid YouTube video ID
       const videoWithUrl = {
         ...video,
         videoUrl: `https://www.youtube.com/watch?v=${video.id}`
       };
-      console.log('Selecting video with URL:', videoWithUrl.videoUrl);
       onVideoSelect(videoWithUrl);
     }
   }, [onVideoSelect]);
@@ -47,26 +51,23 @@ const YouTubePlaylist = ({ playlistId, apiKey, onVideoSelect }) => {
           return;
         }
 
-        console.log('Loading playlist data for ID:', playlistId);
-
         // Use empty string for apiKey to use mock data in development
         const data = await fetchPlaylistData(playlistId, apiKey || '');
-        console.log('Playlist data loaded:', data);
 
         // Only update state if the component is still mounted and playlistId hasn't changed
         if (playlistId === previousPlaylistIdRef.current) {
           setPlaylistData(data);
 
           // Auto-select the first video if available
-          if (data.videos && data.videos.length > 0) {
+          if (data.videos && data.videos.length > 0 && data.videos[0].id) {
             setSelectedVideoId(data.videos[0].id);
+
             if (onVideoSelect) {
               // Ensure the video has a proper videoUrl with a valid YouTube video ID
               const firstVideo = {
                 ...data.videos[0],
                 videoUrl: `https://www.youtube.com/watch?v=${data.videos[0].id}`
               };
-              console.log('Auto-selecting first video with URL:', firstVideo.videoUrl);
               onVideoSelect(firstVideo);
             }
           }

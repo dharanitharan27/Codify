@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useAuth } from '../store/auth';
 import { useTheme } from '../context/ThemeContext';
 
-const YouTubePlayer = ({ videoUrl, courseId, onProgressUpdate }) => {
+const YouTubePlayer = ({ videoUrl, courseId, videoId: externalVideoId }) => {
   const { API, userdata } = useAuth();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
@@ -15,8 +15,9 @@ const YouTubePlayer = ({ videoUrl, courseId, onProgressUpdate }) => {
   const [error, setError] = useState(null);
   const [playerLoaded, setPlayerLoaded] = useState(false);
   const [videoLoading, setVideoLoading] = useState(true); // Track video loading state
+  const [maxWatchedTime, setMaxWatchedTime] = useState(0); // Track maximum time watched
+  const [videoProgressMap, setVideoProgressMap] = useState({}); // Track progress for each video in a playlist
   const progressInterval = useRef(null);
-  const playerContainerRef = useRef(null); // Reference to the player container
   const token = localStorage.getItem('token');
 
   // Extract video ID from YouTube URL
@@ -32,90 +33,65 @@ const YouTubePlayer = ({ videoUrl, courseId, onProgressUpdate }) => {
 
   // Load YouTube API
   useEffect(() => {
-    console.log('YouTubePlayer: videoUrl changed:', videoUrl);
-    console.log('YouTubePlayer: extracted videoId:', videoId);
-
-    setError(null);
-    setPlayerLoaded(false);
-    setVideoLoading(true);
-
-    // Save current progress before changing videos
-    if (player && player.getCurrentTime && videoId) {
-      console.log('YouTubePlayer: Saving progress for current video before changing');
-      try {
-        const currentTime = player.getCurrentTime();
-        const duration = player.getDuration();
-        if (currentTime > 0 && duration > 0) {
-          updateProgress(currentTime, duration);
-        }
-
-        // Always destroy the existing player when video changes
-        if (typeof player.destroy === 'function') {
-          console.log('YouTubePlayer: Destroying existing player instance on videoUrl change');
-          player.destroy();
-          setPlayer(null);
-        }
-      } catch (err) {
-        console.error('YouTubePlayer: Error while saving progress:', err);
-      }
-    }
-
+    // Don't reset player state if we're just re-rendering the component
+    // Only reset if the videoId actually changed
     if (!videoId) {
-      console.error('YouTubePlayer: Invalid YouTube URL, no videoId extracted');
       setError('Invalid YouTube URL');
       setVideoLoading(false);
       return;
     }
 
+    setError(null);
+    setVideoLoading(true);
+
+    // Save current progress before changing videos
+    if (player && player.getCurrentTime && videoId) {
+      try {
+        const currentTime = player.getCurrentTime();
+        const duration = player.getDuration();
+        if (currentTime > 0 && duration > 0) {
+          // Comment out progress updating
+          // updateProgress(currentTime, duration);
+        }
+
+        // Don't destroy the player - just load the new video
+        // This helps maintain the player state and prevents flickering
+      } catch (err) {
+        console.error('Error while saving progress:', err);
+      }
+    }
+
+    // We already checked for videoId above, so we don't need to check again
+
     // Check if YouTube API is already loaded
     if (window.YT && window.YT.Player) {
-      console.log('YouTubePlayer: YouTube API is already loaded');
-
       // If player already exists, just load the new video
       if (player && typeof player.loadVideoById === 'function') {
         try {
-          console.log('YouTubePlayer: Existing player found, loading new video:', videoId);
           setVideoLoading(true);
 
-          // Destroy the existing player first to prevent issues
-          if (typeof player.destroy === 'function') {
-            console.log('YouTubePlayer: Destroying existing player instance');
-            player.destroy();
-          }
+          // Just load the new video ID instead of destroying and recreating the player
+          player.loadVideoById({
+            videoId: videoId,
+            startSeconds: 0 // We'll seek to the saved position in onPlayerReady
+          });
 
-          // Create a new player instance
-          console.log('YouTubePlayer: Creating new player instance for video:', videoId);
-          initializePlayer();
-
-          // Reset states
-          setDuration(0);
-          setCurrentTime(0);
-          setProgress(0);
-
-          // Reset progress tracking interval
-          if (progressInterval.current) {
-            console.log('YouTubePlayer: Clearing existing progress interval');
-            clearInterval(progressInterval.current);
-            progressInterval.current = null;
-          }
+          // We don't reset states here because we want to maintain the player state
+          // The onPlayerReady event will handle seeking to the saved position
 
           return;
         } catch (err) {
-          console.error('YouTubePlayer: Error loading new video:', err);
+          console.error('Error loading new video:', err);
           setVideoLoading(false);
           // If loading new video fails, reinitialize the player
-          console.log('YouTubePlayer: Reinitializing player after error');
           initializePlayer();
           return;
         }
       }
 
-      console.log('YouTubePlayer: No existing player or loadVideoById not available, initializing new player');
       initializePlayer();
       return;
     }
-
-    console.log('YouTubePlayer: YouTube API not loaded yet, loading script');
 
     // Load the YouTube IFrame Player API code asynchronously
     const tag = document.createElement('script');
@@ -132,44 +108,27 @@ const YouTubePlayer = ({ videoUrl, courseId, onProgressUpdate }) => {
 
     return () => {
       // Clean up
-      console.log('YouTubePlayer: Cleaning up on videoId change or unmount');
       window.onYouTubeIframeAPIReady = null;
 
       if (progressInterval.current) {
-        console.log('YouTubePlayer: Clearing progress interval');
         clearInterval(progressInterval.current);
         progressInterval.current = null;
       }
 
-      // Clean up the player when videoId changes
-      if (player && typeof player.destroy === 'function') {
-        try {
-          console.log('YouTubePlayer: Destroying player in cleanup function');
-          player.destroy();
-          setPlayer(null);
-        } catch (err) {
-          console.error('YouTubePlayer: Error destroying player in cleanup:', err);
-        }
-      }
+      // We don't destroy the player here anymore to prevent flickering
+      // The player will be reused or destroyed when the component unmounts
 
-      // Reset states
-      setPlayerLoaded(false);
-      setVideoLoading(true);
-      setCurrentTime(0);
-      setDuration(0);
-      setProgress(0);
+      // We also don't reset states here to maintain the player state
+      // This helps with the "continue watching" functionality
     };
   }, [videoId]);
 
   // Initialize the YouTube player
   const initializePlayer = () => {
     try {
-      console.log('YouTubePlayer: Initializing player for videoId:', videoId);
-
       // Check if the element exists
       const playerElement = document.getElementById('youtube-player');
       if (!playerElement) {
-        console.error('YouTubePlayer: YouTube player element not found in DOM');
         setError('Player element not found');
         setVideoLoading(false);
         return;
@@ -178,7 +137,6 @@ const YouTubePlayer = ({ videoUrl, courseId, onProgressUpdate }) => {
       // Clear any existing content in the player element to ensure clean initialization
       playerElement.innerHTML = '';
 
-      console.log('YouTubePlayer: Creating new YT.Player instance with videoId:', videoId);
       const newPlayer = new window.YT.Player('youtube-player', {
         height: '390',
         width: '100%',
@@ -190,43 +148,36 @@ const YouTubePlayer = ({ videoUrl, courseId, onProgressUpdate }) => {
           'autoplay': 1 // Autoplay when possible
         },
         events: {
-          'onReady': (event) => {
-            console.log('YouTubePlayer: onReady event fired');
-            onPlayerReady(event);
-          },
-          'onStateChange': (event) => {
-            console.log('YouTubePlayer: onStateChange event fired, state:', event.data);
-            onPlayerStateChange(event);
-          },
+          'onReady': onPlayerReady,
+          'onStateChange': onPlayerStateChange,
           'onError': (e) => {
-            console.error('YouTubePlayer: YouTube player error:', e.data);
             setError(`Error loading video (code: ${e.data})`);
             setVideoLoading(false);
           }
         }
       });
 
-      console.log('YouTubePlayer: Player instance created, setting in state');
       setPlayer(newPlayer);
     } catch (err) {
-      console.error('YouTubePlayer: Error initializing YouTube player:', err);
+      console.error('Error initializing YouTube player:', err);
       setError('Failed to initialize player');
       setVideoLoading(false);
     }
   };
 
-  // Fetch existing course progress
-  useEffect(() => {
-    if (courseId && userdata?._id) {
-      fetchCourseProgress();
-    }
-  }, [courseId, userdata]);
-
-  const fetchCourseProgress = async () => {
+  // IMPORTANT: Define fetchCourseProgress first before using it in useEffect
+  // This prevents the "Cannot access 'fetchCourseProgress' before initialization" error
+  const fetchCourseProgress = useCallback(async () => {
     try {
       // Check if we have a valid token and user
       if (!token || !userdata?._id) {
-        console.log('No token or user ID available for progress tracking');
+        return;
+      }
+
+      // Get the current video ID from the URL or props
+      const currentVideoId = externalVideoId || videoId;
+
+      if (!currentVideoId) {
         return;
       }
 
@@ -240,90 +191,175 @@ const YouTubePlayer = ({ videoUrl, courseId, onProgressUpdate }) => {
 
       if (response.ok) {
         const data = await response.json();
+
+        // Store the progress data
         setCourseProgress(data.progress);
 
-        // If there's saved progress, seek to that position when player is ready
-        if (data.progress && player && player.seekTo) {
-          player.seekTo(data.progress.currentVideoTime, true);
+        // Initialize video progress map from the data
+        if (data.progress && data.progress.videoProgress) {
+          // Convert from MongoDB format if needed
+          let progressMap = data.progress.videoProgress;
+
+          // Check if it's coming as a MongoDB Map format and convert if needed
+          if (typeof progressMap !== 'object' || progressMap === null) {
+            progressMap = {};
+          }
+
+          setVideoProgressMap(progressMap);
         }
-      } else if (response.status === 404) {
-        // This is expected for new courses - no progress yet
-        console.log('No progress record found for this course - first time viewing');
-        // We'll create a progress record when the user starts watching
-      } else {
-        console.error('Error fetching course progress:', response.status, response.statusText);
+
+        // Check if we have progress for this specific video
+        const videoSpecificProgress = currentVideoId && data.progress?.videoProgress ?
+          data.progress.videoProgress[currentVideoId] : null;
+
+        if (videoSpecificProgress && videoSpecificProgress.currentTime > 0) {
+          const savedTime = videoSpecificProgress.currentTime;
+
+          // Initialize maxWatchedTime with the saved progress for this video
+          setMaxWatchedTime(savedTime);
+
+          // If player is already initialized, seek to the saved position
+          if (player && player.seekTo) {
+            player.seekTo(savedTime, true);
+            setCurrentTime(savedTime);
+          }
+        } else if (data.progress && data.progress.currentVideoTime && data.progress.currentVideoTime > 0) {
+          // Fallback to course-level progress if no video-specific progress is found
+          const savedTime = data.progress.currentVideoTime;
+
+          // Initialize maxWatchedTime with the saved progress
+          setMaxWatchedTime(savedTime);
+
+          // If player is already initialized, seek to the saved position
+          if (player && player.seekTo) {
+            player.seekTo(savedTime, true);
+            setCurrentTime(savedTime);
+          }
+        }
+      } else if (response.status !== 404) {
+        console.error('Error fetching course progress:', response.status);
       }
     } catch (error) {
       console.error('Error fetching course progress:', error);
     }
-  };
+  }, [API, courseId, player, token, userdata, videoId, externalVideoId]);
 
-  // Update course progress on the server
-  const updateProgress = async (currentTime, totalTime) => {
-    if (!courseId || !userdata?._id || !token) return;
+  // Fetch existing course progress
+  useEffect(() => {
+    if (courseId && userdata?._id && token) {
+      fetchCourseProgress();
+    }
+  }, [courseId, userdata, token, API, fetchCourseProgress]);
 
-    // Don't update if time values are invalid
-    if (isNaN(currentTime) || isNaN(totalTime) || totalTime <= 0) {
-      console.log('Invalid time values, skipping progress update');
+  // Handle case where courseProgress changes after player is initialized
+  useEffect(() => {
+    // Get the current video ID from the URL or props
+    const currentVideoId = externalVideoId || videoId;
+
+    if (!currentVideoId || !player || !playerLoaded) {
       return;
     }
 
-    try {
-      const progressPercent = Math.round((currentTime / totalTime) * 100);
+    // Make sure videoProgress is an object
+    const videoProgress = courseProgress?.videoProgress || {};
 
-      const response = await fetch(`${API}/progress/${courseId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          progress: progressPercent,
-          currentVideoTime: currentTime,
-          totalHoursSpent: (courseProgress?.totalHoursSpent || 0) + (1/60), // Add 1 minute
-          status: progressPercent >= 90 ? 'completed' : 'in-progress'
-        })
-      });
+    // Check if we have video-specific progress
+    const videoSpecificProgress = currentVideoId && videoProgress ?
+      videoProgress[currentVideoId] : null;
 
-      if (response.ok) {
-        const data = await response.json();
-        setCourseProgress(data.progress);
+    let savedTime = 0;
 
-        // Call the callback to update parent components
-        if (onProgressUpdate) {
-          onProgressUpdate(data.progress);
-        }
-      } else {
-        console.error('Error updating course progress:', response.status, response.statusText);
-      }
-    } catch (error) {
-      console.error('Error updating course progress:', error);
+    if (videoSpecificProgress && videoSpecificProgress.currentTime > 0) {
+      // Use video-specific progress
+      savedTime = videoSpecificProgress.currentTime;
+    } else if (courseProgress?.currentVideoTime && courseProgress.currentVideoTime > 0) {
+      // Fallback to course-level progress
+      savedTime = courseProgress.currentVideoTime;
+    } else {
+      // No progress found
+      return;
     }
+
+    // Get current player time
+    const currentPlayerTime = player.getCurrentTime();
+
+    // If current time is significantly different from saved time (more than 3 seconds),
+    // and current time is near the beginning (less than 3 seconds), then seek
+    if (Math.abs(currentPlayerTime - savedTime) > 3 && currentPlayerTime < 3) {
+      // Delay seeking to ensure player is ready
+      setTimeout(() => {
+        try {
+          player.seekTo(savedTime, true);
+          setCurrentTime(savedTime);
+        } catch (err) {
+          console.error('Error seeking to saved position:', err);
+        }
+      }, 500);
+    }
+  }, [courseProgress, player, playerLoaded, videoId, externalVideoId]);
+
+  // Progress updating is commented out
+  /*
+  const updateProgress = async (currentTime, totalTime) => {
+    // Implementation removed to disable progress tracking
   };
+  */
 
   // Player event handlers
   const onPlayerReady = (event) => {
-    console.log('YouTubePlayer: onPlayerReady handler executing');
     const duration = event.target.getDuration();
-    console.log('YouTubePlayer: Video duration:', duration);
     setDuration(duration);
     setPlayerLoaded(true);
 
-    // Check if this is a new video or if we have saved progress for this video
-    // For now, we'll just start from the beginning for each new video
-    // In a more advanced implementation, you could store progress per video ID
+    // Get the current video ID from the URL or props
+    const currentVideoId = externalVideoId || videoId;
 
-    // If we have saved progress for the course, seek to that position
-    if (courseProgress?.currentVideoTime) {
-      console.log('YouTubePlayer: Seeking to saved position:', courseProgress.currentVideoTime);
-      event.target.seekTo(courseProgress.currentVideoTime, true);
-    }
+    // IMPORTANT: We need to delay seeking to ensure the player is fully ready
+    // This is crucial for the seek operation to work properly
+    setTimeout(() => {
+      // Make sure currentVideoId is valid and videoProgress is an object
+      const videoProgress = courseProgress?.videoProgress || {};
 
-    // Start playing the video automatically
-    console.log('YouTubePlayer: Calling playVideo()');
-    event.target.playVideo();
+      const videoSpecificProgress = currentVideoId && videoProgress ?
+        videoProgress[currentVideoId] : null;
 
-    console.log('YouTubePlayer: Player ready with video:', videoId);
+      if (videoSpecificProgress && videoSpecificProgress.currentTime > 0) {
+        // Use video-specific progress
+        const savedTime = videoSpecificProgress.currentTime;
+
+        // Make sure maxWatchedTime is set to the saved progress
+        setMaxWatchedTime(prevMax => Math.max(prevMax, savedTime));
+
+        try {
+          // Seek to the saved position with a force parameter to ensure it works
+          event.target.seekTo(savedTime, true);
+
+          // Update current time display
+          setCurrentTime(savedTime);
+        } catch (err) {
+          console.error('Error seeking to saved position:', err);
+        }
+      } else if (courseProgress?.currentVideoTime && courseProgress.currentVideoTime > 0) {
+        // Fallback to course-level progress if no video-specific progress is found
+        const savedTime = courseProgress.currentVideoTime;
+
+        // Make sure maxWatchedTime is set to the saved progress
+        setMaxWatchedTime(prevMax => Math.max(prevMax, savedTime));
+
+        try {
+          // Seek to the saved position with a force parameter to ensure it works
+          event.target.seekTo(savedTime, true);
+
+          // Update current time display
+          setCurrentTime(savedTime);
+        } catch (err) {
+          console.error('Error seeking to saved position:', err);
+        }
+      }
+
+      // Start playing the video automatically
+      event.target.playVideo();
+    }, 500); // 500ms delay to ensure player is fully initialized
   };
 
   const onPlayerStateChange = (event) => {
@@ -352,18 +388,39 @@ const YouTubePlayer = ({ videoUrl, courseId, onProgressUpdate }) => {
         if (player && player.getCurrentTime) {
           const currentTime = player.getCurrentTime();
           const duration = player.getDuration();
+
+          // Update the current time display
           setCurrentTime(currentTime);
           setDuration(duration);
-          setProgress(Math.round((currentTime / duration) * 100));
 
-          // Update progress on server every 30 seconds
-          if (Math.floor(currentTime) % 30 === 0) {
-            updateProgress(currentTime, duration);
+          // Update maxWatchedTime - keep the maximum value
+          setMaxWatchedTime(prevMax => {
+            const newMax = Math.max(prevMax, currentTime);
+            return newMax;
+          });
+
+          // Calculate progress based on current time
+          const progressPercent = Math.round((currentTime / duration) * 100);
+          setProgress(progressPercent);
+
+          // Progress updating is commented out
+          /*
+          // Check if we should update progress on the server
+          // Update every 10 seconds as requested
+          const shouldUpdateProgress =
+            Math.floor(currentTime) % 10 === 0 || // Every 10 seconds
+            (progressPercent % 5 === 0 && progressPercent > 0); // Or at every 5% milestone
+
+          if (shouldUpdateProgress) {
+            // Get the max time for progress update
+            const maxTime = Math.max(currentTime, maxWatchedTime);
+            updateProgress(maxTime, duration);
           }
+          */
         }
       }, 1000);
-    } else {
-      // YT.PlayerState.PAUSED = 2, YT.PlayerState.ENDED = 0
+    } else if (event.data === 0) {
+      // YT.PlayerState.ENDED = 0
       setIsPlaying(false);
 
       if (progressInterval.current) {
@@ -371,12 +428,55 @@ const YouTubePlayer = ({ videoUrl, courseId, onProgressUpdate }) => {
         progressInterval.current = null;
       }
 
-      // Save progress when paused or ended
+      // Progress updating is commented out
+      /*
+      // Save progress when video ends - mark as completed
+      if (player && player.getCurrentTime) {
+        const currentTime = player.getDuration(); // Use full duration when video ends
+
+        // Update maxWatchedTime to full duration
+        setMaxWatchedTime(currentTime);
+
+        // Force progress to 100% when video ends
+        const progressData = {
+          progress: 100,
+          currentTime: currentTime, // Use full duration for completed videos
+          totalHoursSpent: (courseProgress?.totalHoursSpent || 0) + (1/60),
+          status: 'completed'
+        };
+
+        // Call the callback directly with completed status
+        if (onProgressUpdate) {
+          onProgressUpdate(progressData);
+        }
+      }
+      */
+    } else if (event.data === 2) {
+      // YT.PlayerState.PAUSED = 2
+      setIsPlaying(false);
+
+      if (progressInterval.current) {
+        clearInterval(progressInterval.current);
+        progressInterval.current = null;
+      }
+
+      // Progress updating is commented out
+      /*
+      // Save progress when paused
       if (player && player.getCurrentTime) {
         const currentTime = player.getCurrentTime();
         const duration = player.getDuration();
-        updateProgress(currentTime, duration);
+
+        // Update maxWatchedTime if current time is greater
+        if (currentTime > maxWatchedTime) {
+          setMaxWatchedTime(currentTime);
+        }
+
+        // Use the max time for progress update
+        const timeToSave = Math.max(currentTime, maxWatchedTime);
+        updateProgress(timeToSave, duration);
       }
+      */
     }
   };
 
@@ -416,7 +516,13 @@ const YouTubePlayer = ({ videoUrl, courseId, onProgressUpdate }) => {
   // Effect to clean up the player container on unmount
   useEffect(() => {
     return () => {
-      console.log('YouTubePlayer: Component unmounting, cleaning up player');
+      // Clear any intervals
+      if (progressInterval.current) {
+        clearInterval(progressInterval.current);
+        progressInterval.current = null;
+      }
+
+      // Destroy the player when the component unmounts
       if (player && typeof player.destroy === 'function') {
         try {
           player.destroy();
@@ -425,13 +531,13 @@ const YouTubePlayer = ({ videoUrl, courseId, onProgressUpdate }) => {
         }
       }
     };
-  }, []);
+  }, [player]); // Add player as a dependency to ensure we have the latest reference
 
   return (
     <div className={`rounded-lg overflow-hidden shadow-lg ${isDark ? 'bg-dark-bg-secondary' : 'bg-light-bg-secondary'}`}>
       <div className="aspect-video relative">
-        {/* Use key to force re-creation of the DOM element when videoId changes */}
-        <div key={videoId} id="youtube-player" className="w-full h-full"></div>
+        {/* IMPORTANT: We removed the key={videoId} to prevent the player from being recreated on every render */}
+        <div id="youtube-player" className="w-full h-full"></div>
 
         {/* Loading overlay - show only when video is loading or player is not loaded */}
         {(videoLoading || !playerLoaded) && !error && (
@@ -446,9 +552,14 @@ const YouTubePlayer = ({ videoUrl, courseId, onProgressUpdate }) => {
 
       <div className="p-4">
         <div className="flex justify-between items-center mb-2">
-          <span className={`text-sm ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>
-            {formatTime(currentTime)} / {formatTime(duration)}
-          </span>
+          <div>
+            <span className={`text-sm ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>
+              {formatTime(currentTime)} / {formatTime(duration)}
+            </span>
+            <span className={`text-xs ml-2 text-gray-500`}>
+              (Max: {formatTime(maxWatchedTime)})
+            </span>
+          </div>
           <span className={`text-sm font-medium ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>
             {progress}% completed
           </span>

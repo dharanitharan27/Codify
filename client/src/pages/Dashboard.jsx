@@ -2,11 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../store/auth';
 import { useTheme } from '../context/ThemeContext';
 import CardBody from '../components/CardBody';
-import YouTubePlayer from '../components/YouTubePlayer';
 import CourseModules from '../components/CourseModules';
 import UserActivity from '../components/UserActivity';
 import ContinueWatching from '../components/ContinueWatching';
-import { FaBookmark, FaGraduationCap, FaChartLine, FaClock } from 'react-icons/fa';
+import { FaBookmark, FaGraduationCap, FaChartLine, FaClock, FaPlay } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 function Dashboard() {
@@ -14,11 +13,13 @@ function Dashboard() {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const [watchlist, setWatchlist] = useState([]);
+  // Stats for user dashboard with proper tracking
   const [stats, setStats] = useState({
     coursesInProgress: 0,
     coursesCompleted: 0,
     totalHoursLearned: 0,
-    lastActive: new Date().toISOString()
+    lastActive: new Date().toISOString(),
+    savedCourses: 0
   });
   const [activities, setActivities] = useState([]);
   const [courseProgress, setCourseProgress] = useState([]);
@@ -27,9 +28,10 @@ function Dashboard() {
   const [continueWatchingCourses, setContinueWatchingCourses] = useState([]);
   const token = localStorage.getItem('token');
 
-  // Fetch user's watchlist
+  // Fetch user's watchlist (Saved Courses)
   const fetchWatchlist = async () => {
     try {
+      console.log('Fetching user watchlist...');
       const response = await fetch(`${API}/user/watchlist`, {
         method: 'GET',
         headers: {
@@ -40,17 +42,14 @@ function Dashboard() {
 
       if (response.ok) {
         const data = await response.json();
+        console.log('Watchlist data:', data);
         setWatchlist(data.watchlist || []);
 
-        // Update stats based on watchlist
-        if (data.watchlist) {
-          setStats({
-            ...stats,
-            coursesInProgress: Math.min(data.watchlist.length, 3), // Assuming some courses are in progress
-            coursesCompleted: Math.floor(Math.random() * 5), // Placeholder for completed courses
-            totalHoursLearned: Math.floor(Math.random() * 50) // Placeholder for hours learned
-          });
-        }
+        // Update saved courses count in stats
+        setStats(prevStats => ({
+          ...prevStats,
+          savedCourses: data.watchlist ? data.watchlist.length : 0
+        }));
       } else {
         console.error('Failed to fetch watchlist:', response.status, response.statusText);
       }
@@ -59,9 +58,10 @@ function Dashboard() {
     }
   };
 
-  // Fetch user's progress data
+  // Fetch user's progress data for Continue Watching and stats
   const fetchUserProgress = async () => {
     try {
+      console.log('Fetching user progress data...');
       const response = await fetch(`${API}/progress`, {
         method: 'GET',
         headers: {
@@ -72,7 +72,14 @@ function Dashboard() {
 
       if (response.ok) {
         const data = await response.json();
-        setCourseProgress(data.progress || []);
+        console.log('Progress data:', data);
+
+        // Filter out any invalid progress entries
+        const validProgress = data.progress ? data.progress.filter(
+          course => course.courseId && typeof course.courseId === 'object'
+        ) : [];
+
+        setCourseProgress(validProgress);
 
         // Calculate stats based on progress
         let inProgress = 0;
@@ -82,30 +89,40 @@ function Dashboard() {
         // Filter courses in progress for "Continue Watching" section
         const inProgressCourses = [];
 
-        data.progress.forEach(course => {
+        validProgress.forEach(course => {
+          // Ensure we have valid data
+          if (!course.courseId || typeof course.courseId !== 'object') {
+            console.warn('Invalid course progress entry:', course);
+            return;
+          }
+
           if (course.status === 'in-progress') {
             inProgress++;
-            // Add to continue watching if it has a courseId reference
-            if (course.courseId && typeof course.courseId === 'object') {
-              inProgressCourses.push({
-                ...course,
-                lastWatched: course.lastAccessedAt,
-                progress: course.progress || 0
-              });
-            }
+            // Add to continue watching
+            inProgressCourses.push({
+              ...course,
+              lastWatched: course.lastAccessedAt || course.updatedAt,
+              progress: course.progress || 0
+            });
           } else if (course.status === 'completed') {
             completed++;
           }
+
+          // Add up total learning hours
           totalHours += course.totalHoursSpent || 0;
         });
 
         // Sort by last accessed (most recent first)
-        inProgressCourses.sort((a, b) =>
-          new Date(b.lastWatched) - new Date(a.lastWatched)
-        );
+        inProgressCourses.sort((a, b) => {
+          const dateA = new Date(a.lastWatched || 0);
+          const dateB = new Date(b.lastWatched || 0);
+          return dateB - dateA;
+        });
 
+        console.log('Continue watching courses:', inProgressCourses);
         setContinueWatchingCourses(inProgressCourses);
 
+        // Update stats with real data
         setStats(prev => ({
           ...prev,
           coursesInProgress: inProgress,
@@ -113,25 +130,29 @@ function Dashboard() {
           totalHoursLearned: Math.round(totalHours)
         }));
 
-        // If there's at least one course in progress, select it
+        // If there's at least one course in progress, select it for the dashboard
         if (inProgressCourses.length > 0) {
           setSelectedCourse(inProgressCourses[0].courseId);
           setSelectedCourseProgress(inProgressCourses[0]);
-        } else if (data.progress && data.progress.length > 0) {
-          const firstCourse = data.progress[0].courseId;
+        } else if (validProgress.length > 0) {
+          // Otherwise, select the first course with progress
+          const firstCourse = validProgress[0].courseId;
           setSelectedCourse(firstCourse);
-          setSelectedCourseProgress(data.progress[0]);
+          setSelectedCourseProgress(validProgress[0]);
         }
+      } else {
+        console.error('Failed to fetch progress:', response.status, response.statusText);
       }
     } catch (error) {
       console.error('Error fetching user progress:', error);
     }
   };
 
-  // Fetch user's activity
+  // Fetch user's activity for the activity feed
   const fetchUserActivity = async () => {
     try {
-      const response = await fetch(`${API}/progress/activity`, {
+      console.log('Fetching user activity data...');
+      const response = await fetch(`${API}/activity`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -141,49 +162,125 @@ function Dashboard() {
 
       if (response.ok) {
         const data = await response.json();
-        setActivities(data.activities || []);
+        console.log('Activity data:', data);
 
-        // Update last active date
-        if (data.activities && data.activities.length > 0) {
+        // Ensure we have valid activity data
+        const validActivities = data.activities ? data.activities.filter(
+          activity => activity && activity.timestamp
+        ) : [];
+
+        setActivities(validActivities);
+
+        // Update last active date from the most recent activity
+        if (validActivities.length > 0) {
+          // Sort activities by timestamp (newest first)
+          validActivities.sort((a, b) => {
+            const dateA = new Date(a.timestamp || 0);
+            const dateB = new Date(b.timestamp || 0);
+            return dateB - dateA;
+          });
+
           setStats(prev => ({
             ...prev,
-            lastActive: data.activities[0].timestamp
+            lastActive: validActivities[0].timestamp
           }));
         }
+      } else {
+        console.error('Failed to fetch activity:', response.status, response.statusText);
       }
     } catch (error) {
       console.error('Error fetching user activity:', error);
     }
   };
 
-  // Handle course selection
-  const handleCourseSelect = (course) => {
+  // Handle course selection and track the activity
+  const handleCourseSelect = async (course) => {
+    console.log('Course selected:', course);
     setSelectedCourse(course);
 
     // Find progress for this course
     const progress = courseProgress.find(p => p.courseId._id === course._id);
     setSelectedCourseProgress(progress || null);
+
+    // Track this course selection in user activity
+    if (userdata?._id && token) {
+      try {
+        console.log('Tracking course selection activity');
+        const response = await fetch(`${API}/activity/add`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            courseId: course._id,
+            activityType: 'course_select',
+            details: {
+              courseTitle: course.course_title,
+              action: 'Selected from dashboard'
+            }
+          })
+        });
+
+        if (response.ok) {
+          console.log('Activity tracked successfully');
+          // Refresh activity data
+          fetchUserActivity();
+        }
+      } catch (error) {
+        console.error('Error tracking course selection:', error);
+      }
+    }
   };
 
-  // Handle progress update
-  const handleProgressUpdate = (updatedProgress) => {
-    // Update the progress in the courseProgress array
+  // Handle progress update and store in database
+  const handleProgressUpdate = async (updatedProgress) => {
+    console.log('Progress update received:', updatedProgress);
+
+    // First, update the local state
     setCourseProgress(prev => {
-      const newProgress = prev.map(p =>
-        p._id === updatedProgress._id ? updatedProgress : p
-      );
+      // Find the course to update or add it if it doesn't exist
+      const exists = prev.some(p => p._id === updatedProgress._id);
+      const newProgress = exists
+        ? prev.map(p => p._id === updatedProgress._id ? updatedProgress : p)
+        : [...prev, updatedProgress];
 
       // Update continue watching courses
       const updatedContinueWatching = newProgress
         .filter(course => course.status === 'in-progress' && course.courseId)
         .map(course => ({
           ...course,
-          lastWatched: course.lastAccessedAt,
+          lastWatched: course.lastAccessedAt || course.updatedAt,
           progress: course.progress || 0
         }))
-        .sort((a, b) => new Date(b.lastWatched) - new Date(a.lastWatched));
+        .sort((a, b) => {
+          const dateA = new Date(a.lastWatched || 0);
+          const dateB = new Date(b.lastWatched || 0);
+          return dateB - dateA;
+        });
 
       setContinueWatchingCourses(updatedContinueWatching);
+
+      // Update stats based on new progress data
+      let inProgress = 0;
+      let completed = 0;
+      let totalHours = 0;
+
+      newProgress.forEach(course => {
+        if (course.status === 'in-progress') {
+          inProgress++;
+        } else if (course.status === 'completed') {
+          completed++;
+        }
+        totalHours += course.totalHoursSpent || 0;
+      });
+
+      setStats(prev => ({
+        ...prev,
+        coursesInProgress: inProgress,
+        coursesCompleted: completed,
+        totalHoursLearned: Math.round(totalHours)
+      }));
 
       return newProgress;
     });
@@ -193,8 +290,39 @@ function Dashboard() {
       setSelectedCourseProgress(updatedProgress);
     }
 
-    // Refresh activity data
-    fetchUserActivity();
+    // Save the progress to the database
+    if (updatedProgress.courseId && token) {
+      try {
+        console.log('Saving progress to database...');
+        const courseId = typeof updatedProgress.courseId === 'object'
+          ? updatedProgress.courseId._id
+          : updatedProgress.courseId;
+
+        const response = await fetch(`${API}/progress/${courseId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            progress: updatedProgress.progress || 0,
+            currentVideoTime: updatedProgress.currentVideoTime || 0,
+            totalHoursSpent: updatedProgress.totalHoursSpent || 0,
+            status: updatedProgress.status || 'in-progress'
+          })
+        });
+
+        if (response.ok) {
+          console.log('Progress saved successfully');
+          // Refresh activity data
+          fetchUserActivity();
+        } else {
+          console.error('Failed to save progress:', response.status, response.statusText);
+        }
+      } catch (error) {
+        console.error('Error saving progress:', error);
+      }
+    }
   };
 
   useEffect(() => {
@@ -203,10 +331,45 @@ function Dashboard() {
     fetchUserActivity();
   }, [API, token]);
 
-  // Handle watchlist update in CardBody
-  const updateWatchlist = () => {
-    fetchWatchlist();
-    fetchUserActivity(); // Refresh activity after watchlist changes
+  // Handle watchlist update in CardBody and track the activity
+  const updateWatchlist = async (course, action) => {
+    console.log(`Watchlist update: ${action} course ${course?._id}`);
+
+    // Refresh watchlist data
+    await fetchWatchlist();
+
+    // Track this watchlist action in user activity
+    if (userdata?._id && token && course) {
+      try {
+        console.log('Tracking watchlist activity');
+        const response = await fetch(`${API}/activity/add`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            courseId: course._id,
+            activityType: 'watchlist_update',
+            details: {
+              courseTitle: course.course_title,
+              action: action || 'updated'
+            }
+          })
+        });
+
+        if (response.ok) {
+          console.log('Watchlist activity tracked successfully');
+          // Refresh activity data
+          fetchUserActivity();
+        }
+      } catch (error) {
+        console.error('Error tracking watchlist activity:', error);
+      }
+    } else {
+      // Just refresh activity data
+      fetchUserActivity();
+    }
   };
 
   return (
@@ -233,7 +396,7 @@ function Dashboard() {
             </div>
             <div>
               <p className={`text-sm ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>Saved Courses</p>
-              <h3 className="text-2xl font-bold">{watchlist.length}</h3>
+              <h3 className="text-2xl font-bold">{stats.savedCourses}</h3>
             </div>
           </div>
 
@@ -282,11 +445,52 @@ function Dashboard() {
 
               {selectedCourse ? (
                 <div className="space-y-6">
-                  <YouTubePlayer
-                    videoUrl={selectedCourse.creator_youtube_link}
-                    courseId={selectedCourse._id}
-                    onProgressUpdate={handleProgressUpdate}
-                  />
+                  {/* YouTubePlayer removed from dashboard */}
+                  <div className={`p-6 rounded-lg ${isDark ? 'bg-dark-bg-secondary' : 'bg-light-bg-secondary'} border ${isDark ? 'border-dark-border' : 'border-light-border'} shadow-md`}>
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className={`text-xl font-bold ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'}`}>
+                        {selectedCourse.course_title}
+                      </h3>
+                      <Link
+                        to={`/courses/${selectedCourse._id}`}
+                        className="py-2 px-4 bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors text-sm flex items-center"
+                      >
+                        <FaPlay className="mr-2" /> Continue Watching
+                      </Link>
+                    </div>
+
+                    <div className="flex items-center mb-4">
+                      <img
+                        src={selectedCourse.course_image || 'https://via.placeholder.com/150'}
+                        alt={selectedCourse.course_title}
+                        className="w-20 h-20 object-cover rounded-md mr-4"
+                      />
+                      <div>
+                        <p className={`text-sm ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'} mb-1`}>
+                          By {selectedCourse.creator_name}
+                        </p>
+                        {selectedCourseProgress && (
+                          <div className="mt-2">
+                            <div className="flex justify-between items-center text-xs mb-1">
+                              <span className={`${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>
+                                {selectedCourseProgress.progress || 0}% complete
+                              </span>
+                              <span className="flex items-center text-primary">
+                                <FaClock className="mr-1" />
+                                {Math.round(selectedCourseProgress.totalHoursSpent || 0)}h
+                              </span>
+                            </div>
+                            <div className="w-full bg-gray-200 rounded-full h-2 dark:bg-gray-700">
+                              <div
+                                className="bg-primary h-2 rounded-full"
+                                style={{ width: `${selectedCourseProgress.progress || 0}%` }}
+                              ></div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
 
                   <CourseModules
                     courseId={selectedCourse._id}

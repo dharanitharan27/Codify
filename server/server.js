@@ -10,6 +10,7 @@ import userRouter from './routes/userRoute.js';
 import router from './routes/router.js';
 import adminRouter from './routes/adminRouter.js';
 import progressRouter from './routes/progressRoute.js';
+import activityRouter from './routes/activityRoute.js';
 dotenv.config();
 const app= express();
 
@@ -28,6 +29,7 @@ app.use("/contact",contactRouter);
 app.use("/user",userRouter);
 app.use("/api/v1/courses",coursesRouter);
 app.use("/progress",progressRouter);
+app.use("/activity",activityRouter);
 app.use("/",router)
 app.use("/admin",adminRouter);
 // app.get("/",)

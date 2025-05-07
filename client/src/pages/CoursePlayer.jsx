@@ -21,6 +21,7 @@ const CoursePlayer = () => {
   const [error, setError] = useState(null);
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [courseProgress, setCourseProgress] = useState(null);
+  const [progress, setProgress] = useState(0);
   const [inWatchlist, setInWatchlist] = useState(false);
   const apiKey=import.meta.env.VITE_YOUTUBE_API;
   // YouTube link analysis
@@ -162,6 +163,7 @@ const CoursePlayer = () => {
       if (!course || !userdata?._id || !token || !courseId) return;
 
       try {
+        // console.log('CoursePlayer: Fetching course progress for courseId:', courseId);
         const response = await fetch(`${API}/progress/${courseId}`, {
           method: 'GET',
           headers: {
@@ -172,7 +174,14 @@ const CoursePlayer = () => {
 
         if (response.ok) {
           const data = await response.json();
+          // console.log('CoursePlayer: Progress data received:', data);
           setCourseProgress(data.progress);
+          // console.log('CoursePlayer: Setting progress display to:', data.progress?.progress);
+          // Update the progress display in the UI
+          if (data.progress && typeof data.progress.progress === 'number') {
+            // console.log('CoursePlayer: Setting progress display to:', data.progress.progress);
+            setProgress(data.progress.progress);
+          }
         } else if (response.status === 404) {
           // If progress not found, it's okay - the user hasn't started this course yet
           console.log('No progress found for this course yet');
@@ -186,25 +195,17 @@ const CoursePlayer = () => {
     };
 
     fetchProgress();
-  }, []);
-  // }, [course, userdata, token, API, courseId]);
+  }, [course, userdata, token, API, courseId]);
 
   // Handle video selection from playlist
   const handleVideoSelect = (video) => {
-    console.log('CoursePlayer: Video selected from playlist:', video);
-    console.log('CoursePlayer: Current selectedVideo:', selectedVideo);
-
-    // Save current progress before switching videos
-    if (courseProgress) {
-      console.log('CoursePlayer: Current course progress:', courseProgress);
-      // In a more advanced implementation, you could store progress per video
-      // For now, we'll just update the overall course progress
+    if (!video || !video.id) {
+      return;
     }
 
     // Scroll to the video player to show the user the video is changing
     const videoPlayerElement = document.getElementById('video-player-section');
     if (videoPlayerElement) {
-      console.log('CoursePlayer: Scrolling to video player section');
       videoPlayerElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
@@ -214,15 +215,11 @@ const CoursePlayer = () => {
       videoUrl: video.videoUrl || `https://www.youtube.com/watch?v=${video.id}`
     };
 
-    console.log('CoursePlayer: Setting selected video with URL:', videoWithUrl.videoUrl);
-    console.log('CoursePlayer: Video ID:', video.id);
-
     // Force a re-render by setting to null first, then to the new video
     setSelectedVideo(null);
 
     // Use setTimeout to ensure the state update and re-render happens
     setTimeout(() => {
-      console.log('CoursePlayer: Now setting the new video after brief delay');
       setSelectedVideo(videoWithUrl);
     }, 50);
 
@@ -240,7 +237,7 @@ const CoursePlayer = () => {
             activityType: 'video_change',
             details: {
               videoId: video.id,
-              videoTitle: video.title
+              videoTitle: video.title || 'Unknown'
             }
           })
         });
@@ -250,10 +247,105 @@ const CoursePlayer = () => {
     }
   };
 
+  // Progress updating is commented out
+  /*
   // Handle progress update
   const handleProgressUpdate = (updatedProgress) => {
-    setCourseProgress(updatedProgress);
+    // Validate the progress data
+    if (!updatedProgress || typeof updatedProgress !== 'object') {
+      return;
+    }
+
+    // Update the UI with the new progress
+    setCourseProgress(prev => {
+      // Merge with previous progress data to ensure we don't lose any fields
+      const mergedProgress = {
+        ...prev,
+        ...updatedProgress,
+        // Ensure these fields are always present
+        progress: updatedProgress.progress || (prev?.progress || 0),
+        currentTime: updatedProgress.currentTime || (prev?.currentTime || 0),
+        totalHoursSpent: updatedProgress.totalHoursSpent || (prev?.totalHoursSpent || 0),
+        status: updatedProgress.status || (prev?.status || 'in-progress'),
+        // Merge video progress data if available
+        videoProgress: {
+          ...(prev?.videoProgress || {}),
+          ...(updatedProgress.videoProgress || {})
+        }
+      };
+
+      return mergedProgress;
+    });
+
+    // Save progress to database
+    saveProgressToDatabase(updatedProgress);
+
+    // Update the progress display in the UI
+    setProgress(updatedProgress.progress || 0);
   };
+  */
+
+  // Progress saving is commented out
+  /*
+  // Function to save progress to database
+  const saveProgressToDatabase = async (progressData) => {
+    if (!userdata?._id || !token || !courseId) {
+      return;
+    }
+
+    try {
+      // Create the request body with all possible fields
+      const requestBody = {
+        progress: progressData.progress || 0,
+        currentVideoTime: progressData.currentTime || 0,
+        totalHoursSpent: progressData.totalHoursSpent || 0,
+        status: progressData.status || 'in-progress',
+        videoProgress: progressData.videoProgress || {},
+        currentVideoId: progressData.currentVideoId || ''
+      };
+
+      const response = await fetch(`${API}/progress/${courseId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(requestBody)
+      });
+
+      const responseData = await response.json();
+
+      if (response.ok) {
+        // Update UI with the saved progress
+        setCourseProgress(responseData.progress);
+
+        // Track progress update activity
+        try {
+          const activityResponse = await fetch(`${API}/activity/add`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+              courseId,
+              activityType: 'progress_update',
+              details: {
+                progress: progressData.progress || 0,
+                videoTime: progressData.currentTime || 0,
+                hoursSpent: progressData.totalHoursSpent || 0
+              }
+            })
+          });
+        } catch (activityError) {
+          console.error('Error tracking activity:', activityError);
+        }
+      }
+    } catch (error) {
+      console.error('Error saving progress:', error);
+    }
+  };
+  */
 
   // Toggle watchlist
   const toggleWatchlist = async () => {
@@ -344,9 +436,24 @@ const CoursePlayer = () => {
                 alt={course.creator_name}
                 className="w-10 h-10 rounded-full mr-3"
               />
-              <span className={`${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>
-                {course.creator_name}
-              </span>
+              <div className="flex flex-col">
+                <span className={`${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>
+                  {course.creator_name}
+                </span>
+
+                {/* Progress indicator */}
+                <div className="flex items-center mt-1">
+                  <div className="w-32 bg-gray-200 rounded-full h-1.5 dark:bg-gray-700 mr-2">
+                    <div
+                      className="bg-primary h-1.5 rounded-full transition-all duration-300"
+                      style={{ width: `${progress}%` }}
+                    ></div>
+                  </div>
+                  <span className="text-xs text-gray-500 dark:text-gray-400">
+                    {progress}% completed
+                  </span>
+                </div>
+              </div>
             </div>
 
             <div className="flex space-x-3">
@@ -404,23 +511,19 @@ const CoursePlayer = () => {
 
               {/* Video Player */}
               {selectedVideo ? (
-                <>
-                  {console.log('CoursePlayer: Rendering YouTubePlayer with selected video URL:', selectedVideo.videoUrl)}
-                  <YouTubePlayer
-                    key={selectedVideo.id} // Add key to force re-render when video changes
-                    videoUrl={selectedVideo.videoUrl}
-                    courseId={courseId}
-                    onProgressUpdate={handleProgressUpdate}
-                  />
-                </>
+                <YouTubePlayer
+                  key={selectedVideo.id} // Add key to force re-render when video changes
+                  videoUrl={selectedVideo.videoUrl}
+                  courseId={courseId}
+                  videoId={selectedVideo.id}
+                />
               ) : youtubeData.videoId ? (
                 <div>
-                  {console.log('CoursePlayer: Rendering YouTubePlayer with course videoId:', youtubeData.videoId)}
                   <YouTubePlayer
                     key={youtubeData.videoId} // Add key to force re-render when video changes
                     videoUrl={`https://www.youtube.com/watch?v=${youtubeData.videoId}`}
                     courseId={courseId}
-                    onProgressUpdate={handleProgressUpdate}
+                    videoId={youtubeData.videoId}
                   />
                 </div>
               ) : (

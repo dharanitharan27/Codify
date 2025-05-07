@@ -39,14 +39,16 @@ const CardBody = ({ course, watchlist = [], updateWatchlist, onClick }) => {
   const isInWatchlist = watchlist.some(item => item._id === course._id);
 
   const handleWatchlist = async () => {
-    if (!userdata._id) {
-      toast.info("Not Logged in !");
+    if (!userdata?._id) {
+      toast.info("Please log in to save courses!");
       setIsLoading(false);
       return;
     }
 
     try {
       setIsLoading(true);
+      console.log(`${isInWatchlist ? 'Removing from' : 'Adding to'} watchlist:`, course._id);
+
       const response = await fetch(`${API}/user/addToWatchlist`, {
         method: 'POST',
         headers: {
@@ -62,11 +64,22 @@ const CardBody = ({ course, watchlist = [], updateWatchlist, onClick }) => {
       }
 
       const result = await response.json();
-      console.log("Success:", result);
-      toast.success("Watchlist Updated!");
-      updateWatchlist();
+      console.log("Watchlist update success:", result);
+
+      // Show appropriate toast message
+      if (isInWatchlist) {
+        toast.success("Course removed from saved courses");
+      } else {
+        toast.success("Course added to saved courses");
+      }
+
+      // Call the updateWatchlist function with the course and action
+      if (typeof updateWatchlist === 'function') {
+        updateWatchlist(course, isInWatchlist ? 'removed' : 'added');
+      }
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error updating watchlist:", error);
+      toast.error("Failed to update saved courses");
     } finally {
       setIsLoading(false);
     }
