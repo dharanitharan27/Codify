@@ -23,7 +23,7 @@ import AddNewCourse from "./layouts/CourseLayout/AddNewCourse.jsx";
 import Footer from "./components/Footer.jsx";
 import { LoadingProvider } from "./components/loadingContext.jsx";
 import { useTheme } from "./context/ThemeContext";
-
+import 'react-toastify/ReactToastify.css'
 function App() {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
@@ -35,7 +35,7 @@ function App() {
           <header className="fixed top-0 z-50 w-full">
             <NavBar />
           </header>
-          <main className="flex-grow">
+          <main className="flex-grow pt-16">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/about" element={<About />} />
