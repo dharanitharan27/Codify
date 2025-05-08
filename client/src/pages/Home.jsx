@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { useAuth } from "../store/auth";
 import { useTheme } from "../context/ThemeContext";
@@ -16,10 +16,18 @@ function Home() {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
+  const [randomSize, setRandomSize] = useState(30);
+  useEffect(()=>{
+    const interval = setInterval(() => {
+      setRandomSize(Math.floor(Math.random() * 8)*10 + 40);
+    }, 5000);
+    return () => clearInterval(interval);
+  },[])
+  console.log("random size", randomSize);
   return (
     <div className={`relative min-h-screen-minus-nav overflow-hidden ${isDark ? 'bg-dark-bg-primary text-dark-text-primary' : 'bg-light-bg-primary text-light-text-primary'} z-10 flex flex-col justify-center items-center py-16`}>
       {/* Background with gradient */}
-      <div className={`absolute top-0 left-0 w-full h-full -z-10 bg-[size:30px_30px] ${isDark ? 'bg-grid-pattern-dark' : 'bg-grid-pattern-light'}`}></div>
+      <div className={`absolute top-0 left-0 w-full h-full -z-10 ${isDark ? 'bg-grid-pattern-dark' : 'bg-grid-pattern-light'}`} style={{backgroundSize: `${randomSize}px ${randomSize}px`}} ></div>
 
       {/* Main Content */}
       <div className="relative z-20 w-full max-w-7xl mx-auto px-4">

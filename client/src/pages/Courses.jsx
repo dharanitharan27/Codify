@@ -46,7 +46,7 @@ const Courses = () => {
       if (response.ok) {
         const data = await response.json();
         setWatchlist(data.watchlist || []); // Set to an empty array if watchlist is undefined
-        console.log("Watchlist data is ", data.watchlist || []);
+        //console.log("Watchlist data is ", data.watchlist || []);
       } else {
         console.error('Failed to fetch watchlist:', response.status, response.statusText);
       }
@@ -68,7 +68,7 @@ const Courses = () => {
 
   // Filter courses based on selected category and search term - memoized for performance
   const filteredCourses = useMemo(() => {
-    console.log('Recalculating filtered courses');
+    //console.log('Recalculating filtered courses');
     return coursesData
       .filter(course =>
         (selectedCategory ? course.course_category === selectedCategory : true) &&

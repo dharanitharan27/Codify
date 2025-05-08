@@ -1,7 +1,7 @@
 import React from "react";
-import { Navigate, Outlet } from "react-router";
+import { Navigate, Outlet, useNavigate } from "react-router";
 import { NavLink } from "react-router-dom";
-import { FaUser, FaHome, FaChevronRight } from "react-icons/fa";
+import { FaUser, FaHome, FaChevronRight, FaChartLine } from "react-icons/fa";
 import { MdFeedback, MdDashboard } from "react-icons/md";
 import { BiSolidBook } from "react-icons/bi";
 import { useAuth } from "../store/auth";
@@ -12,6 +12,7 @@ function AdminLayout() {
   const { userdata } = useAuth();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
+  const navigate = useNavigate();
 
   if (!userdata.isAdmin) {
     toast.error("Access denied. Admin privileges required.");
@@ -58,6 +59,23 @@ function AdminLayout() {
                   `}
                 >
                   <FaHome className="text-lg" />
+                  <span className="font-medium">Home</span>
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to="/dashboard"
+                  className={({ isActive }) => `
+                    flex items-center gap-3 px-4 py-3 rounded-lg transition-colors
+                    ${isActive
+                      ? `bg-primary text-white`
+                      : `${isDark
+                          ? 'text-dark-text-primary hover:bg-dark-bg-tertiary'
+                          : 'text-light-text-primary hover:bg-light-bg-tertiary'}`
+                    }
+                  `}
+                >
+                  <FaChartLine className="text-lg" />
                   <span className="font-medium">Dashboard</span>
                 </NavLink>
               </li>
@@ -135,7 +153,7 @@ function AdminLayout() {
         <div className="flex-1 p-4 md:p-8 overflow-x-auto">
           {/* Breadcrumb */}
           <div className="mb-6 flex items-center gap-2 text-sm">
-            <span className={isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}>Admin</span>
+            <span className={`cursor-pointer hover:text-primary ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'} `} onClick={()=>navigate("/admin") } >Admin</span>
             <FaChevronRight className="text-xs text-primary" />
             <span className="font-medium">Dashboard</span>
           </div>

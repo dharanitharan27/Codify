@@ -33,7 +33,7 @@ function Dashboard() {
   // Fetch user's watchlist (Saved Courses) - memoized to prevent unnecessary re-renders
   const fetchWatchlist = useCallback(async () => {
     try {
-      console.log('Fetching user watchlist...');
+      //console.log('Fetching user watchlist...');
       const response = await fetch(`${API}/user/watchlist`, {
         method: 'GET',
         headers: {
@@ -44,7 +44,7 @@ function Dashboard() {
 
       if (response.ok) {
         const data = await response.json();
-        console.log('Watchlist data:', data);
+        //console.log('Watchlist data:', data);
         setWatchlist(data.watchlist || []);
 
         // Update saved courses count in stats
@@ -63,7 +63,7 @@ function Dashboard() {
   // Fetch user's progress data for Continue Watching and stats - memoized to prevent unnecessary re-renders
   const fetchUserProgress = useCallback(async () => {
     try {
-      console.log('Fetching user progress data...');
+      //console.log('Fetching user progress data...');
       const response = await fetch(`${API}/progress`, {
         method: 'GET',
         headers: {
@@ -74,7 +74,7 @@ function Dashboard() {
 
       if (response.ok) {
         const data = await response.json();
-        console.log('Progress data:', data);
+        //console.log('Progress data:', data);
 
         // Filter out any invalid progress entries
         const validProgress = data.progress ? data.progress.filter(
@@ -121,7 +121,7 @@ function Dashboard() {
           return dateB - dateA;
         });
 
-        console.log('Continue watching courses:', inProgressCourses);
+        //console.log('Continue watching courses:', inProgressCourses);
         setContinueWatchingCourses(inProgressCourses);
 
         // Update stats with real data
@@ -153,7 +153,7 @@ function Dashboard() {
   // Fetch user's activity for the activity feed - memoized to prevent unnecessary re-renders
   const fetchUserActivity = useCallback(async () => {
     try {
-      console.log('Fetching user activity data...');
+      //console.log('Fetching user activity data...');
       const response = await fetch(`${API}/activity`, {
         method: 'GET',
         headers: {
@@ -164,7 +164,7 @@ function Dashboard() {
 
       if (response.ok) {
         const data = await response.json();
-        console.log('Activity data:', data);
+        //console.log('Activity data:', data);
 
         // Ensure we have valid activity data
         const validActivities = data.activities ? data.activities.filter(
@@ -197,7 +197,7 @@ function Dashboard() {
 
   // Handle course selection and track the activity - memoized to prevent unnecessary re-renders
   const handleCourseSelect = useCallback(async (course) => {
-    console.log('Course selected:', course);
+    //console.log('Course selected:', course);
     setSelectedCourse(course);
 
     // Find progress for this course
@@ -207,7 +207,7 @@ function Dashboard() {
     // Track this course selection in user activity
     if (userdata?._id && token) {
       try {
-        console.log('Tracking course selection activity');
+        //console.log('Tracking course selection activity');
         const response = await fetch(`${API}/activity/add`, {
           method: 'POST',
           headers: {
@@ -225,7 +225,7 @@ function Dashboard() {
         });
 
         if (response.ok) {
-          console.log('Activity tracked successfully');
+          //console.log('Activity tracked successfully');
           // Refresh activity data
           fetchUserActivity();
         }
@@ -237,7 +237,7 @@ function Dashboard() {
 
   // Handle progress update and store in database - memoized to prevent unnecessary re-renders
   const handleProgressUpdate = useCallback(async (updatedProgress) => {
-    console.log('Progress update received:', updatedProgress);
+    //console.log('Progress update received:', updatedProgress);
 
     // First, update the local state
     setCourseProgress(prev => {
@@ -295,7 +295,7 @@ function Dashboard() {
     // Save the progress to the database
     if (updatedProgress.courseId && token) {
       try {
-        console.log('Saving progress to database...');
+        //console.log('Saving progress to database...');
         const courseId = typeof updatedProgress.courseId === 'object'
           ? updatedProgress.courseId._id
           : updatedProgress.courseId;
@@ -315,7 +315,7 @@ function Dashboard() {
         });
 
         if (response.ok) {
-          console.log('Progress saved successfully');
+          //console.log('Progress saved successfully');
           // Refresh activity data
           fetchUserActivity();
         } else {
@@ -335,7 +335,7 @@ function Dashboard() {
 
   // Handle watchlist update in CardBody and track the activity - memoized to prevent unnecessary re-renders
   const updateWatchlist = useCallback(async (course, action) => {
-    console.log(`Watchlist update: ${action} course ${course?._id}`);
+    //console.log(`Watchlist update: ${action} course ${course?._id}`);
 
     // Refresh watchlist data
     await fetchWatchlist();
@@ -343,7 +343,7 @@ function Dashboard() {
     // Track this watchlist action in user activity
     if (userdata?._id && token && course) {
       try {
-        console.log('Tracking watchlist activity');
+        //console.log('Tracking watchlist activity');
         const response = await fetch(`${API}/activity/add`, {
           method: 'POST',
           headers: {
@@ -361,7 +361,7 @@ function Dashboard() {
         });
 
         if (response.ok) {
-          console.log('Watchlist activity tracked successfully');
+          //console.log('Watchlist activity tracked successfully');
           // Refresh activity data
           fetchUserActivity();
         }
