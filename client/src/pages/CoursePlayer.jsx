@@ -171,7 +171,7 @@ const CoursePlayer = () => {
         }
       } else if (response.status === 404) {
         // If progress not found, it's okay - the user hasn't started this course yet
-        console.log('No progress found for this course yet');
+        //console.log('No progress found for this course yet');
         // We'll create progress when the user starts watching
       } else {
         console.error('Error fetching course progress:', response.statusText);

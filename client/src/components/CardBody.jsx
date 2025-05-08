@@ -47,7 +47,7 @@ const CardBody = ({ course, watchlist = [], updateWatchlist, onClick }) => {
 
     try {
       setIsLoading(true);
-      console.log(`${isInWatchlist ? 'Removing from' : 'Adding to'} watchlist:`, course._id);
+      //console.log(`${isInWatchlist ? 'Removing from' : 'Adding to'} watchlist:`, course._id);
 
       const response = await fetch(`${API}/user/addToWatchlist`, {
         method: 'POST',
@@ -64,7 +64,7 @@ const CardBody = ({ course, watchlist = [], updateWatchlist, onClick }) => {
       }
 
       const result = await response.json();
-      console.log("Watchlist update success:", result);
+      //console.log("Watchlist update success:", result);
 
       // Show appropriate toast message
       if (isInWatchlist) {

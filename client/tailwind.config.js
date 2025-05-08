@@ -103,7 +103,7 @@ export default {
         'screen-minus-nav': 'calc(100dvh - 85px)',
       },
       backgroundImage: {
-        'grid-pattern-dark': 'linear-gradient(to right, rgba(255, 255, 255, 0.1) 1px, transparent 1.5px), linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 1px, transparent 1.5px)',
+        'grid-pattern-dark': 'linear-gradient(to right, rgba(255, 255, 255, 0.1) 3px, transparent 1.5px), linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 1px, transparent 1.5px)',
         'grid-pattern-light': 'linear-gradient(to right, rgba(0, 0, 0, 0.07) 1px, transparent 1.5px), linear-gradient(to bottom, rgba(0, 0, 0, 0.07) 1px, transparent 1.5px)',
       },
       gridTemplateColumns: {

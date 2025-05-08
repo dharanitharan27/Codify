@@ -53,10 +53,10 @@ function AdminUpdate() {
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setUserData({
-      ...userData,
+    setUserData(prevState => ({
+      ...prevState,
       [name]: type === 'checkbox' ? checked : value,
-    });
+    }));
   };
 
   const handleSubmit = async (e) => {

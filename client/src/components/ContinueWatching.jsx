@@ -54,7 +54,7 @@ const ContinueWatching = ({ courses, onCourseSelect }) => {
 
   // Handle course click - either use onCourseSelect or navigate
   const handleCourseClick = (course) => {
-    console.log('Continue watching course selected:', course);
+    //console.log('Continue watching course selected:', course);
 
     // If onCourseSelect prop is provided, use it
     if (onCourseSelect && typeof onCourseSelect === 'function') {
