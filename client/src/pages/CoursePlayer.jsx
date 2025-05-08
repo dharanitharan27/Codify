@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../store/auth';
 import { useTheme } from '../context/ThemeContext';
@@ -32,173 +32,162 @@ const CoursePlayer = () => {
     videoId: null
   });
 
-  // Fetch course data
+  // Memoized fetch course function
+  const fetchCourse = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      // Fetch all courses and filter for the specific one
+      const response = await fetch(`${API}/api/v1/courses`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch courses');
+      }
+
+      const coursesData = await response.json();
+      const courseData = coursesData.data.find(course => course._id === courseId);
+
+      if (!courseData) {
+        throw new Error('Course not found');
+      }
+
+      setCourse(courseData);
+    } catch (err) {
+      console.error('Error fetching course:', err);
+      setError(err.message || 'Failed to load course');
+    } finally {
+      setLoading(false);
+    }
+  }, [API, courseId]);
+
   // 1. First useEffect: Fetch the course data only
   useEffect(() => {
-    const fetchCourse = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-
-        // Fetch all courses and filter for the specific one
-        const response = await fetch(`${API}/api/v1/courses`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch courses');
-        }
-
-        const coursesData = await response.json();
-        const courseData = coursesData.data.find(course => course._id === courseId);
-
-        if (!courseData) {
-          throw new Error('Course not found');
-        }
-
-        setCourse(courseData);
-      } catch (err) {
-        console.error('Error fetching course:', err);
-        setError(err.message || 'Failed to load course');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     if (courseId) {
       fetchCourse();
     }
-  }, []); // Only depend on courseId and API
-  // }, [courseId, API]); // Only depend on courseId and API
+  }, [fetchCourse]);
+
+  // Memoized check watchlist function
+  const checkWatchlist = useCallback(async () => {
+    if (!course || !userdata?._id || !token) return;
+
+    try {
+      const watchlistResponse = await fetch(`${API}/user/watchlist`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (watchlistResponse.ok) {
+        const watchlistData = await watchlistResponse.json();
+        const isInWatchlist = watchlistData.watchlist.some(item => item._id === courseId);
+        setInWatchlist(isInWatchlist);
+      }
+    } catch (error) {
+      console.error('Error checking watchlist:', error);
+    }
+  }, [course, userdata, token, API, courseId]);
 
   // 2. Second useEffect: Check if course is in watchlist (depends on course and userdata)
   useEffect(() => {
-    const checkWatchlist = async () => {
-      if (!course || !userdata?._id || !token) return;
-
-      try {
-        const watchlistResponse = await fetch(`${API}/user/watchlist`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          }
-        });
-
-        if (watchlistResponse.ok) {
-          const watchlistData = await watchlistResponse.json();
-          const isInWatchlist = watchlistData.watchlist.some(item => item._id === courseId);
-          setInWatchlist(isInWatchlist);
-        }
-      } catch (error) {
-        console.error('Error checking watchlist:', error);
-      }
-    };
-
     checkWatchlist();
-  }, []);
-  // }, [course, userdata, token, API, courseId]);
+  }, [checkWatchlist]);
+
+  // Memoized YouTube link analysis function
+  const analyzeYouTubeLink = useCallback(() => {
+    if (!course || !course.creator_youtube_link) {
+      return;
+    }
+
+    try {
+      // Ensure the URL is properly formatted
+      let url = course.creator_youtube_link;
+      if (!url.startsWith('http')) {
+        url = 'https://' + url;
+      }
+
+      const linkType = getYouTubeUrlType(url);
+
+      let playlistId = null;
+      let videoId = null;
+
+      if (linkType.type === 'playlist') {
+        playlistId = linkType.id;
+      } else if (linkType.type === 'video') {
+        videoId = linkType.id;
+
+        // Check if the video URL also contains a playlist ID
+        playlistId = extractPlaylistId(url);
+      } else if (linkType.type === 'channel') {
+        // For channels, we don't have a specific video to show
+      } else {
+        // Try to extract a video ID directly as a fallback
+        videoId = extractVideoId(url);
+      }
+
+      setYoutubeData({
+        type: linkType.type,
+        id: linkType.id,
+        playlistId,
+        videoId
+      });
+    } catch (error) {
+      console.error('Error analyzing YouTube URL:', error);
+    }
+  }, [course]);
 
   // 3. Third useEffect: Analyze YouTube link (depends on course)
   useEffect(() => {
-    const analyzeYouTubeLink = () => {
-      if (!course || !course.creator_youtube_link) {
-        console.log('No YouTube link provided for this course');
-        return;
-      }
-
-      try {
-        console.log('Analyzing YouTube link:', course.creator_youtube_link);
-
-        // Ensure the URL is properly formatted
-        let url = course.creator_youtube_link;
-        if (!url.startsWith('http')) {
-          url = 'https://' + url;
-        }
-
-        const linkType = getYouTubeUrlType(url);
-        console.log('Link type detected:', linkType);
-
-        let playlistId = null;
-        let videoId = null;
-
-        if (linkType.type === 'playlist') {
-          playlistId = linkType.id;
-        } else if (linkType.type === 'video') {
-          videoId = linkType.id;
-
-          // Check if the video URL also contains a playlist ID
-          playlistId = extractPlaylistId(url);
-        } else if (linkType.type === 'channel') {
-          // For channels, we don't have a specific video to show
-          console.log('Channel URL detected, no specific video to show');
-        } else {
-          // Try to extract a video ID directly as a fallback
-          videoId = extractVideoId(url);
-          if (videoId) {
-            console.log('Extracted video ID as fallback:', videoId);
-          }
-        }
-
-        setYoutubeData({
-          type: linkType.type,
-          id: linkType.id,
-          playlistId,
-          videoId
-        });
-      } catch (error) {
-        console.error('Error analyzing YouTube URL:', error);
-      }
-    };
-
     analyzeYouTubeLink();
-  }, [course]);
+  }, [analyzeYouTubeLink]);
+
+  // Memoized fetch progress function
+  const fetchProgress = useCallback(async () => {
+    if (!course || !userdata?._id || !token || !courseId) return;
+
+    try {
+      const response = await fetch(`${API}/progress/${courseId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setCourseProgress(data.progress);
+        // Update the progress display in the UI
+        if (data.progress && typeof data.progress.progress === 'number') {
+          setProgress(data.progress.progress);
+        }
+      } else if (response.status === 404) {
+        // If progress not found, it's okay - the user hasn't started this course yet
+        console.log('No progress found for this course yet');
+        // We'll create progress when the user starts watching
+      } else {
+        console.error('Error fetching course progress:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error fetching course progress:', error);
+    }
+  }, [course, userdata, token, API, courseId]);
 
   // 4. Fourth useEffect: Fetch course progress (depends on course and userdata)
   useEffect(() => {
-    const fetchProgress = async () => {
-      if (!course || !userdata?._id || !token || !courseId) return;
-
-      try {
-        // console.log('CoursePlayer: Fetching course progress for courseId:', courseId);
-        const response = await fetch(`${API}/progress/${courseId}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          }
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          // console.log('CoursePlayer: Progress data received:', data);
-          setCourseProgress(data.progress);
-          // console.log('CoursePlayer: Setting progress display to:', data.progress?.progress);
-          // Update the progress display in the UI
-          if (data.progress && typeof data.progress.progress === 'number') {
-            // console.log('CoursePlayer: Setting progress display to:', data.progress.progress);
-            setProgress(data.progress.progress);
-          }
-        } else if (response.status === 404) {
-          // If progress not found, it's okay - the user hasn't started this course yet
-          console.log('No progress found for this course yet');
-          // We'll create progress when the user starts watching
-        } else {
-          console.error('Error fetching course progress:', response.statusText);
-        }
-      } catch (error) {
-        console.error('Error fetching course progress:', error);
-      }
-    };
-
     fetchProgress();
-  }, [course, userdata, token, API, courseId]);
+  }, [fetchProgress]);
 
-  // Handle video selection from playlist
-  const handleVideoSelect = (video) => {
+  // Handle video selection from playlist - memoized to prevent unnecessary re-renders
+  const handleVideoSelect = useCallback((video) => {
     if (!video || !video.id) {
       return;
     }
@@ -245,7 +234,7 @@ const CoursePlayer = () => {
         console.error('Error tracking video selection:', error);
       }
     }
-  };
+  }, [userdata, token, API, courseId]);
 
   // Progress updating is commented out
   /*
@@ -347,8 +336,8 @@ const CoursePlayer = () => {
   };
   */
 
-  // Toggle watchlist
-  const toggleWatchlist = async () => {
+  // Toggle watchlist - memoized to prevent unnecessary re-renders
+  const toggleWatchlist = useCallback(async () => {
     if (!userdata?._id) {
       navigate('/login');
       return;
@@ -370,10 +359,10 @@ const CoursePlayer = () => {
     } catch (error) {
       console.error('Error updating watchlist:', error);
     }
-  };
+  }, [userdata, navigate, API, token, courseId, inWatchlist]);
 
-  // Share course
-  const shareCourse = () => {
+  // Share course - memoized to prevent unnecessary re-renders
+  const shareCourse = useCallback(() => {
     if (navigator.share) {
       navigator.share({
         title: course?.course_title,
@@ -385,7 +374,7 @@ const CoursePlayer = () => {
       navigator.clipboard.writeText(window.location.href);
       alert('Link copied to clipboard!');
     }
-  };
+  }, [course]);
 
   if (loading) {
     return (

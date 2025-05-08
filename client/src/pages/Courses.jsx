@@ -1,10 +1,12 @@
 // src/components/Courses.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense, useMemo, useCallback } from 'react';
 import { useAuth } from '../store/auth';
 import { useTheme } from '../context/ThemeContext';
-import SearchBar from '../components/SearchBar';
-import CardBody from '../components/CardBody';
 import { useLoading } from '../components/loadingContext';
+
+// Lazy loaded components
+const SearchBar = lazy(() => import('../components/SearchBar'));
+const CardBody = lazy(() => import('../components/CardBody'));
 
 const Courses = () => {
   const { fetchCoursesData, coursesData, API } = useAuth();
@@ -59,27 +61,32 @@ const Courses = () => {
     fetchWatchlist(); // Fetch the watchlist when component mounts
   }, [API, token]);
 
-  // Handle watchlist update in CardBody
-  const updateWatchlist = () => {
+  // Handle watchlist update in CardBody - memoized to prevent unnecessary re-renders
+  const updateWatchlist = useCallback(() => {
     fetchWatchlist(); // Re-fetch watchlist to get the latest data
-  };
-  // Filter courses based on selected category and search term
-  const filteredCourses = coursesData
-    .filter(course =>
-      (selectedCategory ? course.course_category === selectedCategory : true) &&
-      (course.course_title.toLowerCase().includes(searchTerm.toLowerCase())
-       || course.description.toLowerCase().includes(searchTerm.toLowerCase())
-       || course.creator_name.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    );
+  }, []);
 
-  const handleCategorySelect = (category) => {
+  // Filter courses based on selected category and search term - memoized for performance
+  const filteredCourses = useMemo(() => {
+    console.log('Recalculating filtered courses');
+    return coursesData
+      .filter(course =>
+        (selectedCategory ? course.course_category === selectedCategory : true) &&
+        (course.course_title.toLowerCase().includes(searchTerm.toLowerCase())
+         || course.description.toLowerCase().includes(searchTerm.toLowerCase())
+         || course.creator_name.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      );
+  }, [coursesData, selectedCategory, searchTerm]);
+
+  // Memoized category selection handler
+  const handleCategorySelect = useCallback((category) => {
     if (category === 'All') {
       setSelectedCategory(null); // Reset to show all courses
     } else {
       setSelectedCategory(category);
     }
-  };
+  }, []);
 
   return (
     <div className={`relative min-h-screen-minus-nav p-6 overflow-hidden z-10 ${isDark ? 'bg-dark-bg-primary' : 'bg-light-bg-primary'}`}>
@@ -92,7 +99,13 @@ const Courses = () => {
           {selectedCategory || 'All Courses'}
         </h2>
 
-        <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+        <Suspense fallback={
+          <div className="flex items-center justify-center h-12 mb-6">
+            <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-primary"></div>
+          </div>
+        }>
+          <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+        </Suspense>
 
         {/* Categories */}
         <div className="flex flex-wrap justify-center gap-3 mb-10 sticky top-[85px] bg-opacity-80 backdrop-blur-sm py-4 z-30
@@ -132,11 +145,17 @@ const Courses = () => {
           {filteredCourses.length > 0 ? (
             filteredCourses.map(course => (
               <div key={course._id}>
-                <CardBody
-                  course={course}
-                  watchlist={watchlist}
-                  updateWatchlist={updateWatchlist}
-                />
+                <Suspense fallback={
+                  <div className="w-[300px] h-[400px] flex items-center justify-center">
+                    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
+                  </div>
+                }>
+                  <CardBody
+                    course={course}
+                    watchlist={watchlist}
+                    updateWatchlist={updateWatchlist}
+                  />
+                </Suspense>
               </div>
             ))
           ) : (

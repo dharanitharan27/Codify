@@ -1,13 +1,15 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { useAuth } from "../store/auth";
 import { useTheme } from "../context/ThemeContext";
-import CreatorsContainer from "../components/HomePageComponents/CreatorsContainer";
-import ChooseUs from "../components/HomePageComponents/ChooseUs";
-import FAQ from "../components/HomePageComponents/FAQ";
-import Testimonials from "../components/HomePageComponents/Testimonials";
-import NewsLetter from "../components/HomePageComponents/NewsLetter";
-import CallToAction from "../components/HomePageComponents/CallToAction";
+
+// Lazy loaded components
+const CreatorsContainer = lazy(() => import("../components/HomePageComponents/CreatorsContainer"));
+const ChooseUs = lazy(() => import("../components/HomePageComponents/ChooseUs"));
+const FAQ = lazy(() => import("../components/HomePageComponents/FAQ"));
+const Testimonials = lazy(() => import("../components/HomePageComponents/Testimonials"));
+const NewsLetter = lazy(() => import("../components/HomePageComponents/NewsLetter"));
+const CallToAction = lazy(() => import("../components/HomePageComponents/CallToAction"));
 
 function Home() {
   const { coursesData } = useAuth();
@@ -267,7 +269,13 @@ function Home() {
           <h2 className={`text-4xl font-bold mb-12 ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'}`}>
             Meet Our <span className="text-primary">Top Creators</span>
           </h2>
-          <CreatorsContainer count={4} />
+          <Suspense fallback={
+            <div className="flex items-center justify-center h-40">
+              <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary"></div>
+            </div>
+          }>
+            <CreatorsContainer count={4} />
+          </Suspense>
         </div>
 
         {/* Roadmaps Preview Section */}
@@ -444,11 +452,45 @@ function Home() {
         </div>
 
         {/* Additional sections */}
-        <Testimonials />
-        <ChooseUs />
-        <FAQ />
-        <NewsLetter />
-        <CallToAction />
+        <Suspense fallback={
+          <div className="flex items-center justify-center h-40">
+            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary"></div>
+          </div>
+        }>
+          <Testimonials />
+        </Suspense>
+
+        <Suspense fallback={
+          <div className="flex items-center justify-center h-40">
+            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary"></div>
+          </div>
+        }>
+          <ChooseUs />
+        </Suspense>
+
+        <Suspense fallback={
+          <div className="flex items-center justify-center h-40">
+            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary"></div>
+          </div>
+        }>
+          <FAQ />
+        </Suspense>
+
+        <Suspense fallback={
+          <div className="flex items-center justify-center h-40">
+            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary"></div>
+          </div>
+        }>
+          <NewsLetter />
+        </Suspense>
+
+        <Suspense fallback={
+          <div className="flex items-center justify-center h-40">
+            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary"></div>
+          </div>
+        }>
+          <CallToAction />
+        </Suspense>
       </div>
     </div>
   );
