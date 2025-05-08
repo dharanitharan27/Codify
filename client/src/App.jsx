@@ -1,30 +1,36 @@
-import React from "react";
-import About from "./pages/About";
-import Home from "./pages/Home";
-import ContactUs from "./pages/ContactUs";
-import Signup from "./pages/Signup";
-import Login from "./pages/Login";
-import NavBar from "./components/NavBar";
-import ErrorPage from "./pages/ErrorPage";
-import LogOut from "./pages/LogOut";
-import Courses from "./pages/Courses";
-import { useAuth } from "./store/auth";
-import Loader from "./components/Loader";
+import React, { lazy, Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Dashboard from "./pages/Dashboard";
-import CoursePlayer from "./pages/CoursePlayer";
-import CourseUpdate from "./layouts/CourseLayout/CourseUpdate";
-import Roadmap from "./pages/Roadmap";
-import AdminLayout from "./layouts/AdminLayout";
-import AdminUsers from "./layouts/AdminUsers";
-import AdminContacts from "./layouts/AdminContacts";
-import AdminCourses from "./layouts/CourseLayout/AdminCourses";
-import AdminUpdate from "./layouts/AdminUpdate";
-import AddNewCourse from "./layouts/CourseLayout/AddNewCourse.jsx";
-import Footer from "./components/Footer.jsx";
-import { LoadingProvider } from "./components/loadingContext.jsx";
+import { useAuth } from "./store/auth";
 import { useTheme } from "./context/ThemeContext";
-import 'react-toastify/ReactToastify.css'
+import { LoadingProvider } from "./components/loadingContext.jsx";
+import 'react-toastify/ReactToastify.css';
+
+// Always loaded components
+import NavBar from "./components/NavBar";
+import Footer from "./components/Footer.jsx";
+import Loader from "./components/Loader";
+
+// Lazy loaded components
+const Home = lazy(() => import("./pages/Home"));
+const About = lazy(() => import("./pages/About"));
+const ContactUs = lazy(() => import("./pages/ContactUs"));
+const Signup = lazy(() => import("./pages/Signup"));
+const Login = lazy(() => import("./pages/Login"));
+const ErrorPage = lazy(() => import("./pages/ErrorPage"));
+const LogOut = lazy(() => import("./pages/LogOut"));
+const Courses = lazy(() => import("./pages/Courses"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const CoursePlayer = lazy(() => import("./pages/CoursePlayer"));
+const Roadmap = lazy(() => import("./pages/Roadmap"));
+
+// Admin components
+const AdminLayout = lazy(() => import("./layouts/AdminLayout"));
+const AdminUsers = lazy(() => import("./layouts/AdminUsers"));
+const AdminContacts = lazy(() => import("./layouts/AdminContacts"));
+const AdminCourses = lazy(() => import("./layouts/CourseLayout/AdminCourses"));
+const AdminUpdate = lazy(() => import("./layouts/AdminUpdate"));
+const AddNewCourse = lazy(() => import("./layouts/CourseLayout/AddNewCourse.jsx"));
+const CourseUpdate = lazy(() => import("./layouts/CourseLayout/CourseUpdate"));
 function App() {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
@@ -37,27 +43,33 @@ function App() {
             <NavBar />
           </header>
           <main className="flex-grow pt-16">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/courses" element={<Courses />} />
-              <Route path="/courses/:courseId" element={<CoursePlayer />} />
-              <Route path="/roadmap" element={<Roadmap />} />
-              <Route path="/contact" element={<ContactUs />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/logout" element={<LogOut />} />
-              <Route path="*" element={<ErrorPage />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/admin" element={<AdminLayout />}>
-                <Route path="users" element={<AdminUsers />} />
-                <Route path="users/:id/edit" element={<AdminUpdate />} />
-                <Route path="contacts" element={<AdminContacts />} />
-                <Route path="courses" element={<AdminCourses />} />
-                <Route path="courses/add" element={<AddNewCourse />} />
-                <Route path="courses/update/:id" element={<CourseUpdate />} />
-              </Route>
-            </Routes>
+            <Suspense fallback={
+              <div className="flex items-center justify-center h-screen">
+                <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-primary"></div>
+              </div>
+            }>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/courses" element={<Courses />} />
+                <Route path="/courses/:courseId" element={<CoursePlayer />} />
+                <Route path="/roadmap" element={<Roadmap />} />
+                <Route path="/contact" element={<ContactUs />} />
+                <Route path="/signup" element={<Signup />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/logout" element={<LogOut />} />
+                <Route path="*" element={<ErrorPage />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/admin" element={<AdminLayout />}>
+                  <Route path="users" element={<AdminUsers />} />
+                  <Route path="users/:id/edit" element={<AdminUpdate />} />
+                  <Route path="contacts" element={<AdminContacts />} />
+                  <Route path="courses" element={<AdminCourses />} />
+                  <Route path="courses/add" element={<AddNewCourse />} />
+                  <Route path="courses/update/:id" element={<CourseUpdate />} />
+                </Route>
+              </Routes>
+            </Suspense>
           </main>
           <Footer />
         </div>

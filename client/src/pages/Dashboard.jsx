@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense, useMemo, useCallback } from 'react';
 import { useAuth } from '../store/auth';
 import { useTheme } from '../context/ThemeContext';
-import CardBody from '../components/CardBody';
-import CourseModules from '../components/CourseModules';
-import UserActivity from '../components/UserActivity';
-import ContinueWatching from '../components/ContinueWatching';
 import { FaBookmark, FaGraduationCap, FaChartLine, FaClock, FaPlay } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+
+// Lazy loaded components
+const CardBody = lazy(() => import('../components/CardBody'));
+const CourseModules = lazy(() => import('../components/CourseModules'));
+const UserActivity = lazy(() => import('../components/UserActivity'));
+const ContinueWatching = lazy(() => import('../components/ContinueWatching'));
 
 function Dashboard() {
   const { userdata, API } = useAuth();
@@ -28,8 +30,8 @@ function Dashboard() {
   const [continueWatchingCourses, setContinueWatchingCourses] = useState([]);
   const token = localStorage.getItem('token');
 
-  // Fetch user's watchlist (Saved Courses)
-  const fetchWatchlist = async () => {
+  // Fetch user's watchlist (Saved Courses) - memoized to prevent unnecessary re-renders
+  const fetchWatchlist = useCallback(async () => {
     try {
       console.log('Fetching user watchlist...');
       const response = await fetch(`${API}/user/watchlist`, {
@@ -56,10 +58,10 @@ function Dashboard() {
     } catch (error) {
       console.error('Error fetching watchlist:', error);
     }
-  };
+  }, [API, token]);
 
-  // Fetch user's progress data for Continue Watching and stats
-  const fetchUserProgress = async () => {
+  // Fetch user's progress data for Continue Watching and stats - memoized to prevent unnecessary re-renders
+  const fetchUserProgress = useCallback(async () => {
     try {
       console.log('Fetching user progress data...');
       const response = await fetch(`${API}/progress`, {
@@ -146,10 +148,10 @@ function Dashboard() {
     } catch (error) {
       console.error('Error fetching user progress:', error);
     }
-  };
+  }, [API, token]);
 
-  // Fetch user's activity for the activity feed
-  const fetchUserActivity = async () => {
+  // Fetch user's activity for the activity feed - memoized to prevent unnecessary re-renders
+  const fetchUserActivity = useCallback(async () => {
     try {
       console.log('Fetching user activity data...');
       const response = await fetch(`${API}/activity`, {
@@ -191,10 +193,10 @@ function Dashboard() {
     } catch (error) {
       console.error('Error fetching user activity:', error);
     }
-  };
+  }, [API, token]);
 
-  // Handle course selection and track the activity
-  const handleCourseSelect = async (course) => {
+  // Handle course selection and track the activity - memoized to prevent unnecessary re-renders
+  const handleCourseSelect = useCallback(async (course) => {
     console.log('Course selected:', course);
     setSelectedCourse(course);
 
@@ -231,10 +233,10 @@ function Dashboard() {
         console.error('Error tracking course selection:', error);
       }
     }
-  };
+  }, [courseProgress, userdata, token, API, fetchUserActivity]);
 
-  // Handle progress update and store in database
-  const handleProgressUpdate = async (updatedProgress) => {
+  // Handle progress update and store in database - memoized to prevent unnecessary re-renders
+  const handleProgressUpdate = useCallback(async (updatedProgress) => {
     console.log('Progress update received:', updatedProgress);
 
     // First, update the local state
@@ -323,16 +325,16 @@ function Dashboard() {
         console.error('Error saving progress:', error);
       }
     }
-  };
+  }, [selectedCourseProgress, token, API, fetchUserActivity]);
 
   useEffect(() => {
     fetchWatchlist();
     fetchUserProgress();
     fetchUserActivity();
-  }, [API, token]);
+  }, [fetchWatchlist, fetchUserProgress, fetchUserActivity]);
 
-  // Handle watchlist update in CardBody and track the activity
-  const updateWatchlist = async (course, action) => {
+  // Handle watchlist update in CardBody and track the activity - memoized to prevent unnecessary re-renders
+  const updateWatchlist = useCallback(async (course, action) => {
     console.log(`Watchlist update: ${action} course ${course?._id}`);
 
     // Refresh watchlist data
@@ -370,7 +372,7 @@ function Dashboard() {
       // Just refresh activity data
       fetchUserActivity();
     }
-  };
+  }, [userdata, token, API, fetchWatchlist, fetchUserActivity]);
 
   return (
     <div className={`relative min-h-screen-minus-nav overflow-hidden z-10 ${isDark ? 'bg-dark-bg-primary text-dark-text-primary' : 'bg-light-bg-primary text-light-text-primary'}`}>
@@ -492,11 +494,17 @@ function Dashboard() {
                     </div>
                   </div>
 
-                  <CourseModules
-                    courseId={selectedCourse._id}
-                    progress={selectedCourseProgress}
-                    onModuleComplete={handleProgressUpdate}
-                  />
+                  <Suspense fallback={
+                    <div className="flex items-center justify-center h-40">
+                      <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary"></div>
+                    </div>
+                  }>
+                    <CourseModules
+                      courseId={selectedCourse._id}
+                      progress={selectedCourseProgress}
+                      onModuleComplete={handleProgressUpdate}
+                    />
+                  </Suspense>
                 </div>
               ) : (
                 <div className={`p-12 rounded-xl ${isDark ? 'bg-dark-bg-secondary border-dark-border' : 'bg-light-bg-secondary border-light-border'} border shadow-md text-center`}>
@@ -537,12 +545,18 @@ function Dashboard() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {watchlist.map(course => (
                     <div key={course._id}>
-                      <CardBody
-                        course={course}
-                        watchlist={watchlist}
-                        updateWatchlist={updateWatchlist}
-                        onClick={handleCourseSelect}
-                      />
+                      <Suspense fallback={
+                        <div className="flex items-center justify-center h-40">
+                          <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary"></div>
+                        </div>
+                      }>
+                        <CardBody
+                          course={course}
+                          watchlist={watchlist}
+                          updateWatchlist={updateWatchlist}
+                          onClick={handleCourseSelect}
+                        />
+                      </Suspense>
                     </div>
                   ))}
                 </div>
@@ -571,13 +585,25 @@ function Dashboard() {
           {/* Right Column - Stats & Activity */}
           <div className="space-y-8">
             {/* Continue Watching Section */}
-            <ContinueWatching
-              courses={continueWatchingCourses}
-              onCourseSelect={handleCourseSelect}
-            />
+            <Suspense fallback={
+              <div className="flex items-center justify-center h-40">
+                <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary"></div>
+              </div>
+            }>
+              <ContinueWatching
+                courses={continueWatchingCourses}
+                onCourseSelect={handleCourseSelect}
+              />
+            </Suspense>
 
             {/* User Activity */}
-            <UserActivity activities={activities} />
+            <Suspense fallback={
+              <div className="flex items-center justify-center h-40">
+                <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary"></div>
+              </div>
+            }>
+              <UserActivity activities={activities} />
+            </Suspense>
 
             {/* Learning Recommendations */}
             <div className={`p-6 rounded-xl ${isDark ? 'bg-dark-bg-secondary border-dark-border' : 'bg-light-bg-secondary border-light-border'} border shadow-md`}>
