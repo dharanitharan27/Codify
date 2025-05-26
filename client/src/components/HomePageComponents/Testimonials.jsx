@@ -38,12 +38,12 @@ const Testimonials = () => {
             <div
               key={index}
               className={`
-                p-8 rounded-xl ${isDark ? 'bg-dark-bg-secondary border-dark-border' : 'bg-light-bg-secondary border-light-border'}
+                group p-8 rounded-xl ${isDark ? 'bg-dark-bg-secondary border-dark-border' : 'bg-light-bg-secondary border-light-border'}
                 border shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-xl
                 flex flex-col
               `}
             >
-              <FaQuoteLeft className="text-primary/30 text-4xl mb-4" />
+              <FaQuoteLeft className="text-primary/30 text-4xl mb-4 group-hover:text-primary group-hover:scale-110 transition-all duration-300" />
 
               <p className={`italic mb-6 ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>
                 "{testimonial.quote}"

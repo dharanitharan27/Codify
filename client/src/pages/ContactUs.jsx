@@ -117,7 +117,7 @@ function ContactUs() {
             <img
               src="contact.png"
               alt="Contact illustration"
-              className="w-full max-w-sm md:max-w-md mx-auto md:mx-0 drop-shadow-xl animate-float"
+              className="relative max-w-md sm:w-full hidden md:block mx-auto md:mx-0 drop-shadow-xl animate-float"
             />
           </div>
 

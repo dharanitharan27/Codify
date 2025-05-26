@@ -1,5 +1,5 @@
-import React, { lazy, Suspense } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React, { lazy, Suspense, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import { useAuth } from "./store/auth";
 import { useTheme } from "./context/ThemeContext";
 import { LoadingProvider } from "./components/loadingContext.jsx";
@@ -31,12 +31,22 @@ const AdminCourses = lazy(() => import("./layouts/CourseLayout/AdminCourses"));
 const AdminUpdate = lazy(() => import("./layouts/AdminUpdate"));
 const AddNewCourse = lazy(() => import("./layouts/CourseLayout/AddNewCourse.jsx"));
 const CourseUpdate = lazy(() => import("./layouts/CourseLayout/CourseUpdate"));
+const ScrollToTop = ({ children }) => {
+  const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]); // Trigger on route change
+
+  return children;
+};
 function App() {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
   return (
     <Router>
+      <ScrollToTop>
       <LoadingProvider>
         <div className={`flex flex-col min-h-screen ${isDark ? 'bg-dark-bg-primary text-dark-text-primary' : 'bg-light-bg-primary text-light-text-primary'}`}>
           <header className="fixed top-0 z-50 w-full">
@@ -74,6 +84,7 @@ function App() {
           <Footer />
         </div>
       </LoadingProvider>
+      </ScrollToTop>
     </Router>
   );
 }

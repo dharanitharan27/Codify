@@ -88,7 +88,7 @@ function Signup() {
               Create your account today and start your learning journey with access to premium courses and resources.
             </p>
             
-            <div className="relative w-full max-w-md">
+            <div className="relative w-full max-w-md hidden md:block"> 
               <img
                 src="signup.svg"
                 alt="Signup illustration"

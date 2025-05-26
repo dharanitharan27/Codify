@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { NavLink } from 'react-router-dom';
 import { RiCloseLargeLine } from 'react-icons/ri';
-import { FaGraduationCap } from 'react-icons/fa';
+import { FaBook, FaEnvelope, FaGraduationCap, FaHome, FaRoad, FaSignInAlt, FaSignOutAlt, FaUser, FaUserPlus, FaUserTie } from 'react-icons/fa';
 import { useTheme } from '../context/ThemeContext';
 
 function MobileMenu({ isOpen, onClose, isLoggedIn, userdata }) {
@@ -75,7 +75,7 @@ function MobileMenu({ isOpen, onClose, isLoggedIn, userdata }) {
                   to="/"
                   onClick={onClose}
                   className={({ isActive }) => `
-                    px-3 py-2 rounded-md text-base font-medium transition-colors
+                    px-3 py-2 rounded-md text-base font-medium transition-colors flex items-center gap-2
                     ${isActive
                       ? isDark
                         ? 'bg-dark-bg-tertiary text-primary'
@@ -86,14 +86,14 @@ function MobileMenu({ isOpen, onClose, isLoggedIn, userdata }) {
                     }
                   `}
                 >
-                  Home
+                  <FaHome className='text-xl' /> <span className='text-xl'>Home</span>
                 </NavLink>
 
                 <NavLink
                   to="/about"
                   onClick={onClose}
                   className={({ isActive }) => `
-                    px-3 py-2 rounded-md text-base font-medium transition-colors
+                    px-3 py-2 rounded-md text-base font-medium transition-colors flex items-center gap-2
                     ${isActive
                       ? isDark
                         ? 'bg-dark-bg-tertiary text-primary'
@@ -104,14 +104,14 @@ function MobileMenu({ isOpen, onClose, isLoggedIn, userdata }) {
                     }
                   `}
                 >
-                  About
+                  <FaUser className='text-xl' /> <span className='text-xl'>About</span>
                 </NavLink>
 
                 <NavLink
                   to="/courses"
                   onClick={onClose}
                   className={({ isActive }) => `
-                    px-3 py-2 rounded-md text-base font-medium transition-colors
+                    px-3 py-2 rounded-md text-base font-medium transition-colors flex items-center gap-2
                     ${isActive
                       ? isDark
                         ? 'bg-dark-bg-tertiary text-primary'
@@ -122,14 +122,14 @@ function MobileMenu({ isOpen, onClose, isLoggedIn, userdata }) {
                     }
                   `}
                 >
-                  Courses
+                  <FaBook className='text-xl' /> <span className='text-xl'>Courses</span>
                 </NavLink>
 
                 <NavLink
                   to="/roadmap"
                   onClick={onClose}
                   className={({ isActive }) => `
-                    px-3 py-2 rounded-md text-base font-medium transition-colors
+                    px-3 py-2 rounded-md text-base font-medium transition-colors flex items-center gap-2
                     ${isActive
                       ? isDark
                         ? 'bg-dark-bg-tertiary text-primary'
@@ -140,14 +140,14 @@ function MobileMenu({ isOpen, onClose, isLoggedIn, userdata }) {
                     }
                   `}
                 >
-                  Roadmaps
+                  <FaRoad className='text-xl' /> <span className='text-xl'>Roadmaps</span>
                 </NavLink>
 
                 <NavLink
                   to="/contact"
                   onClick={onClose}
                   className={({ isActive }) => `
-                    px-3 py-2 rounded-md text-base font-medium transition-colors
+                    px-3 py-2 rounded-md text-base font-medium transition-colors flex items-center gap-2
                     ${isActive
                       ? isDark
                         ? 'bg-dark-bg-tertiary text-primary'
@@ -158,7 +158,7 @@ function MobileMenu({ isOpen, onClose, isLoggedIn, userdata }) {
                     }
                   `}
                 >
-                  Contact
+                  <FaEnvelope className='text-xl' /> <span className='text-xl'>Contact</span>
                 </NavLink>
 
                 {isLoggedIn ? (
@@ -167,7 +167,7 @@ function MobileMenu({ isOpen, onClose, isLoggedIn, userdata }) {
                       to="/dashboard"
                       onClick={onClose}
                       className={({ isActive }) => `
-                        px-3 py-2 rounded-md text-base font-medium transition-colors
+                        px-3 py-2 rounded-md text-base font-medium transition-colors flex items-center gap-2
                         ${isActive
                           ? isDark
                             ? 'bg-dark-bg-tertiary text-primary'
@@ -178,7 +178,7 @@ function MobileMenu({ isOpen, onClose, isLoggedIn, userdata }) {
                         }
                       `}
                     >
-                      Dashboard
+                      <FaUser className='text-xl' /> <span className='text-xl'>Dashboard</span>
                     </NavLink>
 
                     {userdata?.isAdmin && (
@@ -186,7 +186,7 @@ function MobileMenu({ isOpen, onClose, isLoggedIn, userdata }) {
                         to="/admin"
                         onClick={onClose}
                         className={({ isActive }) => `
-                          px-3 py-2 rounded-md text-base font-medium transition-colors
+                          px-3 py-2 rounded-md text-base font-medium transition-colors flex items-center gap-2
                           ${isActive
                             ? isDark
                               ? 'bg-dark-bg-tertiary text-primary'
@@ -197,7 +197,7 @@ function MobileMenu({ isOpen, onClose, isLoggedIn, userdata }) {
                           }
                         `}
                       >
-                        Admin Panel
+                        <FaUserTie className='text-xl' /> <span className='text-xl'>Admin Panel</span>
                       </NavLink>
                     )}
 
@@ -205,13 +205,13 @@ function MobileMenu({ isOpen, onClose, isLoggedIn, userdata }) {
                       to="/logout"
                       onClick={onClose}
                       className={`
-                        px-3 py-2 rounded-md text-base font-medium transition-colors
+                        px-3 py-2 rounded-md text-base font-medium transition-colors flex items-center gap-2
                         ${isDark
                           ? 'bg-primary/10 text-primary hover:bg-primary/20'
                           : 'bg-primary/10 text-primary hover:bg-primary/20'}
                       `}
                     >
-                      Logout
+                      <FaSignOutAlt className='text-xl' /> <span className='text-xl'>Logout</span>
                     </NavLink>
                   </>
                 ) : (
@@ -220,26 +220,26 @@ function MobileMenu({ isOpen, onClose, isLoggedIn, userdata }) {
                       to="/login"
                       onClick={onClose}
                       className={`
-                        px-3 py-2 rounded-md text-base font-medium transition-colors
+                        px-3 py-2 rounded-md text-base font-medium transition-colors flex items-center gap-2
                         ${isDark
                           ? 'text-dark-text-primary hover:bg-dark-bg-tertiary'
                           : 'text-light-text-primary hover:bg-light-bg-tertiary'}
                       `}
                     >
-                      Login
+                      <FaSignInAlt className='text-xl' /> <span className='text-xl'>Login</span>
                     </NavLink>
 
                     <NavLink
                       to="/signup"
                       onClick={onClose}
                       className={`
-                        px-3 py-2 rounded-md text-base font-medium transition-colors
+                        px-3 py-2 rounded-md text-base font-medium transition-colors flex items-center gap-2
                         ${isDark
                           ? 'bg-primary text-white hover:bg-primary-dark'
                           : 'bg-primary text-white hover:bg-primary-dark'}
                       `}
                     >
-                      Sign Up
+                      <FaUserPlus className='text-xl' /> <span className='text-xl'>Sign Up</span>
                     </NavLink>
                   </>
                 )}

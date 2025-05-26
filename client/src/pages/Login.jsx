@@ -85,7 +85,7 @@ function Login() {
               Sign in to continue your learning journey and access all your courses and progress.
             </p>
             
-            <div className="relative w-full max-w-md">
+            <div className="relative max-w-md sm:w-full hidden md:block">
               <img
                 src="login.svg"
                 alt="Login illustration"
