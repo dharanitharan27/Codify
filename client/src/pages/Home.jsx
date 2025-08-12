@@ -210,7 +210,7 @@ function Home() {
               {/* Courses Stat */}
               <div className="group">
                 <div className={`
-                  text-center p-8 rounded-xl ${isDark ? 'bg-dark-bg-tertiary border-dark-border' : 'bg-light-bg-tertiary border-light-border'}
+                  text-center p-8 rounded-xl h-full ${isDark ? 'bg-dark-bg-tertiary border-dark-border' : 'bg-light-bg-tertiary border-light-border'}
                   border shadow-md transition-all duration-500 group-hover:-translate-y-2 group-hover:shadow-xl
                   animate-fadeIn animation-delay-200
                 `}>
@@ -225,7 +225,7 @@ function Home() {
               {/* Roadmaps Stat */}
               <div className="group">
                 <div className={`
-                  text-center p-8 rounded-xl ${isDark ? 'bg-dark-bg-tertiary border-dark-border' : 'bg-light-bg-tertiary border-light-border'}
+                  text-center p-8 rounded-xl h-full ${isDark ? 'bg-dark-bg-tertiary border-dark-border' : 'bg-light-bg-tertiary border-light-border'}
                   border shadow-md transition-all duration-500 group-hover:-translate-y-2 group-hover:shadow-xl
                   animate-fadeIn animation-delay-300
                 `}>
@@ -240,7 +240,7 @@ function Home() {
               {/* Creators Stat */}
               <div className="group">
                 <div className={`
-                  text-center p-8 rounded-xl ${isDark ? 'bg-dark-bg-tertiary border-dark-border' : 'bg-light-bg-tertiary border-light-border'}
+                  text-center p-8 rounded-xl h-full ${isDark ? 'bg-dark-bg-tertiary border-dark-border' : 'bg-light-bg-tertiary border-light-border'}
                   border shadow-md transition-all duration-500 group-hover:-translate-y-2 group-hover:shadow-xl
                   animate-fadeIn animation-delay-400
                 `}>
@@ -257,7 +257,7 @@ function Home() {
               {/* Users Stat */}
               <div className="group">
                 <div className={`
-                  text-center p-8 rounded-xl ${isDark ? 'bg-dark-bg-tertiary border-dark-border' : 'bg-light-bg-tertiary border-light-border'}
+                  text-center p-8 rounded-xl h-full ${isDark ? 'bg-dark-bg-tertiary border-dark-border' : 'bg-light-bg-tertiary border-light-border'}
                   border shadow-md transition-all duration-500 group-hover:-translate-y-2 group-hover:shadow-xl
                   animate-fadeIn animation-delay-500
                 `}>
