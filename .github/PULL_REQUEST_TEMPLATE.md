@@ -39,6 +39,8 @@ assignees: ""
 ---
 
 ## ✅ Checklist
+- [ ] Created a new branch for PR
+- [ ] Have stared the repository
 - [ ] Follows [JavaScript Styleguide](CONTRIBUTING.md#javascript-styleguide)
 - [ ] No console warnings/errors
 - [ ] Commit messages follow [Git Guidelines](CONTRIBUTING.md#git-commit-messages)
