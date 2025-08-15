@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../store/auth';
 import { useTheme } from '../context/ThemeContext';
 import YouTubePlayer from '../components/YouTubePlayer';
+import CodePlayground from '../components/CodePlayground';
 import YouTubePlaylist from '../components/YouTubePlaylist';
 import CourseModules from '../components/CourseModules';
 import { getYouTubeUrlType, extractPlaylistId, extractVideoId } from '../utils/youtubeUtils';
@@ -565,6 +566,15 @@ const CoursePlayer = () => {
               <p className={`whitespace-pre-line ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>
                 {course.description}
               </p>
+            </div>
+
+            {/* Interactive Code Playground */}
+            <div className={`p-6 rounded-lg ${isDark ? 'bg-dark-bg-secondary' : 'bg-light-bg-secondary'}`}>
+              <h3 className="text-xl font-bold mb-4">Try it yourself</h3>
+              <p className={`mb-3 ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>
+                Experiment with JavaScript directly below. Write code and click Run to see output instantly.
+              </p>
+              <CodePlayground isDark={isDark} />
             </div>
 
             {/* Course Modules */}
