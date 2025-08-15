@@ -59,9 +59,13 @@ function Home() {
           </NavLink>
         </div>
 
-        {/* Features Section */}
+            {/* Features Section */}
         <div className="my-24">
-          <h2 className={`text-3xl font-bold text-center mb-16 ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'} animate-fadeIn animation-delay-100`}>
+          <h2
+            className={`text-3xl font-bold text-center mb-16 ${
+              isDark ? "text-dark-text-primary" : "text-light-text-primary"
+            } animate-fadeIn animation-delay-100`}
+          >
             Why Learn With <span className="text-primary">Codify</span>
           </h2>
 
@@ -69,63 +73,132 @@ function Home() {
             {/* Feature 1 */}
             <div
               className={`
-                p-8 rounded-xl w-[300px] border ${isDark ? 'bg-dark-bg-secondary border-dark-border' : 'bg-light-bg-secondary border-light-border'}
-                shadow-md transition-all duration-300 hover:-translate-y-2 hover:shadow-xl
-                animate-slide-in-bottom animation-delay-200
-              `}
+        group p-8 rounded-xl w-[300px] border ${
+          isDark
+            ? "bg-dark-bg-secondary border-dark-border"
+            : "bg-light-bg-secondary border-light-border"
+        }
+        shadow-md transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:bg-primary hover:bg-opacity-[0.01]
+        animate-slide-in-bottom animation-delay-200
+      `}
             >
-              <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-primary/10 flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+              <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-primary/10 flex items-center justify-center transition-colors duration-300 group-hover:bg-primary/20">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-8 w-8 text-primary transition-colors duration-300 group-hover:text-[#ffffff]"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                  />
                 </svg>
               </div>
 
-              <h3 className="text-primary -z-10 text-xl font-semibold mb-3 text-center">Interactive Learning</h3>
+              <h3 className="text-primary transition-colors duration-300 group-hover:text-[#ffffff] text-xl font-semibold mb-3 text-center">
+                Interactive Learning
+              </h3>
 
-              <p className={`${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'} text-center`}>
-                Our courses provide hands-on learning with real-world examples and interactive exercises to reinforce concepts.
+              <p
+                className={`
+    ${isDark ? "text-dark-text-primary" : "text-light-text-primary"}
+    text-center transition-colors duration-300 group-hover:text-white
+  `}
+              >
+                Our courses provide hands-on learning with real-world examples
+                and interactive exercises to reinforce concepts.
               </p>
             </div>
 
             {/* Feature 2 */}
             <div
               className={`
-                p-8 rounded-xl w-[300px] border ${isDark ? 'bg-dark-bg-secondary border-dark-border' : 'bg-light-bg-secondary border-light-border'}
-                shadow-md transition-all duration-300 hover:-translate-y-2 hover:shadow-xl
-                animate-slide-in-bottom animation-delay-400
-              `}
+        group p-8 rounded-xl w-[300px] border ${
+          isDark
+            ? "bg-dark-bg-secondary border-dark-border"
+            : "bg-light-bg-secondary border-light-border"
+        }
+        shadow-md transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:bg-primary hover:bg-opacity-[0.01]
+        animate-slide-in-bottom animation-delay-400
+      `}
             >
-              <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-primary/10 flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+              <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-primary/10 flex items-center justify-center transition-colors duration-300 group-hover:bg-primary/20">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-8 w-8 text-primary transition-colors duration-300 group-hover:text-[#ffffff]"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                  />
                 </svg>
               </div>
 
-              <h3 className="text-primary -z-10 text-xl font-semibold mb-3 text-center">Expert Instructors</h3>
+              <h3 className="text-primary transition-colors duration-300 group-hover:text-[#ffffff] text-xl font-semibold mb-3 text-center">
+                Expert Instructors
+              </h3>
 
-              <p className={`${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'} text-center`}>
-                Learn from industry professionals who guide you step by step through complex topics with clarity and expertise.
+              <p
+                className={`
+    ${isDark ? "text-dark-text-primary" : "text-light-text-primary"}
+    text-center transition-colors duration-300 group-hover:text-white
+  `}
+              >
+                Learn from industry professionals who guide you step by step
+                through complex topics with clarity and expertise.
               </p>
             </div>
 
             {/* Feature 3 */}
             <div
               className={`
-                p-8 rounded-xl w-[300px] border ${isDark ? 'bg-dark-bg-secondary border-dark-border' : 'bg-light-bg-secondary border-light-border'}
-                shadow-md transition-all duration-300 hover:-translate-y-2 hover:shadow-xl
-                animate-slide-in-bottom animation-delay-600
-              `}
+        group p-8 rounded-xl w-[300px] border ${
+          isDark
+            ? "bg-dark-bg-secondary border-dark-border"
+            : "bg-light-bg-secondary border-light-border"
+        }
+        shadow-md transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:bg-primary hover:bg-opacity-[0.01]
+        animate-slide-in-bottom animation-delay-600
+      `}
             >
-              <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-primary/10 flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-primary/10 flex items-center justify-center transition-colors duration-300 group-hover:bg-primary/20">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-8 w-8 text-primary transition-colors duration-300 group-hover:text-[#ffffff]"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
                 </svg>
               </div>
 
-              <h3 className="text-primary -z-10 text-xl font-semibold mb-3 text-center">Flexible Schedules</h3>
+              <h3 className="text-primary transition-colors duration-300 group-hover:text-[#ffffff] text-xl font-semibold mb-3 text-center">
+                Flexible Schedules
+              </h3>
 
-              <p className={`${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'} text-center`}>
-                Take courses at your own pace with flexible learning hours. Learn when and where it works best for you.
+              <p
+                className={`
+    ${isDark ? "text-dark-text-primary" : "text-light-text-primary"}
+    text-center transition-colors duration-300 group-hover:text-white
+  `}
+              >
+                Take courses at your own pace with flexible learning hours.
+                Learn when and where it works best for you.
               </p>
             </div>
           </div>
