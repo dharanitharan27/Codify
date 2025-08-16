@@ -1,6 +1,5 @@
 import React, { lazy, Suspense, useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { useAuth } from "../store/auth";
 import { useTheme } from "../context/ThemeContext";
 import { FaArrowUp } from 'react-icons/fa';
 
@@ -11,10 +10,8 @@ const FAQ = lazy(() => import("../components/HomePageComponents/FAQ"));
 const Testimonials = lazy(() => import("../components/HomePageComponents/Testimonials"));
 const NewsLetter = lazy(() => import("../components/HomePageComponents/NewsLetter"));
 const CallToAction = lazy(() => import("../components/HomePageComponents/CallToAction"));
-const FeaturedCourses = lazy(() => import("../components/HomePageComponents/FeaturedCourses"));
 
 function Home() {
-  const { coursesData } = useAuth();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
@@ -299,7 +296,7 @@ function Home() {
                     <div className="relative mb-4">
                       <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-full transform scale-0 group-hover:scale-100 transition-transform duration-500"></div>
                       <h3 className="text-5xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary mb-2 relative z-10">
-                        {coursesData?.length || 70}+
+                        70+
                       </h3>
                     </div>
                     <p className={`text-lg font-semibold ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'}`}>Premium Courses</p>
@@ -323,7 +320,7 @@ function Home() {
                     <div className="relative mb-4">
                       <div className="absolute inset-0 bg-gradient-to-r from-accent/20 to-primary/20 rounded-full transform scale-0 group-hover:scale-100 transition-transform duration-500"></div>
                       <h3 className="text-5xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-accent to-primary mb-2 relative z-10">
-                        {[...new Map(coursesData?.map(course => [course.creator_name, course])).values()].length || 30}+
+                        30+
                       </h3>
                     </div>
                     <p className={`text-lg font-semibold ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'}`}>Expert Creators</p>
@@ -546,14 +543,7 @@ function Home() {
         <CallToAction />
       </Suspense>
 
-      {/* Featured Courses Section */}
-      <Suspense fallback={
-        <div className="flex items-center justify-center h-40">
-          <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-primary"></div>
-        </div>
-      }>
-        <FeaturedCourses />
-      </Suspense>
+
 
       {/* Floating Scroll to Top Button */}
       {showScrollTop && (

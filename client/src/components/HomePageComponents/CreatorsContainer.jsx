@@ -1,10 +1,8 @@
 import { Link } from "react-router-dom";
-import { useAuth } from "../../store/auth";
 import { useTheme } from "../../context/ThemeContext";
 import { useEffect, useState } from "react";
 
 const CreatorsContainer = ({ count = 3 }) => {
-  const { coursesData } = useAuth();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const [creators, setCreators] = useState([]);
