@@ -4,7 +4,7 @@ import { useTheme } from "../context/ThemeContext";
 import { toast } from "react-toastify";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { useLoading } from "../components/loadingContext";
-import { FaUser, FaEnvelope, FaPhone, FaLock, FaUserPlus } from "react-icons/fa";
+import { FaUser, FaEnvelope, FaPhone, FaLock, FaUserPlus, FaExclamationCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 function Signup() {
@@ -15,23 +15,87 @@ function Signup() {
     password: "",
   });
   const [show, setShow] = useState(false);
-  const [errMessage, setErrMessage] = useState("");
+  const [errors, setErrors] = useState({});
   const { storeTokenInLS, API } = useAuth();
   const { setIsLoading } = useLoading();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
+  const validateField = (name, value) => {
+    let error = "";
+    switch (name) {
+      case "username":
+        if (!value) {
+          error = "Username is required";
+        }
+        break;
+      case "email":
+        if (!value) {
+          error = "Email is required";
+        } else if (!/\S+@\S+\.\S+/.test(value)) {
+          error = "Enter a valid email address";
+        }
+        break;
+      case "phone":
+        if (!value) {
+          error = "Phone number is required";
+        } else if (!/^\d{10}$/.test(value)) {
+          error = "Enter a valid 10-digit phone number";
+        }
+        break;
+      case "password":
+        if (!value) {
+          error = "Password is required";
+        } else if (value.length < 6) {
+          error = "Password must be at least 6 characters";
+        }
+        break;
+      default:
+        break;
+    }
+    return error;
+  };
+
   const handleChange = (e) => {
-    const name = e.target.name;
-    const value = e.target.value;
+    const { name, value } = e.target;
     setUser({
       ...user,
       [name]: value,
+    });
+    if (errors[name]) {
+      setErrors({
+        ...errors,
+        [name]: "",
+      });
+    }
+  };
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    const error = validateField(name, value);
+    setErrors({
+      ...errors,
+      [name]: error,
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const newErrors = {};
+    Object.keys(user).forEach((key) => {
+      const error = validateField(key, user[key]);
+      if (error) {
+        newErrors[key] = error;
+      }
+    });
+
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length > 0) {
+      toast.error("Please fix the errors before submitting.");
+      return;
+    }
+
     try {
       setIsLoading(true);
       const response = await fetch(`${API}/api/v1/auth/register`, {
@@ -48,10 +112,8 @@ function Signup() {
         toast.success("Registration successful! Welcome aboard!");
         window.location.href = "/";
       } else {
-        setErrMessage(res_data);
-        toast.warn(
-          errMessage.extraDetails ? errMessage.extraDetails : errMessage.message
-        );
+        const errorMessage = res_data.extraDetails ? res_data.extraDetails : res_data.message;
+        toast.warn(errorMessage);
       }
     } catch (error) {
       console.log("response error : ", error);
@@ -109,7 +171,7 @@ function Signup() {
                 Create Account
               </h2>
               
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmit} noValidate>
                 <div className="mb-5">
                   <label
                     htmlFor="username"
@@ -124,16 +186,17 @@ function Signup() {
                     type="text"
                     id="username"
                     name="username"
-                    required
                     placeholder="Enter your name"
                     value={user.username}
                     onChange={handleChange}
+                    onBlur={handleBlur}
                     className={`w-full px-4 py-3 rounded-lg ${
                       isDark 
                         ? 'bg-dark-bg-tertiary text-dark-text-primary border-dark-border' 
                         : 'bg-light-bg-tertiary text-light-text-primary border-light-border'
-                    } border focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-300`}
+                    } border focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-300 ${errors.username ? 'border-red-500' : ''}`}
                   />
+                  {errors.username && <p className="text-red-500 text-xs mt-1 flex items-center"><FaExclamationCircle className="mr-1" />{errors.username}</p>}
                 </div>
 
                 <div className="mb-5">
@@ -150,16 +213,17 @@ function Signup() {
                     type="email"
                     id="email"
                     name="email"
-                    required
                     placeholder="Enter your email"
                     value={user.email}
                     onChange={handleChange}
+                    onBlur={handleBlur}
                     className={`w-full px-4 py-3 rounded-lg ${
                       isDark 
                         ? 'bg-dark-bg-tertiary text-dark-text-primary border-dark-border' 
                         : 'bg-light-bg-tertiary text-light-text-primary border-light-border'
-                    } border focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-300`}
+                    } border focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-300 ${errors.email ? 'border-red-500' : ''}`}
                   />
+                  {errors.email && <p className="text-red-500 text-xs mt-1 flex items-center"><FaExclamationCircle className="mr-1" />{errors.email}</p>}
                 </div>
 
                 <div className="mb-5">
@@ -173,19 +237,20 @@ function Signup() {
                     </div>
                   </label>
                   <input
-                    type="number"
+                    type="tel"
                     id="phone"
                     name="phone"
-                    required
                     placeholder="Enter your phone"
                     value={user.phone}
                     onChange={handleChange}
+                    onBlur={handleBlur}
                     className={`w-full px-4 py-3 rounded-lg ${
                       isDark 
                         ? 'bg-dark-bg-tertiary text-dark-text-primary border-dark-border' 
                         : 'bg-light-bg-tertiary text-light-text-primary border-light-border'
-                    } border focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-300`}
+                    } border focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-300 ${errors.phone ? 'border-red-500' : ''}`}
                   />
+                  {errors.phone && <p className="text-red-500 text-xs mt-1 flex items-center"><FaExclamationCircle className="mr-1" />{errors.phone}</p>}
                 </div>
 
                 <div className="mb-6 relative">
@@ -202,16 +267,17 @@ function Signup() {
                     type={show ? "text" : "password"}
                     id="password"
                     name="password"
-                    required
                     placeholder="Enter your password"
                     value={user.password}
                     onChange={handleChange}
+                    onBlur={handleBlur}
                     className={`w-full px-4 py-3 rounded-lg ${
                       isDark 
                         ? 'bg-dark-bg-tertiary text-dark-text-primary border-dark-border' 
                         : 'bg-light-bg-tertiary text-light-text-primary border-light-border'
-                    } border focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-300`}
+                    } border focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-300 ${errors.password ? 'border-red-500' : ''}`}
                   />
+                  {errors.password && <p className="text-red-500 text-xs mt-1 flex items-center"><FaExclamationCircle className="mr-1" />{errors.password}</p>}
                   <div
                     className="absolute right-3 top-[42px] cursor-pointer text-xl p-1 rounded-full hover:bg-primary/10 transition-colors"
                     onClick={() => setShow(!show)}
