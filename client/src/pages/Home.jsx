@@ -137,7 +137,7 @@ function Home() {
 
           {/* Trust Indicators */}
           <div className="mt-16 animate-fadeIn animation-delay-800">
-            <p className={`text-sm ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'} mb-4`}>Trusted by developers from around the world</p>
+            <p className={`text-sm ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'} mb-4`}>Trusted by developers from 100+ countries</p>
             <div className="flex justify-center items-center gap-8 opacity-60">
               <div className="w-16 h-8 bg-gradient-to-r from-primary/20 to-secondary/20 rounded"></div>
               <div className="w-16 h-8 bg-gradient-to-r from-secondary/20 to-accent/20 rounded"></div>
