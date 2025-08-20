@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import { useAuth } from "../store/auth";
 import { useTheme } from "../context/ThemeContext";
 import { RiMenu3Fill } from "react-icons/ri";
-import { FaGraduationCap } from "react-icons/fa";
+import { FaGraduationCap, FaArrowUp, FaArrowDown } from "react-icons/fa";
 import ThemeSwitcher from "./ThemeSwitcher";
 import ThemeColorSelector from "./ThemeColorSelector";
 import MobileMenu from "./MobileMenu";
@@ -42,6 +42,11 @@ function NavBar() {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  // Scroll to top handler
+  const handleBackToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <nav 
     // className={`
@@ -57,7 +62,7 @@ function NavBar() {
     `}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+  <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex-shrink-0 flex items-center">
             <NavLink to="/" className={`flex items-center space-x-2 font-bold text-xl text-primary-500 transition-colors`}>
@@ -184,10 +189,29 @@ function NavBar() {
             </div>
           </div>
 
-          {/* Theme Controls */}
+
+          {/* Theme Controls & Back to Top */}
           <div className="hidden md:flex items-center space-x-3">
             <ThemeSwitcher />
             <ThemeColorSelector />
+            {/* Back to Top Arrow */}
+            <button
+              onClick={handleBackToTop}
+              className="ml-4 p-2 rounded-full bg-primary-500 hover:bg-primary-600 text-white shadow transition-colors focus:outline-none"
+              title="Back to Top"
+              style={{ position: 'relative', right: 0 }}
+            >
+              <FaArrowUp className="text-xl" />
+            </button>
+            {/* Top to Bottom Arrow */}
+            <button
+              onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}
+              className="ml-2 p-2 rounded-full bg-primary-500 hover:bg-primary-600 text-white shadow transition-colors focus:outline-none"
+              title="Top to Bottom"
+              style={{ position: 'relative', right: 0 }}
+            >
+              <FaArrowDown className="text-xl" />
+            </button>
           </div>
 
           {/* Mobile menu button */}

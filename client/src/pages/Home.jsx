@@ -543,20 +543,6 @@ function Home() {
         <CallToAction />
       </Suspense>
 
-
-
-      {/* Floating Scroll to Top Button */}
-      {showScrollTop && (
-        <div className="fixed bottom-8 right-8 z-50">
-          <button
-            onClick={scrollToTop}
-            className="w-16 h-16 rounded-full bg-gradient-to-r from-primary to-secondary shadow-2xl hover:shadow-primary/25 transition-all duration-300 hover:scale-110 cursor-pointer flex items-center justify-center group"
-            aria-label="Scroll to top"
-          >
-            <FaArrowUp className="w-8 h-8 text-white group-hover:-translate-y-1 transition-transform duration-300" />
-          </button>
-        </div>
-      )}
     </div>
   );
 }
