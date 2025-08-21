@@ -9,6 +9,7 @@ import 'react-toastify/ReactToastify.css';
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer.jsx";
 import Loader from "./components/Loader";
+import ScrollToTopButton from "./components/ScrollToTopButton.jsx";
 
 // Lazy loaded components
 const Home = lazy(() => import("./pages/Home"));
@@ -81,6 +82,7 @@ function App() {
               </Routes>
             </Suspense>
           </main>
+          <ScrollToTopButton />
           <Footer />
         </div>
       </LoadingProvider>
