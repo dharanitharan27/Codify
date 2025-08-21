@@ -27,7 +27,31 @@ function ScrollToTopButton() {
   }, []);
 
   const handleClick = useCallback(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    const duration = 1000; // Duration in milliseconds
+    const start = window.pageYOffset;
+    const startTime = performance.now();
+
+    const animateScroll = (currentTime) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      // Easing function for smoother animation
+      const easeInOutCubic = progress => {
+        return progress < 0.5
+          ? 4 * progress * progress * progress
+          : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+      };
+
+      window.scrollTo({
+        top: start * (1 - easeInOutCubic(progress))
+      });
+
+      if (progress < 1) {
+        requestAnimationFrame(animateScroll);
+      }
+    };
+
+    requestAnimationFrame(animateScroll);
   }, []);
 
   return (
