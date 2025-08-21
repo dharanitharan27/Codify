@@ -1,9 +1,11 @@
 import { useTheme } from "../../context/ThemeContext";
 import { FaQuoteLeft, FaStar } from "react-icons/fa";
+import { useEffect, useRef } from "react";
 
 const Testimonials = () => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
+  const scrollRef = useRef(null);
 
   const testimonials = [
     {
@@ -29,11 +31,154 @@ const Testimonials = () => {
       avatar: "https://randomuser.me/api/portraits/women/68.jpg",
       rating: 5,
       company: "Digital Solutions"
+    },
+    {
+      quote: "The interactive coding challenges pushed me to think differently. Now I solve complex problems with confidence.",
+      name: "Alex Thompson",
+      role: "Software Architect",
+      avatar: "https://randomuser.me/api/portraits/men/22.jpg",
+      rating: 5,
+      company: "Innovation Labs"
+    },
+    {
+      quote: "The mentorship program was invaluable. Real-world insights from industry experts made all the difference.",
+      name: "Priya Patel",
+      role: "Mobile Developer",
+      avatar: "https://randomuser.me/api/portraits/women/45.jpg",
+      rating: 5,
+      company: "AppTech Solutions"
+    },
+    {
+      quote: "From a complete beginner to deploying my first full-stack application. The journey has been incredible!",
+      name: "James Wilson",
+      role: "Junior Developer",
+      avatar: "https://randomuser.me/api/portraits/men/52.jpg",
+      rating: 5,
+      company: "WebFlow Systems"
+    },
+    {
+      quote: "The project-based learning approach helped me build a strong portfolio. Landed my first tech job within weeks!",
+      name: "Sofia Martinez",
+      role: "Cloud Engineer",
+      avatar: "https://randomuser.me/api/portraits/women/89.jpg",
+      rating: 5,
+      company: "CloudScale Inc."
     }
   ];
 
+  useEffect(() => {
+    const scrollContainer = scrollRef.current;
+    if (!scrollContainer) return;
+
+    // Clone testimonials for seamless infinite scroll
+    const content = scrollContainer.firstElementChild;
+    const scrollSpeed = 0.5; // Adjust speed (pixels per frame)
+    let animationFrameId;
+    let scrollPosition = 0;
+
+    const scroll = () => {
+      scrollPosition += scrollSpeed;
+      
+      // Reset position when reaching half of content width for seamless loop
+      if (scrollPosition >= content.offsetWidth) {
+        scrollPosition = 0;
+      }
+      
+      scrollContainer.scrollLeft = scrollPosition;
+      animationFrameId = requestAnimationFrame(scroll);
+    };
+
+    animationFrameId = requestAnimationFrame(scroll);
+
+    const handleMouseEnter = () => cancelAnimationFrame(animationFrameId);
+    const handleMouseLeave = () => {
+      animationFrameId = requestAnimationFrame(scroll);
+    };
+
+    scrollContainer.addEventListener('mouseenter', handleMouseEnter);
+    scrollContainer.addEventListener('mouseleave', handleMouseLeave);
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+      scrollContainer.removeEventListener('mouseenter', handleMouseEnter);
+      scrollContainer.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  }, []);
+
+  const TestimonialCard = ({ testimonial, isDuplicate = false }) => (
+    <div
+      className={`
+        flex-shrink-0 w-[400px] h-[450px] group relative p-8 rounded-2xl 
+        ${isDark ? 'bg-dark-bg-secondary border-dark-border' : 'bg-light-bg-secondary border-light-border'}
+        border shadow-lg transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl
+        flex flex-col justify-between
+        ${isDark ? 'hover:bg-gradient-to-br hover:from-primary/5 hover:to-secondary/5' : 'hover:bg-gradient-to-br hover:from-primary/5 hover:to-secondary/5'}
+      `}
+    >
+      {/* Background Pattern */}
+      <div className="absolute top-0 right-0 w-32 h-32 opacity-5 group-hover:opacity-20 transition-opacity duration-500">
+        <svg className="w-full h-full text-primary" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+        </svg>
+      </div>
+
+      {/* Quote Icon */}
+      <div className="relative z-10 mb-6">
+        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+          <FaQuoteLeft className="text-primary text-2xl group-hover:text-secondary transition-colors duration-300" />
+        </div>
+      </div>
+
+      {/* Rating */}
+      <div className="flex items-center gap-1 mb-4">
+        {[...Array(testimonial.rating)].map((_, i) => (
+          <FaStar key={i} className="text-yellow-400 text-sm" />
+        ))}
+      </div>
+
+      {/* Quote */}
+      <p className={`italic mb-6 leading-relaxed ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'} group-hover:text-primary transition-colors duration-300`}>
+        "{testimonial.quote}"
+      </p>
+
+      {/* Author Info */}
+      <div className="mt-auto flex items-center">
+        <div className="relative">
+          <img
+            src={testimonial.avatar}
+            alt={testimonial.name}
+            className="w-14 h-14 rounded-full border-3 border-gradient-to-r from-primary to-secondary p-0.5 group-hover:scale-110 transition-transform duration-300"
+          />
+          <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center">
+            <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+            </svg>
+          </div>
+        </div>
+        <div className="ml-4">
+          <h4 className={`font-bold text-lg ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'} group-hover:text-primary transition-colors duration-300`}>
+            {testimonial.name}
+          </h4>
+          <p className={`text-sm ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'} mb-1`}>
+            {testimonial.role}
+          </p>
+          <p className="text-xs text-primary font-medium">
+            {testimonial.company}
+          </p>
+        </div>
+      </div>
+
+      {/* Success Badge */}
+      <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <div className="px-3 py-1 bg-gradient-to-r from-green-400 to-green-600 text-white text-xs rounded-full font-medium">
+          Success Story
+        </div>
+      </div>
+    </div>
+  );
+
   return (
-    <section className="py-24 px-4 relative">
+    <section className="py-24 px-4 relative overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-0 left-0 w-96 h-96 rounded-full bg-gradient-to-br from-primary/5 to-secondary/5 blur-3xl"></div>
@@ -51,79 +196,28 @@ const Testimonials = () => {
           </p>
         </div>
 
-        {/* Testimonials Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {testimonials.map((testimonial, index) => (
-            <div
-              key={index}
-              className={`
-                group relative p-8 rounded-2xl ${isDark ? 'bg-dark-bg-secondary border-dark-border' : 'bg-light-bg-secondary border-light-border'}
-                border shadow-lg transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl
-                flex flex-col overflow-hidden
-                ${isDark ? 'hover:bg-gradient-to-br hover:from-primary/5 hover:to-secondary/5' : 'hover:bg-gradient-to-br hover:from-primary/5 hover:to-secondary/5'}
-              `}
-            >
-              {/* Background Pattern */}
-              <div className="absolute top-0 right-0 w-32 h-32 opacity-5 group-hover:opacity-20 transition-opacity duration-500">
-                <svg className="w-full h-full text-primary" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                </svg>
-              </div>
-
-              {/* Quote Icon */}
-              <div className="relative z-10 mb-6">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                  <FaQuoteLeft className="text-primary text-2xl group-hover:text-secondary transition-colors duration-300" />
-                </div>
-              </div>
-
-              {/* Rating */}
-              <div className="flex items-center gap-1 mb-4">
-                {[...Array(testimonial.rating)].map((_, i) => (
-                  <FaStar key={i} className="text-yellow-400 text-sm" />
-                ))}
-              </div>
-
-              {/* Quote */}
-              <p className={`italic mb-6 leading-relaxed ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'} group-hover:text-primary transition-colors duration-300`}>
-                "{testimonial.quote}"
-              </p>
-
-              {/* Author Info */}
-              <div className="mt-auto flex items-center">
-                <div className="relative">
-                  <img
-                    src={testimonial.avatar}
-                    alt={testimonial.name}
-                    className="w-14 h-14 rounded-full border-3 border-gradient-to-r from-primary to-secondary p-0.5 group-hover:scale-110 transition-transform duration-300"
-                  />
-                  <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center">
-                    <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                </div>
-                <div className="ml-4">
-                  <h4 className={`font-bold text-lg ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'} group-hover:text-primary transition-colors duration-300`}>
-                    {testimonial.name}
-                  </h4>
-                  <p className={`text-sm ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'} mb-1`}>
-                    {testimonial.role}
-                  </p>
-                  <p className="text-xs text-primary font-medium">
-                    {testimonial.company}
-                  </p>
-                </div>
-              </div>
-
-              {/* Success Badge */}
-              <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <div className="px-3 py-1 bg-gradient-to-r from-green-400 to-green-600 text-white text-xs rounded-full font-medium">
-                  Success Story
-                </div>
-              </div>
-            </div>
-          ))}
+        {/* Scrolling Container */}
+        <div 
+          ref={scrollRef}
+          className="overflow-hidden relative w-full"
+        >
+          <div className="flex gap-8 w-fit">
+            {/* Original testimonials */}
+            {testimonials.map((testimonial, index) => (
+              <TestimonialCard 
+                key={index} 
+                testimonial={testimonial} 
+              />
+            ))}
+            {/* Duplicated testimonials for smooth infinite scroll */}
+            {testimonials.map((testimonial, index) => (
+              <TestimonialCard 
+                key={`duplicate-${index}`} 
+                testimonial={testimonial}
+                isDuplicate={true}
+              />
+            ))}
+          </div>
         </div>
 
         {/* Bottom CTA */}
