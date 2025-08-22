@@ -3,6 +3,7 @@ import { FiArrowUp } from 'react-icons/fi';
 
 function ScrollToTopButton() {
   const [isVisible, setIsVisible] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     let ticking = false;
@@ -26,7 +27,31 @@ function ScrollToTopButton() {
   }, []);
 
   const handleClick = useCallback(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    const duration = 1000; // Duration in milliseconds
+    const start = window.pageYOffset;
+    const startTime = performance.now();
+
+    const animateScroll = (currentTime) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      // Easing function for smoother animation
+      const easeInOutCubic = progress => {
+        return progress < 0.5
+          ? 4 * progress * progress * progress
+          : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+      };
+
+      window.scrollTo({
+        top: start * (1 - easeInOutCubic(progress))
+      });
+
+      if (progress < 1) {
+        requestAnimationFrame(animateScroll);
+      }
+    };
+
+    requestAnimationFrame(animateScroll);
   }, []);
 
   return (
@@ -34,7 +59,17 @@ function ScrollToTopButton() {
       type="button"
       aria-label="Scroll to top"
       onClick={handleClick}
-      className={`md:hidden fixed z-50 right-5 bottom-[75px] rounded-full bg-primary text-white shadow-card hover:shadow-card-hover transition-opacity duration-300 focus:outline-none focus:ring-2 focus:ring-primary-300 dark:focus:ring-primary-700 ${isVisible ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className={`fixed z-50 right-5 bottom-[75px] rounded-full bg-primary text-white 
+        shadow-card hover:shadow-card-hover transition-all duration-300 
+        focus:outline-none focus:ring-2 focus:ring-primary-300 
+        dark:focus:ring-primary-700
+        ${isHovered ? 'animate-pulse' : 'animate-bounce-subtle'}
+        ${isVisible 
+          ? "opacity-100 translate-y-0" 
+          : "opacity-0 translate-y-10 pointer-events-none"
+      }`}
     >
       <span className="h-12 w-12 grid place-items-center">
         <FiArrowUp className="text-2xl font-bold"/>

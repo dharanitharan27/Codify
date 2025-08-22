@@ -1,0 +1,16 @@
+{
+  "name": "codify",
+  "version": "1.0.0",
+  "description": "<div align=\"center\">\r   <img src=\"https://github.com/user-attachments/assets/18bb2c91-12e4-45e7-b1e6-2cbee943975c\" alt=\"Codify Banner\" width=\"800\"/>\r   <p><em>Master coding with interactive courses, personalized learning paths, and expert-curated roadmaps</em></p>",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "vite"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "vite": "^7.1.3"
+  }
+}
