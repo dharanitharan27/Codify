@@ -224,6 +224,10 @@ server/
 
 We welcome contributions to Codify! Here's how you can help:
 
+> **Contributor Guide:**  
+> Visit [`/ContributorsGuide`](https://codifylearn.netlify.app/ContributorsGuide) in the app for a step-by-step, beginner-friendly guide.  
+> This page covers the Git workflow, pull request creation, FAQs, and helpful resources to make your first contribution smooth and enjoyable.
+
 1. Fork the repository
 2. Create a feature branch
    ```bash
