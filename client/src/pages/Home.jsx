@@ -69,7 +69,7 @@ function Home() {
           loop
           muted
           playsInline
-          className="absolute inset-0 w-full h-full object-cover opacity-20"
+          className={`absolute inset-0 w-full h-full object-cover ${isDark ? "opacity-20" : "opacity-40"}`}
         >
           <source src="/Videos/vid1.mp4" type="video/mp4" />
         </video>
@@ -125,9 +125,9 @@ function Home() {
           {/* Badge */}
           <div
             className={`inline-flex items-center mt-16 gap-2 px-4 py-2 rounded-full ${
-              isDark ? "bg-dark-bg-secondary/80" : "bg-light-bg-secondary/80"
+              isDark ? "bg-dark-bg-secondary/80" : "bg-light-bg-secondary"
             } backdrop-blur-sm border ${
-              isDark ? "border-dark-border/50" : "border-light-border/50"
+              isDark ? "border-dark-border/50" : "border-light-border"
             } mb-8 animate-fadeIn`}
           >
             <span className="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
