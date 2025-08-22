@@ -10,13 +10,11 @@ export default function CodifyLearningComponent() {
   const navigate = useNavigate()
 
   const handleViewRepo = () => {
-    // In a real app, this would navigate to the actual repository
     window.open('https://github.com/Roshansuthar1105/Codify', '_blank');
   };
 
   const handleGithubGuide = () => {
-    // In a real app, this would navigate to the contribution guide
-    window.open('https://github.com/your-org/codify-learning/blob/main/CONTRIBUTING.md', '_blank');
+    navigate("/contributorGuide")
   };
 
   return (
