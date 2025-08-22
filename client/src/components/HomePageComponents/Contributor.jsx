@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Github, BookOpen, Code, Heart, Users } from 'lucide-react';
 import { useNavigate } from 'react-router';
+import { useTheme } from '../../context/ThemeContext';
 
 export default function CodifyLearningComponent() {
   const [showMotivation, setShowMotivation] = useState(false);
-  const [theme] = useState('dark'); // You can change this to 'light' or get it from your theme context
+  const { theme } = useTheme();
   const isDark = theme === 'dark';
 
   const navigate = useNavigate()
@@ -18,11 +19,14 @@ export default function CodifyLearningComponent() {
   };
 
   return (
-    <section className="py-20 px-4">
+    <section className={`py-20 px-4 ${
+      isDark ? 'bg-dark-bg-primary' : 'bg-light-bg-primary'
+    }`}>
       <div
         className={`
-          max-w-5xl mx-auto rounded-2xl p-12 ${isDark ? 'bg-dark-bg-secondary border-dark-border' : 'bg-light-bg-secondary border-light-border'}
-          border shadow-xl relative overflow-hidden
+          max-w-5xl mx-auto rounded-2xl p-12 border shadow-xl relative overflow-hidden ${
+            isDark ? 'bg-dark-bg-secondary border-dark-border' : 'bg-light-bg-secondary border-light-border'
+          }
         `}
       >
         {/* Background pattern */}
@@ -38,11 +42,15 @@ export default function CodifyLearningComponent() {
               <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center mr-3">
                 <Code className="h-6 w-6 text-primary" />
               </div>
-              <h1 className={`text-3xl md:text-4xl font-bold ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'}`}>
+              <h1 className={`text-3xl md:text-4xl font-bold ${
+                isDark ? 'text-dark-text-primary' : 'text-light-text-primary'
+              }`}>
                 <span className="text-primary">Codify</span>Learning Platform
               </h1>
             </div>
-            <p className={`text-lg max-w-2xl mx-auto ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>
+            <p className={`text-lg max-w-2xl mx-auto ${
+              isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'
+            }`}>
               Empowering the next generation of developers with expert-led tutorials and hands-on projects.
             </p>
           </div>
@@ -51,11 +59,11 @@ export default function CodifyLearningComponent() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
             <button
               onClick={handleViewRepo}
-              className={`flex items-center justify-center px-6 py-3 rounded-lg font-medium transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl ${
+              className={`flex items-center justify-center px-6 py-3 rounded-lg font-medium transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl border ${
                 isDark 
                   ? 'bg-dark-bg-tertiary text-dark-text-primary border-dark-border hover:bg-dark-bg-tertiary/80' 
                   : 'bg-light-bg-tertiary text-light-text-primary border-light-border hover:bg-light-bg-tertiary/80'
-              } border`}
+              }`}
             >
               <Github className="h-5 w-5 mr-2" />
               View Repository
@@ -90,12 +98,16 @@ export default function CodifyLearningComponent() {
                 <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center mr-3">
                   <Heart className="h-5 w-5 text-primary" />
                 </div>
-                <h2 className={`text-xl font-bold ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'}`}>
+                <h2 className={`text-xl font-bold ${
+                  isDark ? 'text-dark-text-primary' : 'text-light-text-primary'
+                }`}>
                   Join Our Mission!
                 </h2>
               </div>
               
-              <div className={`space-y-4 ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>
+              <div className={`space-y-4 ${
+                isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'
+              }`}>
                 <p className="leading-relaxed">
                   <strong className={isDark ? 'text-dark-text-primary' : 'text-light-text-primary'}>
                     Every line of code you contribute shapes the future of learning.
@@ -114,7 +126,9 @@ export default function CodifyLearningComponent() {
                 <div className={`p-4 rounded-lg border-l-4 border-primary ${
                   isDark ? 'bg-dark-bg-primary/50' : 'bg-light-bg-primary/50'
                 }`}>
-                  <p className={`font-medium mb-2 ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'}`}>
+                  <p className={`font-medium mb-2 ${
+                    isDark ? 'text-dark-text-primary' : 'text-light-text-primary'
+                  }`}>
                     Why Your Contribution Matters:
                   </p>
                   <ul className="space-y-2">
@@ -137,7 +151,9 @@ export default function CodifyLearningComponent() {
                   </ul>
                 </div>
                 
-                <p className={`leading-relaxed font-medium ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'}`}>
+                <p className={`leading-relaxed font-medium ${
+                  isDark ? 'text-dark-text-primary' : 'text-light-text-primary'
+                }`}>
                   Remember: You don't need to be perfect to contribute. You just need to care. 
                   Whether it's fixing a typo, improving a code example, or adding a new feature – 
                   every contribution is valuable. We're all learning together, and your unique perspective 
@@ -150,7 +166,9 @@ export default function CodifyLearningComponent() {
                   <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center mr-3">
                     <Users className="h-4 w-4 text-primary" />
                   </div>
-                  <span className={`font-medium ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'}`}>
+                  <span className={`font-medium ${
+                    isDark ? 'text-dark-text-primary' : 'text-light-text-primary'
+                  }`}>
                     Join thousands of contributors making learning accessible to everyone!
                   </span>
                 </div>
@@ -159,11 +177,15 @@ export default function CodifyLearningComponent() {
           )}
 
           {/* Footer */}
-          <div className={`text-center mt-8 pt-6 border-t ${isDark ? 'border-dark-border' : 'border-light-border'}`}>
+          <div className={`text-center mt-8 pt-6 border-t ${
+            isDark ? 'border-dark-border' : 'border-light-border'
+          }`}>
             <p className={isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}>
               Ready to make an impact? Start with small contributions and grow into a core maintainer.
             </p>
-            <p className={`text-sm mt-2 ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>
+            <p className={`text-sm mt-2 ${
+              isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'
+            }`}>
               Together, we're building the future of developer education. 🚀
             </p>
           </div>
