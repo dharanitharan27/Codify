@@ -56,9 +56,7 @@ function App() {
           </header>
           <main className="flex-grow pt-16">
             <Suspense fallback={
-              <div className="flex items-center justify-center h-screen">
-                <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-primary"></div>
-              </div>
+              <Loader />
             }>
               <Routes>
                 <Route path="/" element={<Home />} />
