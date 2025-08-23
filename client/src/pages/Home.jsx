@@ -85,10 +85,10 @@ function Home() {
         </div>
 
         {/* Floating Icons */}
-        <div className="absolute top-20 right-20 text-6xl text-primary/30 animate-float">
+        <div className="absolute md:top-20 top-6 right-1 md:right-20 text-6xl text-primary/30 animate-float">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-20 w-20"
+            className="md:h-20 md:w-20 h-10 w-10"
             viewBox="0 0 24 24"
             fill="currentColor"
           >
@@ -96,10 +96,10 @@ function Home() {
           </svg>
         </div>
 
-        <div className="absolute bottom-32 left-16 text-4xl text-secondary/30 animate-float animation-delay-300">
+        <div className="absolute bottom-32 md:left-16 left-6 top-1/8 text-4xl text-secondary/30 animate-float animation-delay-300">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-16 w-16"
+            className="md:h-16 md:w-16 h-8 w-8"
             viewBox="0 0 24 24"
             fill="currentColor"
           >
@@ -108,20 +108,20 @@ function Home() {
         </div>
 
         {/* Additional Floating Code Elements */}
-        <div className="absolute top-1/3 left-10 text-3xl text-accent/30 animate-float animation-delay-500">
-          <svg className="h-12 w-12" fill="currentColor" viewBox="0 0 24 24">
+        <div className="absolute md:top-1/3 top-6 md:left-10 left-5 text-3xl text-accent/30 animate-float animation-delay-500">
+          <svg className="md:h-12 md:w-12 h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
             <path d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
           </svg>
         </div>
 
-        <div className="absolute bottom-1/4 right-10 text-2xl text-primary/20 animate-float animation-delay-700">
-          <svg className="h-10 w-10" fill="currentColor" viewBox="0 0 24 24">
+        <div className="absolute bottom-1/4 right-4 text-2xl text-primary/20 animate-float animation-delay-700">
+          <svg className="md:h-10 md:w-10 h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
             <path d="M7.375 16.781l1.25-1.562L4.601 12l4.024-3.219-1.25-1.562-5 4a1 1 0 000 1.562l5 4zm9.25-9.562l-1.25 1.562L19.399 12l-4.024 3.219 1.25 1.562 5-4a1 1 0 000-1.562l-5-4zM14.976 3.216l-4 18-1.953-.434 4-18 1.953.434z" />
           </svg>
         </div>
 
         {/* Main Content */}
-        <div className="relative z-20 text-center max-w-6xl mx-auto px-6 py-8">
+        <div className="relative z-20 text-center max-w-6xl mx-auto md:px-6 md:py-8">
           {/* Badge */}
           <div
             className={`inline-flex items-center mt-16 gap-2 px-4 py-2 rounded-full ${
@@ -431,7 +431,7 @@ function Home() {
       {/* Enhanced Stats Section */}
       <section className="py-24 relative">
         {/* Floating Code Icon */}
-        <div className="absolute top-20 left-20 text-3xl text-accent/30 animate-float animation-delay-400">
+        <div className="absolute md:top-20 top-14 left-20 text-3xl text-accent/30 animate-float animation-delay-400">
           <svg className="h-10 w-10" fill="currentColor" viewBox="0 0 24 24">
             <path d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
           </svg>
@@ -453,7 +453,7 @@ function Home() {
               <div className="absolute -bottom-32 -left-32 w-96 h-96 rounded-full bg-gradient-to-br from-secondary/20 to-accent/20 blur-3xl animate-pulse animation-delay-1000"></div>
             </div>
 
-            <div className="relative z-10 text-center">
+            <div className="relative  z-10 text-center">
               <h2
                 className={`text-4xl md:text-5xl font-bold mb-16 ${
                   isDark ? "text-dark-text-primary" : "text-light-text-primary"
@@ -466,13 +466,13 @@ function Home() {
                 Worldwide
               </h2>
 
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+              <div className="grid grid-cols-2 md:grid-cols-4 md:gap-8 gap-6">
                 {/* Courses Stat */}
                 <div className="group">
-                  <div className="text-center p-6 rounded-2xl transition-all duration-500 group-hover:-translate-y-2 group-hover:shadow-xl">
+                  <div className="text-center md:p-6 rounded-2xl transition-all duration-500 group-hover:-translate-y-2 group-hover:shadow-xl">
                     <div className="relative mb-4">
                       <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-full transform scale-0 group-hover:scale-100 transition-transform duration-500"></div>
-                      <h3 className="text-5xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary mb-2 relative z-10">
+                      <h3 className="text-3xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary mb-2 relative z-10">
                         70+
                       </h3>
                     </div>
@@ -490,10 +490,10 @@ function Home() {
 
                 {/* Roadmaps Stat */}
                 <div className="group">
-                  <div className="text-center p-6 rounded-2xl transition-all duration-500 group-hover:-translate-y-2 group-hover:shadow-xl">
+                  <div className="text-center md:p-6 rounded-2xl transition-all duration-500 group-hover:-translate-y-2 group-hover:shadow-xl">
                     <div className="relative mb-4">
                       <div className="absolute inset-0 bg-gradient-to-r from-secondary/20 to-accent/20 rounded-full transform scale-0 group-hover:scale-100 transition-transform duration-500"></div>
-                      <h3 className="text-5xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-secondary to-accent mb-2 relative z-10">
+                      <h3 className="text-3xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-secondary to-accent mb-2 relative z-10">
                         35+
                       </h3>
                     </div>
@@ -511,10 +511,10 @@ function Home() {
 
                 {/* Creators Stat */}
                 <div className="group">
-                  <div className="text-center p-6 rounded-2xl transition-all duration-500 group-hover:-translate-y-2 group-hover:shadow-xl">
+                  <div className="text-center md:p-6 rounded-2xl transition-all duration-500 group-hover:-translate-y-2 group-hover:shadow-xl">
                     <div className="relative mb-4">
                       <div className="absolute inset-0 bg-gradient-to-r from-accent/20 to-primary/20 rounded-full transform scale-0 group-hover:scale-100 transition-transform duration-500"></div>
-                      <h3 className="text-5xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-accent to-primary mb-2 relative z-10">
+                      <h3 className="text-3xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-accent to-primary mb-2 relative z-10">
                         30+
                       </h3>
                     </div>
@@ -532,10 +532,10 @@ function Home() {
 
                 {/* Users Stat */}
                 <div className="group">
-                  <div className="text-center p-6 rounded-2xl transition-all duration-500 group-hover:-translate-y-2 group-hover:shadow-xl">
+                  <div className="text-center md:p-6 rounded-2xl transition-all duration-500 group-hover:-translate-y-2 group-hover:shadow-xl">
                     <div className="relative mb-4">
                       <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-full transform scale-0 group-hover:scale-100 transition-transform duration-500"></div>
-                      <h3 className="text-5xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary mb-2 relative z-10">
+                      <h3 className="text-3xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary mb-2 relative z-10">
                         1000+
                       </h3>
                     </div>
