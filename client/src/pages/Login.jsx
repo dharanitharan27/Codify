@@ -35,36 +35,6 @@ function Login() {
     });
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     setIsLoading(true);
-  //     const response = await fetch(`${API}/api/v1/auth/login`, {
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       method: "POST",
-  //       body: JSON.stringify(user),
-  //     });
-  //     if (response.ok) {
-  //       setUser({ email: "", password: "" });
-  //       const res_data = await response.json();
-  //       storeTokenInLS(res_data.token);
-  //       toast.success("Logged in Successfully");
-  //       window.location.href = "/";
-  //     } else {
-  //       const err_data = await response.json();
-  //       toast.warn(
-  //         err_data.extraDetails ? err_data.extraDetails : err_data.message
-  //       );
-  //     }
-  //   } catch (error) {
-  //     console.log("response error : ", error);
-  //     toast.error("Failed to login. Please try again.");
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
   const handleSubmit = async (e) => {
   e.preventDefault();
   try {

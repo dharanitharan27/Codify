@@ -194,40 +194,6 @@ const handleResendOtp = async () => {
 };
 
 
-// const handleOtpChange = (e, index) => {
-//   const value = e.target.value;
-//   if (/^\d*$/.test(value)) {
-//     const newOtp = [...otp];
-//     newOtp[index] = value;
-//     setOtp(newOtp);
-//     if (value && index < otpRefs.current.length - 1) {
-//       otpRefs.current[index + 1]?.focus();
-//     }
-//   }
-// };
-
-// const handleOtpKeyDown = (e, index) => {
-//   if (e.key === "Backspace" && !otp[index] && index > 0) {
-//     otpRefs.current[index - 1]?.focus();
-//   } else if (e.key === "ArrowLeft" && index > 0) {
-//     otpRefs.current[index - 1]?.focus();
-//   } else if (e.key === "ArrowRight" && index < otpRefs.current.length - 1) {
-//     otpRefs.current[index + 1]?.focus();
-//   }
-// };
-// const handleOtpPaste = (e) => {
-//   e.preventDefault();
-//   const pasted = e.clipboardData.getData('text').slice(0, otpLength);
-//   const chars = pasted.split('');
-//   const newOtp = [...otp];
-//   chars.forEach((char, index) => {
-//     if (!isNaN(char)) newOtp[index] = char;
-//   });
-//   setOtp(newOtp);
-// };
-
-
-
   return (
   <>
     <div className={`relative min-h-screen-minus-nav flex items-center justify-center p-4 md:p-8 overflow-hidden z-10 ${
