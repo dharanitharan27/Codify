@@ -246,8 +246,8 @@ const Footer = () => {
                 Get the latest updates, tutorials and offers directly to your inbox.
               </p>
             </div>
-            <div className="flex-1 w-full">
-              <div className="flex gap-2">
+            <div className="md:flex-1 w-full ">
+              <div className="md:flex gap-2">
                 <input 
                   type="email" 
                   placeholder="Enter your email" 
@@ -259,7 +259,7 @@ const Footer = () => {
                     } border focus:outline-none focus:ring-2 focus:ring-primary
                   `}
                 />
-                <button className="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg transition-colors">
+                <button className="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg transition-colors my-3 mx-1">
                   Subscribe
                 </button>
               </div>

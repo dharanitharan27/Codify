@@ -23,6 +23,7 @@ const Courses = lazy(() => import("./pages/Courses"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const CoursePlayer = lazy(() => import("./pages/CoursePlayer"));
 const Roadmap = lazy(() => import("./pages/Roadmap"));
+const ContributorsGuide = lazy(() => import("./pages/ContributorGuide.jsx"))
 
 // Admin components
 const AdminLayout = lazy(() => import("./layouts/AdminLayout"));
@@ -71,6 +72,7 @@ function App() {
                 <Route path="/logout" element={<LogOut />} />
                 <Route path="*" element={<ErrorPage />} />
                 <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/contributorGuide" element={<ContributorsGuide />} />
                 <Route path="/admin" element={<AdminLayout />}>
                   <Route path="users" element={<AdminUsers />} />
                   <Route path="users/:id/edit" element={<AdminUpdate />} />
