@@ -34,7 +34,7 @@ const login = async (req, res) => {
       return res.status(400).send({ message: "invalid Credentions" });
     }
     // const isCorrectPassword =await bcryptjs.compare(password,userExist.password);
-    const isCorrectPassword = await userExist.compairPassword(password);
+    const isCorrectPassword = await userExist.comparePassword(password);
     if (isCorrectPassword) {
       res.status(201).send({
         message: "logged In Successful",
