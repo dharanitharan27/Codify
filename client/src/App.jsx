@@ -10,6 +10,7 @@ import NavBar from "./components/NavBar";
 import Footer from "./components/Footer.jsx";
 import Loader from "./components/Loader";
 import ScrollToTopButton from "./components/ScrollToTopButton.jsx";
+ 
 
 // Lazy loaded components
 const Home = lazy(() => import("./pages/Home"));
@@ -33,6 +34,7 @@ const AdminCourses = lazy(() => import("./layouts/CourseLayout/AdminCourses"));
 const AdminUpdate = lazy(() => import("./layouts/AdminUpdate"));
 const AddNewCourse = lazy(() => import("./layouts/CourseLayout/AddNewCourse.jsx"));
 const CourseUpdate = lazy(() => import("./layouts/CourseLayout/CourseUpdate"));
+const ContributorsPage = lazy(()=>import("./components/Contributor.jsx"))
 const ScrollToTop = ({ children }) => {
   const location = useLocation();
 
@@ -68,6 +70,7 @@ function App() {
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/logout" element={<LogOut />} />
+                <Route path="/C" element = {<ContributorsPage/>}/>
                 <Route path="*" element={<ErrorPage />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/contributorGuide" element={<ContributorsGuide />} />

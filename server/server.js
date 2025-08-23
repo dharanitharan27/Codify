@@ -11,6 +11,7 @@ import router from './routes/router.js';
 import adminRouter from './routes/adminRouter.js';
 import progressRouter from './routes/progressRoute.js';
 import activityRouter from './routes/activityRoute.js';
+import LearderBoardRouter from './routes/LeaderBoardRoute.js'
 dotenv.config();
 const app= express();
 
@@ -22,6 +23,7 @@ const corsOption = {
     credentials:false
 }
 app.use(cors(corsOption));
+ 
 // https://bitwise-backend.onrender.com/api/v1/auth/login
 app.use(express.json());
 app.use("/api/v1/auth",authRouter);
@@ -32,6 +34,7 @@ app.use("/progress",progressRouter);
 app.use("/activity",activityRouter);
 app.use("/",router)
 app.use("/admin",adminRouter);
+app.use("/api/v1",LearderBoardRouter);
 // app.get("/",)
 const PORT = process.env.PORT ||5050;
 
