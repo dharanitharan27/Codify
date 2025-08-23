@@ -114,11 +114,11 @@ Experience Codify in action: [https://codifylearn.netlify.app](https://codifylea
 ### Frontend Setup
 1. Clone the repository
    ```bash
-   git clone https://github.com/roshansuthar1105/codify-frontend.git
+   git clone https://github.com/Roshansuthar1105/Codify.git
    ```
 2. Navigate to the client directory
    ```bash
-   cd codify-frontend/client
+   cd codify/client
    ```
 3. Install dependencies
    ```bash
@@ -128,7 +128,7 @@ Experience Codify in action: [https://codifylearn.netlify.app](https://codifylea
    ```
 4. Create a `.env` file in the client directory with the following variables:
    ```
-   VITE_API_URL=http://localhost:5000/api
+   VITE_SERVER_API=http://localhost:5050
    VITE_YOUTUBE_API=your_youtube_api_key
    ```
 5. Start the development server
@@ -142,11 +142,11 @@ Experience Codify in action: [https://codifylearn.netlify.app](https://codifylea
 ### Backend Setup
 1. Clone the backend repository
    ```bash
-   git clone https://github.com/roshansuthar1105/codify-backend.git
+   git clone https://github.com/Roshansuthar1105/Codify.git
    ```
 2. Navigate to the server directory
    ```bash
-   cd codify-backend
+   cd codify/server
    ```
 3. Install dependencies
    ```bash
@@ -156,9 +156,10 @@ Experience Codify in action: [https://codifylearn.netlify.app](https://codifylea
    ```
 4. Create a `.env` file with the following variables:
    ```
-   PORT=5000
-   MONGODB_URI=your_mongodb_connection_string
+   MONGODB_URI=your_mongodb_connection_string/or ask the repo owner for the URI
+   PORT=5050
    JWT_SECRET=your_jwt_secret
+   CLIENT_CORS=http://localhost:5173
    ```
 5. Start the server
    ```bash
@@ -166,6 +167,9 @@ Experience Codify in action: [https://codifylearn.netlify.app](https://codifylea
    # or
    yarn start
    ```
+
+## Note:
+ You might need to run both the client and server simultaneously for fetching data in your local machine.
 
 ## 📁 Project Structure
 
@@ -225,19 +229,27 @@ server/
 We welcome contributions to Codify! Here's how you can help:
 
 1. Fork the repository
-2. Create a feature branch
+2. Add an upstream to keep your fork synchronized with the original repository
+   ```bash
+   git remote add upstream https://github.com/Roshansuthar1105/Codify.git
+   ```
+3. Fetch Changes from the upstream
+   ```bash
+   git fetch upstream
+   ```
+3. Create a feature branch
    ```bash
    git checkout -b feature/amazing-feature
    ```
-3. Commit your changes
+4. Commit your changes
    ```bash
    git commit -m 'Add some amazing feature'
    ```
-4. Push to the branch
+5. Push to the branch
    ```bash
    git push origin feature/amazing-feature
    ```
-5. Open a Pull Request
+6. Open a Pull Request
 
 Please read our [Contributing Guidelines](CONTRIBUTING.md) for more details.
 
