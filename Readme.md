@@ -160,6 +160,8 @@ Experience Codify in action: [https://codifylearn.netlify.app](https://codifylea
    PORT=5050
    JWT_SECRET=your_jwt_secret
    CLIENT_CORS=http://localhost:5173
+   EMAIL_USER=your_email@gmail.com
+   EMAIL_PASS=your_app_password
    ```
 5. Start the server
    ```bash
