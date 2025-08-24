@@ -1,7 +1,10 @@
 import React, { lazy, Suspense, useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
+import Counter from "../utils/Counter";
 import { FaArrowUp } from "react-icons/fa";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 // Lazy loaded components
 const CreatorsContainer = lazy(() =>
@@ -21,7 +24,7 @@ const CallToAction = lazy(() =>
   import("../components/HomePageComponents/CallToAction")
 );
 
-const Contribution = lazy(()=>
+const Contribution = lazy(() =>
   import("../components/HomePageComponents/Contributor")
 )
 
@@ -57,13 +60,16 @@ function Home() {
     });
   };
 
+  useEffect(() => {
+    AOS.init({ duration: 1000, once: true });
+  }, []);
+
   return (
     <div
-      className={`relative min-h-screen-minus-nav ${
-        isDark
+      className={`relative min-h-screen-minus-nav ${isDark
           ? "bg-dark-bg-primary text-dark-text-primary"
           : "bg-light-bg-primary text-light-text-primary"
-      }`}
+        }`}
     >
       {/* Hero Section with Video Background */}
       <section className="relative h-screen-minus-nav flex items-center justify-center">
@@ -128,11 +134,9 @@ function Home() {
         <div className="relative z-20 text-center max-w-6xl mx-auto md:px-6 md:py-8">
           {/* Badge */}
           <div
-            className={`inline-flex items-center mt-16 gap-2 px-4 py-2 rounded-full ${
-              isDark ? "bg-dark-bg-secondary/80" : "bg-light-bg-secondary"
-            } backdrop-blur-sm border ${
-              isDark ? "border-dark-border/50" : "border-light-border"
-            } mb-8 animate-fadeIn`}
+            className={`inline-flex items-center mt-16 gap-2 px-4 py-2 rounded-full ${isDark ? "bg-dark-bg-secondary/80" : "bg-light-bg-secondary"
+              } backdrop-blur-sm border ${isDark ? "border-dark-border/50" : "border-light-border"
+              } mb-8 animate-fadeIn`}
           >
             <span className="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
             <span className="text-sm font-medium">
@@ -142,9 +146,8 @@ function Home() {
 
           {/* Main Headline */}
           <h1
-            className={`text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-8 leading-tight ${
-              isDark ? "text-dark-text-primary" : "text-light-text-primary"
-            } animate-fadeIn animation-delay-200`}
+            className={`text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-8 leading-tight ${isDark ? "text-dark-text-primary" : "text-light-text-primary"
+              } animate-fadeIn animation-delay-200`}
           >
             Master Coding with
             <span className="block text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-accent animate-pulse mt-2 leading-tight py-2">
@@ -154,9 +157,8 @@ function Home() {
 
           {/* Subtitle */}
           <p
-            className={`text-xl md:text-2xl mb-12 max-w-3xl mx-auto ${
-              isDark ? "text-dark-text-secondary" : "text-light-text-secondary"
-            } animate-fadeIn animation-delay-400`}
+            className={`text-xl md:text-2xl mb-12 max-w-3xl mx-auto ${isDark ? "text-dark-text-secondary" : "text-light-text-secondary"
+              } animate-fadeIn animation-delay-400`}
           >
             Discover the perfect learning path with hands-on projects, expert
             guidance, and a community of passionate developers
@@ -204,11 +206,10 @@ function Home() {
           <div className="mt-16 animate-fadeIn animation-delay-800">
 
             <p
-              className={`text-sm ${
-                isDark
+              className={`text-sm ${isDark
                   ? "text-dark-text-secondary"
                   : "text-light-text-secondary"
-              } mb-4`}
+                } mb-4`}
             >
               Trusted by developers from 100+ countries
             </p>
@@ -230,7 +231,7 @@ function Home() {
       </section>
 
       {/* Enhanced Features Section */}
-      <section className="py-24 relative">
+      <section className="py-24 relative" data-aos="fade-up">
         {/* Floating Decorative Elements */}
         <div className="absolute top-10 left-10 text-2xl text-primary/20 animate-float animation-delay-300">
           <svg className="h-8 w-8" fill="currentColor" viewBox="0 0 24 24">
@@ -248,9 +249,8 @@ function Home() {
           {/* Section Header */}
           <div className="text-center mb-20">
             <h2
-              className={`text-4xl md:text-5xl font-bold mb-6 ${
-                isDark ? "text-dark-text-primary" : "text-light-text-primary"
-              }`}
+              className={`text-4xl md:text-5xl font-bold mb-6 ${isDark ? "text-dark-text-primary" : "text-light-text-primary"
+                }`}
             >
               Why Choose{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
@@ -258,11 +258,10 @@ function Home() {
               </span>
             </h2>
             <p
-              className={`text-xl ${
-                isDark
+              className={`text-xl ${isDark
                   ? "text-dark-text-secondary"
                   : "text-light-text-secondary"
-              } max-w-2xl mx-auto`}
+                } max-w-2xl mx-auto`}
             >
               Experience learning reimagined with cutting-edge technology and
               proven methodologies
@@ -273,11 +272,10 @@ function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Feature 1 - Interactive Learning */}
             <div
-              className={`group relative p-8 rounded-2xl border transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl ${
-                isDark
+              className={`group relative p-8 rounded-2xl border transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl ${isDark
                   ? "bg-dark-bg-secondary border-dark-border hover:bg-gradient-to-br hover:from-primary/10 hover:to-secondary/10"
                   : "bg-light-bg-secondary border-light-border hover:bg-gradient-to-br hover:from-primary/5 hover:to-secondary/5"
-              }`}
+                }`} data-aos="fade-up" data-aos-delay="0"
             >
               {/* Background Pattern */}
               <div className="absolute top-0 right-0 w-24 h-24 opacity-5 group-hover:opacity-20 transition-opacity duration-500">
@@ -312,11 +310,10 @@ function Home() {
                 </h3>
 
                 <p
-                  className={`text-center ${
-                    isDark
+                  className={`text-center ${isDark
                       ? "text-dark-text-secondary"
                       : "text-light-text-secondary"
-                  } leading-relaxed`}
+                    } leading-relaxed`}
                 >
                   Learn by doing with real-world projects, interactive
                   exercises, and hands-on coding challenges that reinforce your
@@ -327,11 +324,10 @@ function Home() {
 
             {/* Feature 2 - Expert Instructors */}
             <div
-              className={`group relative p-8 rounded-2xl border transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl ${
-                isDark
+              className={`group relative p-8 rounded-2xl border transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl ${isDark
                   ? "bg-dark-bg-secondary border-dark-border hover:bg-gradient-to-br hover:from-secondary/10 hover:to-accent/10"
                   : "bg-light-bg-secondary border-light-border hover:bg-gradient-to-br hover:from-secondary/5 hover:to-accent/5"
-              }`}
+                }`} data-aos="fade-up" data-aos-delay="150"
             >
               <div className="absolute top-0 right-0 w-24 h-24 opacity-5 group-hover:opacity-20 transition-opacity duration-500">
                 <svg
@@ -365,11 +361,10 @@ function Home() {
                 </h3>
 
                 <p
-                  className={`text-center ${
-                    isDark
+                  className={`text-center ${isDark
                       ? "text-dark-text-secondary"
                       : "text-light-text-secondary"
-                  } leading-relaxed`}
+                    } leading-relaxed`}
                 >
                   Learn from industry professionals and experienced developers
                   who provide clear explanations and practical insights.
@@ -379,11 +374,10 @@ function Home() {
 
             {/* Feature 3 - Flexible Learning */}
             <div
-              className={`group relative p-8 rounded-2xl border transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl ${
-                isDark
+              className={`group relative p-8 rounded-2xl border transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl ${isDark
                   ? "bg-dark-bg-secondary border-dark-border hover:bg-gradient-to-br hover:from-accent/10 hover:to-primary/10"
                   : "bg-light-bg-secondary border-light-border hover:bg-gradient-to-br hover:from-accent/5 hover:to-primary/5"
-              }`}
+                }`} data-aos="fade-up" data-aos-delay="300"
             >
               <div className="absolute top-0 right-0 w-24 h-24 opacity-5 group-hover:opacity-20 transition-opacity duration-500">
                 <svg
@@ -417,11 +411,10 @@ function Home() {
                 </h3>
 
                 <p
-                  className={`text-center ${
-                    isDark
+                  className={`text-center ${isDark
                       ? "text-dark-text-secondary"
                       : "text-light-text-secondary"
-                  } leading-relaxed`}
+                    } leading-relaxed`}
                 >
                   Study at your own pace with 24/7 access to courses, progress
                   tracking, and personalized learning paths.
@@ -433,7 +426,7 @@ function Home() {
       </section>
 
       {/* Enhanced Stats Section */}
-      <section className="py-24 relative">
+      <section className="py-24 relative" data-aos="fade-right">
         {/* Floating Code Icon */}
         <div className="absolute md:top-20 top-14 left-20 text-3xl text-accent/30 animate-float animation-delay-400">
           <svg className="h-10 w-10" fill="currentColor" viewBox="0 0 24 24">
@@ -443,13 +436,11 @@ function Home() {
 
         <div className="max-w-7xl mx-auto px-6">
           <div
-            className={`relative rounded-3xl p-16 ${
-              isDark
+            className={`relative rounded-3xl p-16 ${isDark
                 ? "bg-gradient-to-br from-dark-bg-secondary via-dark-bg-tertiary to-dark-bg-secondary"
                 : "bg-gradient-to-br from-light-bg-secondary via-light-bg-tertiary to-light-bg-secondary"
-            } border ${
-              isDark ? "border-dark-border" : "border-light-border"
-            } shadow-2xl overflow-hidden`}
+              } border ${isDark ? "border-dark-border" : "border-light-border"
+              } shadow-2xl overflow-hidden`}
           >
             {/* Background Decoration */}
             <div className="absolute inset-0 overflow-hidden">
@@ -459,9 +450,8 @@ function Home() {
 
             <div className="relative  z-10 text-center">
               <h2
-                className={`text-4xl md:text-5xl font-bold mb-16 ${
-                  isDark ? "text-dark-text-primary" : "text-light-text-primary"
-                }`}
+                className={`text-4xl md:text-5xl font-bold mb-16 ${isDark ? "text-dark-text-primary" : "text-light-text-primary"
+                  }`}
               >
                 Empowering{" "}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
@@ -477,15 +467,14 @@ function Home() {
                     <div className="relative mb-4">
                       <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-full transform scale-0 group-hover:scale-100 transition-transform duration-500"></div>
                       <h3 className="text-3xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary mb-2 relative z-10">
-                        70+
+                        <Counter end={70} />
                       </h3>
                     </div>
                     <p
-                      className={`text-lg font-semibold ${
-                        isDark
+                      className={`text-lg font-semibold ${isDark
                           ? "text-dark-text-primary"
                           : "text-light-text-primary"
-                      }`}
+                        }`}
                     >
                       Premium Courses
                     </p>
@@ -498,15 +487,14 @@ function Home() {
                     <div className="relative mb-4">
                       <div className="absolute inset-0 bg-gradient-to-r from-secondary/20 to-accent/20 rounded-full transform scale-0 group-hover:scale-100 transition-transform duration-500"></div>
                       <h3 className="text-3xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-secondary to-accent mb-2 relative z-10">
-                        35+
+                        <Counter end={35} />
                       </h3>
                     </div>
                     <p
-                      className={`text-lg font-semibold ${
-                        isDark
+                      className={`text-lg font-semibold ${isDark
                           ? "text-dark-text-primary"
                           : "text-light-text-primary"
-                      }`}
+                        }`}
                     >
                       Learning Paths
                     </p>
@@ -519,15 +507,14 @@ function Home() {
                     <div className="relative mb-4">
                       <div className="absolute inset-0 bg-gradient-to-r from-accent/20 to-primary/20 rounded-full transform scale-0 group-hover:scale-100 transition-transform duration-500"></div>
                       <h3 className="text-3xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-accent to-primary mb-2 relative z-10">
-                        30+
+                        <Counter end={30} />
                       </h3>
                     </div>
                     <p
-                      className={`text-lg font-semibold ${
-                        isDark
+                      className={`text-lg font-semibold ${isDark
                           ? "text-dark-text-primary"
                           : "text-light-text-primary"
-                      }`}
+                        }`}
                     >
                       Expert Creators
                     </p>
@@ -540,15 +527,14 @@ function Home() {
                     <div className="relative mb-4">
                       <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-full transform scale-0 group-hover:scale-100 transition-transform duration-500"></div>
                       <h3 className="text-3xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary mb-2 relative z-10">
-                        1000+
+                        <Counter end={1000} />
                       </h3>
                     </div>
                     <p
-                      className={`text-lg font-semibold ${
-                        isDark
+                      className={`text-lg font-semibold ${isDark
                           ? "text-dark-text-primary"
                           : "text-light-text-primary"
-                      }`}
+                        }`}
                     >
                       Active Learners
                     </p>
@@ -561,7 +547,7 @@ function Home() {
       </section>
 
       {/* Enhanced Roadmaps Preview */}
-      <section className="py-24 relative">
+      <section className="py-24 relative" data-aos="fade-up">
         {/* Floating Decorative Element */}
         <div className="absolute top-10 right-10 text-2xl text-primary/20 animate-float animation-delay-500">
           <svg className="h-8 w-8" fill="currentColor" viewBox="0 0 24 24">
@@ -572,9 +558,8 @@ function Home() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-20">
             <h2
-              className={`text-4xl md:text-5xl font-bold mb-6 ${
-                isDark ? "text-dark-text-primary" : "text-light-text-primary"
-              }`}
+              className={`text-4xl md:text-5xl font-bold mb-6 ${isDark ? "text-dark-text-primary" : "text-light-text-primary"
+                }`}
             >
               Choose Your{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
@@ -582,11 +567,10 @@ function Home() {
               </span>
             </h2>
             <p
-              className={`text-xl ${
-                isDark
+              className={`text-xl ${isDark
                   ? "text-dark-text-secondary"
                   : "text-light-text-secondary"
-              } max-w-3xl mx-auto`}
+                } max-w-3xl mx-auto`}
             >
               Structured learning paths designed to take you from beginner to
               expert in your chosen field
@@ -596,11 +580,10 @@ function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {/* Frontend Development */}
             <div
-              className={`group relative rounded-2xl p-8 min-h-[280px] flex flex-col justify-between transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl border ${
-                isDark
+              className={`group relative rounded-2xl p-8 min-h-[280px] flex flex-col justify-between transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl border ${isDark
                   ? "bg-dark-bg-secondary border-dark-border hover:bg-gradient-to-br hover:from-primary/10 hover:to-secondary/10"
                   : "bg-light-bg-secondary border-light-border hover:bg-gradient-to-br hover:from-primary/5 hover:to-secondary/5"
-              }`}
+                }`} data-aos="fade-up" data-aos-delay="0"
             >
               <div className="absolute top-0 right-0 w-32 h-32 opacity-5 group-hover:opacity-20 transition-all duration-500 group-hover:scale-110">
                 <svg
@@ -629,20 +612,18 @@ function Home() {
                   </svg>
                 </div>
                 <h3
-                  className={`text-2xl font-bold ${
-                    isDark
+                  className={`text-2xl font-bold ${isDark
                       ? "text-dark-text-primary"
                       : "text-light-text-primary"
-                  } mb-3`}
+                    } mb-3`}
                 >
                   Frontend Development
                 </h3>
                 <p
-                  className={`text-sm ${
-                    isDark
+                  className={`text-sm ${isDark
                       ? "text-dark-text-secondary"
                       : "text-light-text-secondary"
-                  } mb-6 leading-relaxed`}
+                    } mb-6 leading-relaxed`}
                 >
                   Master modern web technologies including React, Vue, and
                   advanced CSS techniques
@@ -659,11 +640,10 @@ function Home() {
 
             {/* Backend Development */}
             <div
-              className={`group relative rounded-2xl p-8 min-h-[280px] flex flex-col justify-between transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl border ${
-                isDark
+              className={`group relative rounded-2xl p-8 min-h-[280px] flex flex-col justify-between transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl border ${isDark
                   ? "bg-dark-bg-secondary border-dark-border hover:bg-gradient-to-br hover:from-secondary/10 hover:to-accent/10"
                   : "bg-light-bg-secondary border-light-border hover:bg-gradient-to-br hover:from-secondary/5 hover:to-accent/5"
-              }`}
+                }`} data-aos="fade-up" data-aos-delay="200"
             >
               <div className="absolute top-0 right-0 w-32 h-32 opacity-5 group-hover:opacity-20 transition-all duration-500 group-hover:scale-110">
                 <svg
@@ -692,20 +672,18 @@ function Home() {
                   </svg>
                 </div>
                 <h3
-                  className={`text-2xl font-bold ${
-                    isDark
+                  className={`text-2xl font-bold ${isDark
                       ? "text-dark-text-primary"
                       : "text-light-text-primary"
-                  } mb-3`}
+                    } mb-3`}
                 >
                   Backend Development
                 </h3>
                 <p
-                  className={`text-sm ${
-                    isDark
+                  className={`text-sm ${isDark
                       ? "text-dark-text-secondary"
                       : "text-light-text-secondary"
-                  } mb-6 leading-relaxed`}
+                    } mb-6 leading-relaxed`}
                 >
                   Build robust APIs, databases, and server-side applications
                   with Node.js, Python, and more
@@ -722,11 +700,10 @@ function Home() {
 
             {/* Full Stack Development */}
             <div
-              className={`group relative rounded-2xl p-8 min-h-[280px] flex flex-col justify-between transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl border ${
-                isDark
+              className={`group relative rounded-2xl p-8 min-h-[280px] flex flex-col justify-between transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl border ${isDark
                   ? "bg-dark-bg-secondary border-dark-border hover:bg-gradient-to-br hover:from-accent/10 hover:to-primary/10"
                   : "bg-light-bg-secondary border-light-border hover:bg-gradient-to-br hover:from-accent/5 hover:to-primary/5"
-              }`}
+                }`} data-aos="fade-up" data-aos-delay="400"
             >
               <div className="absolute top-0 right-0 w-32 h-32 opacity-5 group-hover:opacity-20 transition-all duration-500 group-hover:scale-110">
                 <svg
@@ -755,20 +732,18 @@ function Home() {
                   </svg>
                 </div>
                 <h3
-                  className={`text-2xl font-bold ${
-                    isDark
+                  className={`text-2xl font-bold ${isDark
                       ? "text-dark-text-primary"
                       : "text-light-text-primary"
-                  } mb-3`}
+                    } mb-3`}
                 >
                   Full Stack Development
                 </h3>
                 <p
-                  className={`text-sm ${
-                    isDark
+                  className={`text-sm ${isDark
                       ? "text-dark-text-secondary"
                       : "text-light-text-secondary"
-                  } mb-6 leading-relaxed`}
+                    } mb-6 leading-relaxed`}
                 >
                   Master both frontend and backend technologies to build
                   complete web applications
@@ -785,11 +760,10 @@ function Home() {
 
             {/* View All Paths */}
             <div
-              className={`relative rounded-2xl p-8 min-h-[280px] flex flex-col justify-center items-center transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl overflow-hidden border ${
-                isDark
+              className={`relative rounded-2xl p-8 min-h-[280px] flex flex-col justify-center items-center transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl overflow-hidden border ${isDark
                   ? "bg-gradient-to-br from-dark-bg-secondary to-dark-bg-tertiary border-dark-border"
                   : "bg-gradient-to-br from-light-bg-secondary to-light-bg-tertiary border-light-border"
-              }`}
+                }`} data-aos="fade-left" data-aos-delay="600"
             >
               <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5"></div>
               <div className="relative z-10 text-center">
@@ -835,13 +809,12 @@ function Home() {
       </section>
 
       {/* Creators Showcase Section */}
-      <section className="py-24 relative">
+      <section className="py-24 relative" data-aos="fade-up">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-20">
             <h2
-              className={`text-4xl md:text-5xl font-bold mb-6 ${
-                isDark ? "text-dark-text-primary" : "text-light-text-primary"
-              }`}
+              className={`text-4xl md:text-5xl font-bold mb-6 ${isDark ? "text-dark-text-primary" : "text-light-text-primary"
+                }`}
             >
               Learn from{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
@@ -849,11 +822,10 @@ function Home() {
               </span>
             </h2>
             <p
-              className={`text-xl ${
-                isDark
+              className={`text-xl ${isDark
                   ? "text-dark-text-secondary"
                   : "text-light-text-secondary"
-              } max-w-3xl mx-auto`}
+                } max-w-3xl mx-auto`}
             >
               Our creators are passionate developers and educators committed to
               your success
