@@ -763,7 +763,7 @@ function Home() {
               className={`relative rounded-2xl p-8 min-h-[280px] flex flex-col justify-center items-center transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl overflow-hidden border ${isDark
                   ? "bg-gradient-to-br from-dark-bg-secondary to-dark-bg-tertiary border-dark-border"
                   : "bg-gradient-to-br from-light-bg-secondary to-light-bg-tertiary border-light-border"
-                }`} data-aos="fade-left" data-aos-delay="600"
+                }`} data-aos="fade-up" data-aos-delay="600"
             >
               <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5"></div>
               <div className="relative z-10 text-center">
