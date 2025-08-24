@@ -1,10 +1,11 @@
-import React, { lazy, Suspense, useEffect, useState } from "react";
+import React, { lazy, Suspense, useLayoutEffect, useRef, useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 import Counter from "../utils/Counter";
 import { FaArrowUp } from "react-icons/fa";
-import AOS from "aos";
-import "aos/dist/aos.css";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+gsap.registerPlugin(ScrollTrigger); // register once at module scope
 
 // Lazy loaded components
 const CreatorsContainer = lazy(() =>
@@ -35,6 +36,12 @@ function Home() {
   const [isVisible, setIsVisible] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
 
+  // refs for scoped GSAP
+  const root = useRef(null);
+  const featuresGridRef = useRef(null);
+  const statsGridRef = useRef(null);
+  const roadmapsGridRef = useRef(null);
+
   useEffect(() => {
     setIsVisible(true);
   }, []);
@@ -60,15 +67,118 @@ function Home() {
     });
   };
 
-  useEffect(() => {
-    AOS.init({ duration: 1000, once: true });
+  useLayoutEffect(() => {
+    // guard for safety
+    if (!root.current) return;
+
+    const ctx = gsap.context(() => {
+      // 1) Feature cards: fade-up in sequence when the GRID enters
+      if (featuresGridRef.current) {
+        const cards = featuresGridRef.current.querySelectorAll(".feature-card");
+        gsap.set(cards, { y: 40, opacity: 0 });
+        gsap.to(cards, {
+          y: 0,
+          opacity: 1,
+          ease: "power2.out",
+          duration: 0.8,
+          stagger: 0.15,
+          scrollTrigger: {
+            trigger: featuresGridRef.current,
+            start: "top 80%",
+            once: true,
+          },
+        });
+      }
+
+      // 2) Stat cards: staggered fade-up when the GRID enters
+      if (statsGridRef.current) {
+        const statCards = statsGridRef.current.querySelectorAll(".stat-card");
+        gsap.set(statCards, { y: 40, opacity: 0 });
+        gsap.to(statCards, {
+          y: 0,
+          opacity: 1,
+          ease: "power3.out",
+          duration: 1.2,
+          stagger: 0.15,
+          scrollTrigger: {
+            trigger: statsGridRef.current,
+            start: "top 80%",
+            once: true,
+          },
+        });
+      }
+
+      // 3) Counters: animate numbers safely (no plugin)
+      gsap.utils.toArray(".counter").forEach((el) => {
+        const finalValue =
+          parseInt(el.getAttribute("data-end"), 10) ||
+          parseInt(el.textContent, 10) ||
+          0;
+
+        const obj = { val: 0 };
+        gsap.to(obj, {
+          val: finalValue,
+          duration: 2.2,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: el,
+            start: "top 85%",
+            once: true,
+          },
+          onUpdate() {
+            el.textContent = Math.floor(obj.val) + "+";
+          },
+        });
+      });
+
+      // 4) Roadmaps section staggered animation
+      if (roadmapsGridRef.current) {
+        const roadmapCards = roadmapsGridRef.current.querySelectorAll(".roadmap-card");
+        gsap.set(roadmapCards, { y: 40, opacity: 0 });
+        gsap.to(roadmapCards, {
+          y: 0,
+          opacity: 1,
+          ease: "power3.out",
+          duration: 1,
+          stagger: 0.2,
+          scrollTrigger: {
+            trigger: roadmapsGridRef.current,
+            start: "top 80%",
+            once: true,
+          },
+        });
+      }
+
+      // 5) Generic fade sections
+      gsap.utils.toArray(".fade-section").forEach((section) => {
+        gsap.from(section, {
+          y: 60,
+          opacity: 0,
+          duration: 1.3,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: section,
+            start: "top 85%",
+            once: true,
+          },
+        });
+      });
+    }, root);
+
+    // ensure ScrollTrigger recalculates after lazy content mounts
+    requestAnimationFrame(() => ScrollTrigger.refresh());
+    setTimeout(() => ScrollTrigger.refresh(), 300);
+
+    // cleanup on unmount
+    return () => ctx.revert();
   }, []);
 
   return (
     <div
+      ref={root}
       className={`relative min-h-screen-minus-nav ${isDark
-          ? "bg-dark-bg-primary text-dark-text-primary"
-          : "bg-light-bg-primary text-light-text-primary"
+        ? "bg-dark-bg-primary text-dark-text-primary"
+        : "bg-light-bg-primary text-light-text-primary"
         }`}
     >
       {/* Hero Section with Video Background */}
@@ -131,33 +241,33 @@ function Home() {
         </div>
 
         {/* Main Content */}
-        <div className="relative z-20 text-center max-w-6xl mx-auto md:px-6 md:py-8">
+        <div className="relative z-20 text-center max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
           {/* Badge */}
           <div
-            className={`inline-flex items-center mt-16 gap-2 px-4 py-2 rounded-full ${isDark ? "bg-dark-bg-secondary/80" : "bg-light-bg-secondary"
+            className={`inline-flex items-center mt-20 sm:mt-16 gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1 sm:py-2 rounded-full ${isDark ? "bg-dark-bg-secondary/80" : "bg-light-bg-secondary"
               } backdrop-blur-sm border ${isDark ? "border-dark-border/50" : "border-light-border"
               } mb-8 animate-fadeIn`}
           >
-            <span className="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
-            <span className="text-sm font-medium">
+            <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-primary rounded-full animate-pulse"></span>
+            <span className="text-sm sm:text-sm font-medium">
               🚀 Join 1000+ learners worldwide
             </span>
           </div>
 
           {/* Main Headline */}
           <h1
-            className={`text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-8 leading-tight ${isDark ? "text-dark-text-primary" : "text-light-text-primary"
+            className={`text-4xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 sm:mb-8 leading-sug sm:leading-tight ${isDark ? "text-dark-text-primary" : "text-light-text-primary"
               } animate-fadeIn animation-delay-200`}
           >
             Master Coding with
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-accent animate-pulse mt-2 leading-tight py-2">
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-accent animate-pulse mt-2 py-1 sm:py-2">
               Interactive Learning
             </span>
           </h1>
 
           {/* Subtitle */}
           <p
-            className={`text-xl md:text-2xl mb-12 max-w-3xl mx-auto ${isDark ? "text-dark-text-secondary" : "text-light-text-secondary"
+            className={`text-xl sm:text-lg md:text-xl lg:text-2xl mb-8 sm:mb-12 max-w-xl sm:max-w-2xl md:max-w-3xl mx-auto ${isDark ? "text-dark-text-secondary" : "text-light-text-secondary"
               } animate-fadeIn animation-delay-400`}
           >
             Discover the perfect learning path with hands-on projects, expert
@@ -165,15 +275,15 @@ function Home() {
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fadeIn animation-delay-600">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center animate-fadeIn animation-delay-600">
             <NavLink
               to="/courses"
-              className="group bg-gradient-to-r from-primary to-secondary text-white py-4 px-8 text-lg rounded-xl font-semibold transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 hover:scale-105 inline-flex items-center gap-3"
+              className="group bg-gradient-to-r from-primary to-secondary text-white py-3 sm:py-4 px-6 sm:px-8 text-base sm:text-lg rounded-xl font-semibold transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 hover:scale-105 inline-flex items-center gap-2 sm:gap-3"
             >
               <span>Start Learning Free</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 transform group-hover:translate-x-1 transition-transform"
+                className="h-4 w-4 sm:h-5 sm:w-5 transform group-hover:translate-x-1 transition-transform"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
@@ -189,7 +299,7 @@ function Home() {
               <span>Watch Demo</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 transform group-hover:scale-110 transition-transform"
+                className="h-4 w-4 sm:h-5 sm:w-5 transform group-hover:scale-110 transition-transform"
                 viewBox="0 0 20 20"
                 fill="currentColor"
               >
@@ -203,35 +313,35 @@ function Home() {
           </div>
 
           {/* Trust Indicators */}
-          <div className="mt-16 animate-fadeIn animation-delay-800">
+          <div className="mt-10 sm:mt-16 animate-fadeIn animation-delay-800">
 
             <p
-              className={`text-sm ${isDark
-                  ? "text-dark-text-secondary"
-                  : "text-light-text-secondary"
-                } mb-4`}
+              className={`text-xs sm:text-sm ${isDark
+                ? "text-dark-text-secondary"
+                : "text-light-text-secondary"
+                } mb-3 sm:mb-4`}
             >
               Trusted by developers from 100+ countries
             </p>
 
-            <div className="flex justify-center items-center gap-8 opacity-60">
-              <div className="w-16 h-8 bg-gradient-to-r from-primary/20 to-secondary/20 rounded"></div>
-              <div className="w-16 h-8 bg-gradient-to-r from-secondary/20 to-accent/20 rounded"></div>
-              <div className="w-16 h-8 bg-gradient-to-r from-accent/20 to-primary/20 rounded"></div>
+            <div className="flex justify-center items-center gap-4 sm:gap-8 opacity-60">
+              <div className="w-12 sm:w-16 h-6 sm:h-8 bg-gradient-to-r from-primary/20 to-secondary/20 rounded"></div>
+              <div className="w-12 sm:w-16 h-6 sm:h-8 bg-gradient-to-r from-secondary/20 to-accent/20 rounded"></div>
+              <div className="w-12 sm:w-16 h-6 sm:h-8 bg-gradient-to-r from-accent/20 to-primary/20 rounded"></div>
             </div>
           </div>
         </div>
 
         {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <div className="w-6 h-10 border-2 border-primary rounded-full flex justify-center">
-            <div className="w-1 h-3 bg-primary rounded-full mt-2 animate-pulse"></div>
+        <div className="absolute bottom-6 sm:bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+          <div className="w-5 sm:w-6 h-8 sm:h-10 border-2 border-primary rounded-full flex justify-center">
+            <div className="w-1 h-2 sm:h-3 bg-primary rounded-full mt-1.5 sm:mt-2 animate-pulse"></div>
           </div>
         </div>
       </section>
 
       {/* Enhanced Features Section */}
-      <section className="py-24 relative" data-aos="fade-up">
+      <section className="py-24 relative fade-section">
         {/* Floating Decorative Elements */}
         <div className="absolute top-10 left-10 text-2xl text-primary/20 animate-float animation-delay-300">
           <svg className="h-8 w-8" fill="currentColor" viewBox="0 0 24 24">
@@ -259,8 +369,8 @@ function Home() {
             </h2>
             <p
               className={`text-xl ${isDark
-                  ? "text-dark-text-secondary"
-                  : "text-light-text-secondary"
+                ? "text-dark-text-secondary"
+                : "text-light-text-secondary"
                 } max-w-2xl mx-auto`}
             >
               Experience learning reimagined with cutting-edge technology and
@@ -269,13 +379,13 @@ function Home() {
           </div>
 
           {/* Features Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div ref={featuresGridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Feature 1 - Interactive Learning */}
             <div
-              className={`group relative p-8 rounded-2xl border transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl ${isDark
-                  ? "bg-dark-bg-secondary border-dark-border hover:bg-gradient-to-br hover:from-primary/10 hover:to-secondary/10"
-                  : "bg-light-bg-secondary border-light-border hover:bg-gradient-to-br hover:from-primary/5 hover:to-secondary/5"
-                }`} data-aos="fade-up" data-aos-delay="0"
+              className={`feature-card group relative p-8 rounded-2xl border transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl ${isDark
+                ? "bg-dark-bg-secondary border-dark-border hover:bg-gradient-to-br hover:from-primary/10 hover:to-secondary/10"
+                : "bg-light-bg-secondary border-light-border hover:bg-gradient-to-br hover:from-primary/5 hover:to-secondary/5"
+                }`}
             >
               {/* Background Pattern */}
               <div className="absolute top-0 right-0 w-24 h-24 opacity-5 group-hover:opacity-20 transition-opacity duration-500">
@@ -311,8 +421,8 @@ function Home() {
 
                 <p
                   className={`text-center ${isDark
-                      ? "text-dark-text-secondary"
-                      : "text-light-text-secondary"
+                    ? "text-dark-text-secondary"
+                    : "text-light-text-secondary"
                     } leading-relaxed`}
                 >
                   Learn by doing with real-world projects, interactive
@@ -324,10 +434,10 @@ function Home() {
 
             {/* Feature 2 - Expert Instructors */}
             <div
-              className={`group relative p-8 rounded-2xl border transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl ${isDark
-                  ? "bg-dark-bg-secondary border-dark-border hover:bg-gradient-to-br hover:from-secondary/10 hover:to-accent/10"
-                  : "bg-light-bg-secondary border-light-border hover:bg-gradient-to-br hover:from-secondary/5 hover:to-accent/5"
-                }`} data-aos="fade-up" data-aos-delay="150"
+              className={`feature-card group relative p-8 rounded-2xl border transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl ${isDark
+                ? "bg-dark-bg-secondary border-dark-border hover:bg-gradient-to-br hover:from-secondary/10 hover:to-accent/10"
+                : "bg-light-bg-secondary border-light-border hover:bg-gradient-to-br hover:from-secondary/5 hover:to-accent/5"
+                }`}
             >
               <div className="absolute top-0 right-0 w-24 h-24 opacity-5 group-hover:opacity-20 transition-opacity duration-500">
                 <svg
@@ -362,8 +472,8 @@ function Home() {
 
                 <p
                   className={`text-center ${isDark
-                      ? "text-dark-text-secondary"
-                      : "text-light-text-secondary"
+                    ? "text-dark-text-secondary"
+                    : "text-light-text-secondary"
                     } leading-relaxed`}
                 >
                   Learn from industry professionals and experienced developers
@@ -374,10 +484,10 @@ function Home() {
 
             {/* Feature 3 - Flexible Learning */}
             <div
-              className={`group relative p-8 rounded-2xl border transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl ${isDark
-                  ? "bg-dark-bg-secondary border-dark-border hover:bg-gradient-to-br hover:from-accent/10 hover:to-primary/10"
-                  : "bg-light-bg-secondary border-light-border hover:bg-gradient-to-br hover:from-accent/5 hover:to-primary/5"
-                }`} data-aos="fade-up" data-aos-delay="300"
+              className={`feature-card group relative p-8 rounded-2xl border transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl ${isDark
+                ? "bg-dark-bg-secondary border-dark-border hover:bg-gradient-to-br hover:from-accent/10 hover:to-primary/10"
+                : "bg-light-bg-secondary border-light-border hover:bg-gradient-to-br hover:from-accent/5 hover:to-primary/5"
+                }`}
             >
               <div className="absolute top-0 right-0 w-24 h-24 opacity-5 group-hover:opacity-20 transition-opacity duration-500">
                 <svg
@@ -412,8 +522,8 @@ function Home() {
 
                 <p
                   className={`text-center ${isDark
-                      ? "text-dark-text-secondary"
-                      : "text-light-text-secondary"
+                    ? "text-dark-text-secondary"
+                    : "text-light-text-secondary"
                     } leading-relaxed`}
                 >
                   Study at your own pace with 24/7 access to courses, progress
@@ -426,31 +536,31 @@ function Home() {
       </section>
 
       {/* Enhanced Stats Section */}
-      <section className="py-24 relative" data-aos="fade-right">
+      <section className="py-16 sm:py-20 md:py-24 relative fade-section">
         {/* Floating Code Icon */}
-        <div className="absolute md:top-20 top-14 left-20 text-3xl text-accent/30 animate-float animation-delay-400">
-          <svg className="h-10 w-10" fill="currentColor" viewBox="0 0 24 24">
+        <div className="absolute top-10 sm:top-14 md:top-20 left-6 sm:left-12 md:left-20 text-2xl sm:text-3xl text-accent/30 animate-float animation-delay-400">
+          <svg className="h-8 w-8 sm:h-10 sm:w-10" fill="currentColor" viewBox="0 0 24 24">
             <path d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
           </svg>
         </div>
 
-        <div className="max-w-7xl mx-auto px-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div
-            className={`relative rounded-3xl p-16 ${isDark
-                ? "bg-gradient-to-br from-dark-bg-secondary via-dark-bg-tertiary to-dark-bg-secondary"
-                : "bg-gradient-to-br from-light-bg-secondary via-light-bg-tertiary to-light-bg-secondary"
+            className={`relative rounded-2xl sm:rounded-3xl p-6 sm:p-10 md:p-16 ${isDark
+              ? "bg-gradient-to-br from-dark-bg-secondary via-dark-bg-tertiary to-dark-bg-secondary"
+              : "bg-gradient-to-br from-light-bg-secondary via-light-bg-tertiary to-light-bg-secondary"
               } border ${isDark ? "border-dark-border" : "border-light-border"
               } shadow-2xl overflow-hidden`}
           >
             {/* Background Decoration */}
             <div className="absolute inset-0 overflow-hidden">
-              <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 blur-3xl animate-pulse"></div>
-              <div className="absolute -bottom-32 -left-32 w-96 h-96 rounded-full bg-gradient-to-br from-secondary/20 to-accent/20 blur-3xl animate-pulse animation-delay-1000"></div>
+              <div className="absolute -top-32 -right-32 w-64 sm:w-80 md:w-96 h-64 sm:h-80 md:h-96 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 blur-3xl animate-pulse"></div>
+              <div className="absolute -bottom-32 -left-32 w-64 sm:w-80 md:w-96 h-64 sm:h-80 md:h-96 rounded-full bg-gradient-to-br from-secondary/20 to-accent/20 blur-3xl animate-pulse animation-delay-1000"></div>
             </div>
 
-            <div className="relative  z-10 text-center">
+            <div className="relative z-10 text-center">
               <h2
-                className={`text-4xl md:text-5xl font-bold mb-16 ${isDark ? "text-dark-text-primary" : "text-light-text-primary"
+                className={`text-2xl sm:text-3xl md:text-5xl font-bold mb-10 sm:mb-12 md:mb-16 ${isDark ? "text-dark-text-primary" : "text-light-text-primary"
                   }`}
               >
                 Empowering{" "}
@@ -460,20 +570,20 @@ function Home() {
                 Worldwide
               </h2>
 
-              <div className="grid grid-cols-2 md:grid-cols-4 md:gap-8 gap-6">
+              <div ref={statsGridRef} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 sm:gap-8 gap-6">
                 {/* Courses Stat */}
-                <div className="group">
-                  <div className="text-center md:p-6 rounded-2xl transition-all duration-500 group-hover:-translate-y-2 group-hover:shadow-xl">
-                    <div className="relative mb-4">
+                <div className="stat-card group">
+                  <div className="text-center p-4 sm:p-6 rounded-2xl transition-all duration-500 group-hover:-translate-y-2 group-hover:shadow-xl">
+                    <div className="relative mb-2 sm:mb-4">
                       <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-full transform scale-0 group-hover:scale-100 transition-transform duration-500"></div>
-                      <h3 className="text-3xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary mb-2 relative z-10">
-                        <Counter end={70} />
+                      <h3 className="counter text-2xl sm:text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary mb-1 sm:mb-2 relative z-10" data-end="70">
+                        0
                       </h3>
                     </div>
                     <p
                       className={`text-lg font-semibold ${isDark
-                          ? "text-dark-text-primary"
-                          : "text-light-text-primary"
+                        ? "text-dark-text-primary"
+                        : "text-light-text-primary"
                         }`}
                     >
                       Premium Courses
@@ -482,18 +592,18 @@ function Home() {
                 </div>
 
                 {/* Roadmaps Stat */}
-                <div className="group">
-                  <div className="text-center md:p-6 rounded-2xl transition-all duration-500 group-hover:-translate-y-2 group-hover:shadow-xl">
-                    <div className="relative mb-4">
+                <div className="stat-card group">
+                   <div className="text-center p-4 sm:p-6 rounded-2xl transition-all duration-500 group-hover:-translate-y-2 group-hover:shadow-xl">
+                    <div className="relative mb-2 sm:mb-4">
                       <div className="absolute inset-0 bg-gradient-to-r from-secondary/20 to-accent/20 rounded-full transform scale-0 group-hover:scale-100 transition-transform duration-500"></div>
-                      <h3 className="text-3xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-secondary to-accent mb-2 relative z-10">
-                        <Counter end={35} />
+                      <h3 className="counter text-2xl sm:text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary mb-1 sm:mb-2 relative z-10" data-end="35">
+                        0
                       </h3>
                     </div>
                     <p
                       className={`text-lg font-semibold ${isDark
-                          ? "text-dark-text-primary"
-                          : "text-light-text-primary"
+                        ? "text-dark-text-primary"
+                        : "text-light-text-primary"
                         }`}
                     >
                       Learning Paths
@@ -502,18 +612,18 @@ function Home() {
                 </div>
 
                 {/* Creators Stat */}
-                <div className="group">
-                  <div className="text-center md:p-6 rounded-2xl transition-all duration-500 group-hover:-translate-y-2 group-hover:shadow-xl">
-                    <div className="relative mb-4">
+                <div className="stat-card group">
+                  <div className="text-center p-4 sm:p-6 rounded-2xl transition-all duration-500 group-hover:-translate-y-2 group-hover:shadow-xl">
+                    <div className="relative mb-2 sm:mb-4">
                       <div className="absolute inset-0 bg-gradient-to-r from-accent/20 to-primary/20 rounded-full transform scale-0 group-hover:scale-100 transition-transform duration-500"></div>
-                      <h3 className="text-3xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-accent to-primary mb-2 relative z-10">
-                        <Counter end={30} />
+                      <h3 className="counter text-2xl sm:text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary mb-1 sm:mb-2 relative z-10" data-end="30">
+                        0
                       </h3>
                     </div>
                     <p
                       className={`text-lg font-semibold ${isDark
-                          ? "text-dark-text-primary"
-                          : "text-light-text-primary"
+                        ? "text-dark-text-primary"
+                        : "text-light-text-primary"
                         }`}
                     >
                       Expert Creators
@@ -522,18 +632,18 @@ function Home() {
                 </div>
 
                 {/* Users Stat */}
-                <div className="group">
-                  <div className="text-center md:p-6 rounded-2xl transition-all duration-500 group-hover:-translate-y-2 group-hover:shadow-xl">
-                    <div className="relative mb-4">
+                <div className="stat-card group">
+                  <div className="text-center p-4 sm:p-6 rounded-2xl transition-all duration-500 group-hover:-translate-y-2 group-hover:shadow-xl">
+                    <div className="relative mb-2 sm:mb-4">
                       <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-full transform scale-0 group-hover:scale-100 transition-transform duration-500"></div>
-                      <h3 className="text-3xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary mb-2 relative z-10">
-                        <Counter end={1000} />
+                      <h3 className="counter text-2xl sm:text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary mb-1 sm:mb-2 relative z-10" data-end="1000">
+                        0
                       </h3>
                     </div>
                     <p
                       className={`text-lg font-semibold ${isDark
-                          ? "text-dark-text-primary"
-                          : "text-light-text-primary"
+                        ? "text-dark-text-primary"
+                        : "text-light-text-primary"
                         }`}
                     >
                       Active Learners
@@ -547,7 +657,7 @@ function Home() {
       </section>
 
       {/* Enhanced Roadmaps Preview */}
-      <section className="py-24 relative" data-aos="fade-up">
+      <section className="py-24 relative fade-section">
         {/* Floating Decorative Element */}
         <div className="absolute top-10 right-10 text-2xl text-primary/20 animate-float animation-delay-500">
           <svg className="h-8 w-8" fill="currentColor" viewBox="0 0 24 24">
@@ -568,22 +678,23 @@ function Home() {
             </h2>
             <p
               className={`text-xl ${isDark
-                  ? "text-dark-text-secondary"
-                  : "text-light-text-secondary"
+                ? "text-dark-text-secondary"
+                : "text-light-text-secondary"
                 } max-w-3xl mx-auto`}
             >
               Structured learning paths designed to take you from beginner to
               expert in your chosen field
             </p>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          
+          {/* Roadmaps Grid */}
+          <div ref={roadmapsGridRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {/* Frontend Development */}
             <div
-              className={`group relative rounded-2xl p-8 min-h-[280px] flex flex-col justify-between transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl border ${isDark
-                  ? "bg-dark-bg-secondary border-dark-border hover:bg-gradient-to-br hover:from-primary/10 hover:to-secondary/10"
-                  : "bg-light-bg-secondary border-light-border hover:bg-gradient-to-br hover:from-primary/5 hover:to-secondary/5"
-                }`} data-aos="fade-up" data-aos-delay="0"
+              className={`roadmap-card group relative rounded-2xl p-8 min-h-[280px] flex flex-col justify-between transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl border ${isDark
+                ? "bg-dark-bg-secondary border-dark-border hover:bg-gradient-to-br hover:from-primary/10 hover:to-secondary/10"
+                : "bg-light-bg-secondary border-light-border hover:bg-gradient-to-br hover:from-primary/5 hover:to-secondary/5"
+                }`}
             >
               <div className="absolute top-0 right-0 w-32 h-32 opacity-5 group-hover:opacity-20 transition-all duration-500 group-hover:scale-110">
                 <svg
@@ -613,16 +724,16 @@ function Home() {
                 </div>
                 <h3
                   className={`text-2xl font-bold ${isDark
-                      ? "text-dark-text-primary"
-                      : "text-light-text-primary"
+                    ? "text-dark-text-primary"
+                    : "text-light-text-primary"
                     } mb-3`}
                 >
                   Frontend Development
                 </h3>
                 <p
                   className={`text-sm ${isDark
-                      ? "text-dark-text-secondary"
-                      : "text-light-text-secondary"
+                    ? "text-dark-text-secondary"
+                    : "text-light-text-secondary"
                     } mb-6 leading-relaxed`}
                 >
                   Master modern web technologies including React, Vue, and
@@ -640,10 +751,10 @@ function Home() {
 
             {/* Backend Development */}
             <div
-              className={`group relative rounded-2xl p-8 min-h-[280px] flex flex-col justify-between transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl border ${isDark
-                  ? "bg-dark-bg-secondary border-dark-border hover:bg-gradient-to-br hover:from-secondary/10 hover:to-accent/10"
-                  : "bg-light-bg-secondary border-light-border hover:bg-gradient-to-br hover:from-secondary/5 hover:to-accent/5"
-                }`} data-aos="fade-up" data-aos-delay="200"
+              className={`roadmap-card group relative rounded-2xl p-8 min-h-[280px] flex flex-col justify-between transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl border ${isDark
+                ? "bg-dark-bg-secondary border-dark-border hover:bg-gradient-to-br hover:from-secondary/10 hover:to-accent/10"
+                : "bg-light-bg-secondary border-light-border hover:bg-gradient-to-br hover:from-secondary/5 hover:to-accent/5"
+                }`}
             >
               <div className="absolute top-0 right-0 w-32 h-32 opacity-5 group-hover:opacity-20 transition-all duration-500 group-hover:scale-110">
                 <svg
@@ -673,16 +784,16 @@ function Home() {
                 </div>
                 <h3
                   className={`text-2xl font-bold ${isDark
-                      ? "text-dark-text-primary"
-                      : "text-light-text-primary"
+                    ? "text-dark-text-primary"
+                    : "text-light-text-primary"
                     } mb-3`}
                 >
                   Backend Development
                 </h3>
                 <p
                   className={`text-sm ${isDark
-                      ? "text-dark-text-secondary"
-                      : "text-light-text-secondary"
+                    ? "text-dark-text-secondary"
+                    : "text-light-text-secondary"
                     } mb-6 leading-relaxed`}
                 >
                   Build robust APIs, databases, and server-side applications
@@ -700,10 +811,10 @@ function Home() {
 
             {/* Full Stack Development */}
             <div
-              className={`group relative rounded-2xl p-8 min-h-[280px] flex flex-col justify-between transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl border ${isDark
-                  ? "bg-dark-bg-secondary border-dark-border hover:bg-gradient-to-br hover:from-accent/10 hover:to-primary/10"
-                  : "bg-light-bg-secondary border-light-border hover:bg-gradient-to-br hover:from-accent/5 hover:to-primary/5"
-                }`} data-aos="fade-up" data-aos-delay="400"
+              className={`roadmap-card group relative rounded-2xl p-8 min-h-[280px] flex flex-col justify-between transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl border ${isDark
+                ? "bg-dark-bg-secondary border-dark-border hover:bg-gradient-to-br hover:from-accent/10 hover:to-primary/10"
+                : "bg-light-bg-secondary border-light-border hover:bg-gradient-to-br hover:from-accent/5 hover:to-primary/5"
+                }`}
             >
               <div className="absolute top-0 right-0 w-32 h-32 opacity-5 group-hover:opacity-20 transition-all duration-500 group-hover:scale-110">
                 <svg
@@ -733,16 +844,16 @@ function Home() {
                 </div>
                 <h3
                   className={`text-2xl font-bold ${isDark
-                      ? "text-dark-text-primary"
-                      : "text-light-text-primary"
+                    ? "text-dark-text-primary"
+                    : "text-light-text-primary"
                     } mb-3`}
                 >
                   Full Stack Development
                 </h3>
                 <p
                   className={`text-sm ${isDark
-                      ? "text-dark-text-secondary"
-                      : "text-light-text-secondary"
+                    ? "text-dark-text-secondary"
+                    : "text-light-text-secondary"
                     } mb-6 leading-relaxed`}
                 >
                   Master both frontend and backend technologies to build
@@ -760,16 +871,16 @@ function Home() {
 
             {/* View All Paths */}
             <div
-              className={`relative rounded-2xl p-8 min-h-[280px] flex flex-col justify-center items-center transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl overflow-hidden border ${isDark
-                  ? "bg-gradient-to-br from-dark-bg-secondary to-dark-bg-tertiary border-dark-border"
-                  : "bg-gradient-to-br from-light-bg-secondary to-light-bg-tertiary border-light-border"
-                }`} data-aos="fade-up" data-aos-delay="600"
+              className={`roadmap-card relative rounded-2xl p-6 sm:p-8 min-h-[280px] sm:min-h-[280px] flex flex-col justify-center items-center transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl overflow-hidden border ${isDark
+                ? "bg-gradient-to-br from-dark-bg-secondary to-dark-bg-tertiary border-dark-border"
+                : "bg-gradient-to-br from-light-bg-secondary to-light-bg-tertiary border-light-border"
+                }`}
             >
               <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5"></div>
               <div className="relative z-10 text-center">
-                <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-r from-primary to-secondary p-5 flex items-center justify-center">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 sm:mb-6 rounded-2xl bg-gradient-to-r from-primary to-secondary p-4 sm:p-5 flex items-center justify-center">
                   <svg
-                    className="h-10 w-10 text-white"
+                    className="h-8 sm:h-10 w-8 sm:w-10 text-white"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -785,11 +896,11 @@ function Home() {
 
                 <Link
                   to="/roadmap"
-                  className="py-4 px-8 bg-gradient-to-r from-primary to-secondary text-white rounded-xl hover:shadow-xl transition-all duration-300 inline-flex items-center gap-3 group font-semibold text-lg"
+                  className="py-3 px-6 sm:py-4 sm:px-8 bg-gradient-to-r from-primary to-secondary text-white rounded-xl hover:shadow-xl transition-all duration-300 inline-flex items-center gap-2 sm:gap-3 group font-semibold text-base sm:text-lg"
                 >
                   <span>View All Paths</span>
                   <svg
-                    className="h-6 w-6 transform group-hover:translate-x-1 transition-transform"
+                    className="h-5 w-5 sm:h-6 sm:w-6 transform group-hover:translate-x-1 transition-transform"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -823,8 +934,8 @@ function Home() {
             </h2>
             <p
               className={`text-xl ${isDark
-                  ? "text-dark-text-secondary"
-                  : "text-light-text-secondary"
+                ? "text-dark-text-secondary"
+                : "text-light-text-secondary"
                 } max-w-3xl mx-auto`}
             >
               Our creators are passionate developers and educators committed to
