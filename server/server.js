@@ -19,7 +19,6 @@ const corsOption = {
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: false
 };
-
 app.use(cors(corsOption));
 
 // // using cors

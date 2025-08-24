@@ -211,6 +211,8 @@ Follow these steps to set up **Codify** locally and begin contributing.
     PORT=5050
     JWT_SECRET=your_jwt_secret
     CLIENT_CORS=http://localhost:5173
+    EMAIL_USER=your_email@gmail.com
+    EMAIL_PASS=your_app_password
    ```
 4. Run Backend
 
