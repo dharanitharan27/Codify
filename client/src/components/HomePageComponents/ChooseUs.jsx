@@ -1,4 +1,7 @@
 import { useTheme } from "../../context/ThemeContext";
+import { useEffect } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const ChooseUs = () => {
   const { theme } = useTheme();
@@ -27,8 +30,12 @@ const ChooseUs = () => {
     }
   ];
 
+  useEffect(() => {
+    AOS.init({ duration: 1000, once: true });
+  }, []);
+
   return (
-    <section className="py-20 px-4">
+    <section className="py-20 px-4" data-aos="fade-up">
       <div className="max-w-7xl mx-auto">
         <h2 className={`text-4xl font-bold text-center mb-16 ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'}`}>
           Why Choose <span className="text-primary">Our Platform</span>
@@ -38,6 +45,8 @@ const ChooseUs = () => {
           {benefits.map((benefit, index) => (
             <div
               key={index}
+              data-aos="fade-up"
+              data-aos-delay={index * 200}
               className={`
                 p-8 rounded-xl ${isDark ? 'bg-dark-bg-secondary border-dark-border' : 'bg-light-bg-secondary border-light-border'}
                 border shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-xl
