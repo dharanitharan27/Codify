@@ -1,16 +1,14 @@
-# Codify – Interactive Coding Learning Platform [Live Demo](https://codifylearn.netlify.app)
-
-<img src="https://miro.medium.com/v2/resize:fit:400/1%2AZfYWXN0zA6TqQQ7wGNJUOg.jpeg" alt="GSSoC Logo" width="100"/>
-
-[![Open Source](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://github.com/roshansuthar1105/codify)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-
-<img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="150%">
-
-> Welcome to **Codify**, your all-in-one coding learning platform! Bookmarked learning paths, interactive courses, personalized dashboards, dark/light themes, and more — all in one place.
+# Codify - Interactive Coding Learning Platform
 
 <div align="center">
-  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=700&size=24&duration=3000&pause=1000&color=38B2AC&center=true&vCenter=true&width=900&lines=Learn+by+Doing+%F0%9F%92%BB;Interactive+Courses+%26+Curated+Roadmaps+%F0%9F%93%9A;Contribute+and+Grow+with+Open+Source+%F0%9F%8C%8D;Happy+Coding+%E2%9C%A8" alt="Typing Banner"/>
+  <img src="https://github.com/user-attachments/assets/18bb2c91-12e4-45e7-b1e6-2cbee943975c" alt="Codify Banner" width="800"/>
+  <p><em>Master coding with interactive courses, personalized learning paths, and expert-curated roadmaps</em></p>
+
+  [![Netlify Status](https://api.netlify.com/api/v1/badges/your-netlify-id/deploy-status)](https://codifylearn.netlify.app)
+  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+  [![React](https://img.shields.io/badge/React-18.x-blue)](https://reactjs.org/)
+  [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.x-38B2AC)](https://tailwindcss.com/)
+  [![Node.js](https://img.shields.io/badge/Node.js-18.x-green)](https://nodejs.org/)
 </div>
 
 ## 📋 Table of Contents
@@ -78,14 +76,12 @@ Our mission is to make coding education accessible, engaging, and effective for 
 
 Codify implements several performance optimization techniques:
 
-1. **Lazy Loading**: Components and routes are loaded on demand  
-2. **Code Splitting**: Bundle splitting for faster initial load times  
-3. **Memoization**: Prevents unnecessary re-renders with useMemo and useCallback  
-4. **Image Optimization**: Efficient image loading and rendering  
-5. **SEO Optimization**: Comprehensive meta tags and structured data  
-6. **Responsive Design**: Optimized for all device sizes  
-
-![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
+1. **Lazy Loading**: Components and routes are loaded on demand
+2. **Code Splitting**: Bundle splitting for faster initial load times
+3. **Memoization**: Prevents unnecessary re-renders with useMemo and useCallback
+4. **Image Optimization**: Efficient image loading and rendering
+5. **SEO Optimization**: Comprehensive meta tags and structured data
+6. **Responsive Design**: Optimized for all device sizes
 
 ## 📸 Screenshots
 
@@ -115,13 +111,20 @@ Experience Codify in action: [https://codifylearn.netlify.app](https://codifylea
 - npm or yarn
 - MongoDB (local or cloud instance)
 
-### Installation
-
-1. **Clone Frontend**
+### Frontend Setup
+1. Clone the repository
    ```bash
-   git clone https://github.com/roshansuthar1105/codify.git
+   git clone https://github.com/Roshansuthar1105/Codify.git
+   ```
+2. Navigate to the client directory
+   ```bash
    cd codify/client
+   ```
+3. Install dependencies
+   ```bash
    npm install
+   # or
+   yarn install
    ```
 4. Create a `.env` file in the client directory with the following variables:
    ```
