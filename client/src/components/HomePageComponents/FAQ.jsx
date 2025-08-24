@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTheme } from "../../context/ThemeContext";
 import { FaChevronDown } from "react-icons/fa";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const FAQ = () => {
   const { theme } = useTheme();
@@ -36,8 +38,12 @@ const FAQ = () => {
     setOpenItem(openItem === index ? null : index);
   };
 
+  useEffect(() => {
+    AOS.init({ duration: 1000, once: true });
+  }, []);
+
   return (
-    <section className="py-20 px-4">
+    <section className="py-20 px-4" data-aos="fade-up">
       <div className="max-w-4xl mx-auto">
         <h2 className={`text-4xl font-bold text-center mb-16 ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'}`}>
           Frequently Asked <span className="text-primary">Questions</span>
