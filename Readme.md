@@ -7,6 +7,20 @@
 
 <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="150%">
 
+# 🌐 Connect with Me on Discord  
+
+👤 **Username:** `sroshan1105_99788`  
+or search for `Roshan Suthar | PA`   
+🆔 **Discord ID:** `1317732270047498343`  
+
+[![Join My Server](https://img.shields.io/badge/Join%20Discord-5865F2?logo=discord&logoColor=white&style=for-the-badge)](https://discord.gg/ybwDbRHY)  
+
+📌 **My Profile:** 
+[![Profile](https://img.shields.io/badge/View%20Profile-Click%20Here-blue?style=for-the-badge)](https://discord.com/users/1317732270047498343)  
+
+<img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="150%">
+
+# Codify – Interactive Coding Learning Platform 
 > Welcome to **Codify**, your all-in-one coding learning platform! Bookmarked learning paths, interactive courses, personalized dashboards, dark/light themes, and more — all in one place.
 
 <div align="center">
@@ -286,3 +300,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
     <a href="mailto:contact@codifylearn.com">Contact</a>
   </p>
 </div>
+
