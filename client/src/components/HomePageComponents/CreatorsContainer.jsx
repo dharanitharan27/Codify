@@ -131,7 +131,7 @@ const CreatorsContainer = ({ count = 3 }) => {
           group flex flex-col items-center p-6 rounded-2xl border shadow-lg overflow-hidden
           ${isDark ? 'bg-dark-bg-secondary border-dark-border' : 'bg-light-bg-secondary border-light-border'}
           transition-all duration-300 hover:-translate-y-2 hover:shadow-xl
-        `} data-aos="fade-left" data-aos-delay={(creators.length) * 200}
+        `} data-aos="fade-up" data-aos-delay={(creators.length) * 200}
       >
         {/* Icon */}
         <div className="relative mb-4 w-24 h-24 rounded-full border-4 border-primary flex items-center justify-center bg-gradient-to-r from-primary to-secondary">
