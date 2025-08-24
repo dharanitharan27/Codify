@@ -1,6 +1,8 @@
 import { useTheme } from "../../context/ThemeContext";
 import { FaQuoteLeft, FaStar } from "react-icons/fa";
 import { useEffect, useRef } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const Testimonials = () => {
   const { theme } = useTheme();
@@ -78,12 +80,12 @@ const Testimonials = () => {
 
     const scroll = () => {
       scrollPosition += scrollSpeed;
-      
+
       // Reset position when reaching half of content width for seamless loop
       if (scrollPosition >= content.offsetWidth) {
         scrollPosition = 0;
       }
-      
+
       scrollContainer.scrollLeft = scrollPosition;
       animationFrameId = requestAnimationFrame(scroll);
     };
@@ -105,6 +107,10 @@ const Testimonials = () => {
     };
   }, []);
 
+  useEffect(() => {
+    AOS.init({ duration: 1000, once: true });
+  }, []);
+
   const TestimonialCard = ({ testimonial, isDuplicate = false }) => (
     <div
       className={`
@@ -118,7 +124,7 @@ const Testimonials = () => {
       {/* Background Pattern */}
       <div className="absolute top-0 right-0 w-32 h-32 opacity-5 group-hover:opacity-20 transition-opacity duration-500">
         <svg className="w-full h-full text-primary" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
         </svg>
       </div>
 
@@ -178,7 +184,7 @@ const Testimonials = () => {
   );
 
   return (
-    <section className="py-24 px-4 relative overflow-hidden">
+    <section className="py-24 px-4 relative overflow-hidden" data-aos="fade-up">
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-0 left-0 w-96 h-96 rounded-full bg-gradient-to-br from-primary/5 to-secondary/5 blur-3xl"></div>
@@ -197,22 +203,22 @@ const Testimonials = () => {
         </div>
 
         {/* Scrolling Container */}
-        <div 
+        <div
           ref={scrollRef}
           className="overflow-hidden relative w-full"
         >
           <div className="flex gap-8 w-fit">
             {/* Original testimonials */}
             {testimonials.map((testimonial, index) => (
-              <TestimonialCard 
-                key={index} 
-                testimonial={testimonial} 
+              <TestimonialCard
+                key={index}
+                testimonial={testimonial}
               />
             ))}
             {/* Duplicated testimonials for smooth infinite scroll */}
             {testimonials.map((testimonial, index) => (
-              <TestimonialCard 
-                key={`duplicate-${index}`} 
+              <TestimonialCard
+                key={`duplicate-${index}`}
                 testimonial={testimonial}
                 isDuplicate={true}
               />
