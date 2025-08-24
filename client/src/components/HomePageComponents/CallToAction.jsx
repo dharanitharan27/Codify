@@ -1,12 +1,19 @@
 import { Link } from "react-router-dom";
 import { useTheme } from "../../context/ThemeContext";
+import { useEffect} from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const CallToAction = () => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
+  useEffect(() => {
+    AOS.init({ duration: 1000, once: true });
+  }, []);
+
   return (
-    <section className="py-24 px-4 relative">
+    <section className="py-24 px-4 relative" data-aos="zoom-in">
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 blur-3xl animate-pulse"></div>
@@ -31,7 +38,7 @@ const CallToAction = () => {
           {/* Floating elements */}
           <div className="absolute top-8 right-8 text-4xl animate-float">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-white/30" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
             </svg>
           </div>
 
@@ -49,7 +56,7 @@ const CallToAction = () => {
             </div>
 
             <h2 className="text-5xl md:text-6xl font-bold mb-8 text-white leading-tight drop-shadow-lg">
-              Ready to Start Your 
+              Ready to Start Your
               <span className="block text-yellow-300 font-bold animate-pulse drop-shadow-lg">
                 Learning Journey?
               </span>
@@ -88,19 +95,19 @@ const CallToAction = () => {
                 {/* Company/Platform logos or trust badges */}
                 <div className="flex items-center gap-2 text-white font-medium drop-shadow-sm">
                   <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
                   </svg>
                   <span className="text-sm font-semibold">Verified</span>
                 </div>
                 <div className="flex items-center gap-2 text-white font-medium drop-shadow-sm">
                   <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                   </svg>
                   <span className="text-sm font-semibold">Premium</span>
                 </div>
                 <div className="flex items-center gap-2 text-white font-medium drop-shadow-sm">
                   <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
                   </svg>
                   <span className="text-sm font-semibold">Secure</span>
                 </div>
