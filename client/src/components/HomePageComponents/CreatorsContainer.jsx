@@ -1,13 +1,39 @@
 import { Link } from "react-router-dom";
 import { useTheme } from "../../context/ThemeContext";
-import { useEffect, useState } from "react";
-import AOS from "aos";
-import "aos/dist/aos.css";
+import { useEffect, useState, useRef, useLayoutEffect } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+gsap.registerPlugin(ScrollTrigger);
 
 const CreatorsContainer = ({ count = 3 }) => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const [creators, setCreators] = useState([]);
+  const gridRef = useRef(null);
+
+  // ✅ Animate when creators are loaded
+  useLayoutEffect(() => {
+    if (!gridRef.current || creators.length === 0) return;
+
+    const cards = gridRef.current.querySelectorAll(".creator-card");
+
+    gsap.set(cards, { y: 60, opacity: 0 });
+    gsap.to(cards, {
+      y: 0,
+      opacity: 1,
+      duration: 0.8,
+      ease: "power2.out",
+      stagger: 0.2,
+      scrollTrigger: {
+        trigger: gridRef.current,
+        start: "top 80%",
+        once: true,
+      },
+    });
+
+    // Refresh ScrollTrigger in case elements were added later
+    ScrollTrigger.refresh();
+  }, [creators]);
 
   // Creator data with CORRECT YouTube channel profile images
   const creatorInfo = [
@@ -42,12 +68,9 @@ const CreatorsContainer = ({ count = 3 }) => {
     setCreators(creatorInfo);
   }, []);
 
-  useEffect(() => {
-    AOS.init({ duration: 1000, once: true });
-  }, []);
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto" data-aos="fade-up">
+    <div ref={gridRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto" data-aos="fade-up">
       {/* Loading state */}
       {creators.length === 0 && (
         <>
@@ -79,10 +102,8 @@ const CreatorsContainer = ({ count = 3 }) => {
       {creators.length > 0 && creators.map((creator, index) => (
         <div
           key={index}
-          data-aos="fade-up"
-          data-aos-delay={index * 200}
           className={`
-            group flex flex-col items-center p-6 rounded-2xl border shadow-lg
+            creator-card group flex flex-col items-center p-6 rounded-2xl border shadow-lg
             ${isDark ? 'bg-dark-bg-secondary border-dark-border' : 'bg-light-bg-secondary border-light-border'}
             transition-all duration-300 hover:-translate-y-2 hover:shadow-xl
           `}
@@ -128,10 +149,10 @@ const CreatorsContainer = ({ count = 3 }) => {
       {/* "And Many More" card */}
       <div
         className={`
-          group flex flex-col items-center p-6 rounded-2xl border shadow-lg overflow-hidden
+          creator-card group flex flex-col items-center p-6 rounded-2xl border shadow-lg overflow-hidden
           ${isDark ? 'bg-dark-bg-secondary border-dark-border' : 'bg-light-bg-secondary border-light-border'}
           transition-all duration-300 hover:-translate-y-2 hover:shadow-xl
-        `} data-aos="fade-up" data-aos-delay={(creators.length) * 200}
+        `}
       >
         {/* Icon */}
         <div className="relative mb-4 w-24 h-24 rounded-full border-4 border-primary flex items-center justify-center bg-gradient-to-r from-primary to-secondary">
