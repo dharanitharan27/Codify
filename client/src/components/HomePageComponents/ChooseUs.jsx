@@ -1,11 +1,15 @@
 import { useTheme } from "../../context/ThemeContext";
-import { useEffect } from "react";
-import AOS from "aos";
-import "aos/dist/aos.css";
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const ChooseUs = () => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
+  const cardsRef = useRef([]);
+  const sectionRef = useRef(null);
 
   const benefits = [
     {
@@ -31,11 +35,27 @@ const ChooseUs = () => {
   ];
 
   useEffect(() => {
-    AOS.init({ duration: 1000, once: true });
+    if (!cardsRef.current.length) return;
+
+    gsap.set(cardsRef.current, { y: 60, opacity: 0 });
+
+    gsap.to(cardsRef.current, {
+      y: 0,
+      opacity: 1,
+      duration: 0.8,
+      ease: "power2.out",
+      stagger: 0.2, // 👈 one after another
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: "top 80%",
+        once: true,
+      },
+    });
   }, []);
 
+
   return (
-    <section className="py-20 px-4" data-aos="fade-up">
+    <section ref={sectionRef} className="py-20 px-4">
       <div className="max-w-7xl mx-auto">
         <h2 className={`text-4xl font-bold text-center mb-16 ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'}`}>
           Why Choose <span className="text-primary">Our Platform</span>
@@ -45,8 +65,7 @@ const ChooseUs = () => {
           {benefits.map((benefit, index) => (
             <div
               key={index}
-              data-aos="fade-up"
-              data-aos-delay={index * 200}
+              ref={(el) => (cardsRef.current[index] = el)}
               className={`
                 p-8 rounded-xl ${isDark ? 'bg-dark-bg-secondary border-dark-border' : 'bg-light-bg-secondary border-light-border'}
                 border shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-xl
