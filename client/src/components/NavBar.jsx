@@ -232,7 +232,7 @@ function NavBar() {
             <ThemeColorSelector />
             <button
               onClick={toggleMenu}
-              className="inline-flex items-center justify-center p-2 rounded-md text-white hover:bg-white/10 focus:outline-none"
+              className={`inline-flex items-center justify-center p-2 rounded-md ${isDark ? 'text-white hover:bg-white/10' : 'text-black hover:bg-black/10'} focus:outline-none`}
             >
               <span className="sr-only">Open main menu</span>
               <RiMenu3Fill className="block h-6 w-6" />

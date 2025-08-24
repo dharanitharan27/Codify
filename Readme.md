@@ -1,53 +1,62 @@
-# Codify - Interactive Coding Learning Platform
+# Codify – Interactive Coding Learning Platform [Live Demo](https://codifylearn.netlify.app)
+
+<img src="https://miro.medium.com/v2/resize:fit:400/1%2AZfYWXN0zA6TqQQ7wGNJUOg.jpeg" alt="GSSoC Logo" width="100"/>
+
+[![Open Source](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://github.com/roshansuthar1105/codify)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+<img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="150%">
+
+> Welcome to **Codify**, your all-in-one coding learning platform! Bookmarked learning paths, interactive courses, personalized dashboards, dark/light themes, and more — all in one place.
 
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/18bb2c91-12e4-45e7-b1e6-2cbee943975c" alt="Codify Banner" width="800"/>
-  <p><em>Master coding with interactive courses, personalized learning paths, and expert-curated roadmaps</em></p>
-
-  [![Netlify Status](https://api.netlify.com/api/v1/badges/your-netlify-id/deploy-status)](https://codifylearn.netlify.app)
-  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-  [![React](https://img.shields.io/badge/React-18.x-blue)](https://reactjs.org/)
-  [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.x-38B2AC)](https://tailwindcss.com/)
-  [![Node.js](https://img.shields.io/badge/Node.js-18.x-green)](https://nodejs.org/)
+  <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=700&size=24&duration=3000&pause=1000&color=38B2AC&center=true&vCenter=true&width=900&lines=Learn+by+Doing+%F0%9F%92%BB;Interactive+Courses+%26+Curated+Roadmaps+%F0%9F%93%9A;Contribute+and+Grow+with+Open+Source+%F0%9F%8C%8D;Happy+Coding+%E2%9C%A8" alt="Typing Banner"/>
 </div>
 
-## 📋 Table of Contents
+<img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="150%">
 
-- [Overview](#-overview)
-- [Key Features](#-key-features)
-- [Tech Stack](#-tech-stack)
-- [Performance Optimizations](#-performance-optimizations)
-- [Screenshots](#-screenshots)
-- [Live Demo](#-live-demo)
-- [Installation](#-installation)
-- [Project Structure](#-project-structure)
-- [API Documentation](#-api-documentation)
-- [Contributing](#-contributing)
-- [Roadmap](#-roadmap)
-- [License](#-license)
-- [Acknowledgments](#-acknowledgments)
+## 📊 Project Insights
 
-## 🚀 Overview
+<table align="center">
+  <thead>
+    <tr>
+      <td><b>🌟 Stars</b></td>
+      <td><b>🍴 Forks</b></td>
+      <td><b>👥 Contributors</b></td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><img alt="Stars" src="https://img.shields.io/github/stars/roshansuthar1105/codify?style=flat&logo=github"/></td>
+      <td><img alt="Forks" src="https://img.shields.io/github/forks/roshansuthar1105/codify?style=flat&logo=github"/></td>
+      <td><img alt="Contributors Count" src="https://img.shields.io/github/contributors/roshansuthar1105/codify?style=flat&color=blue&logo=github"/></td>
+    </tr>
+  </tbody>
+</table>
+<table align="center">
+  <thead>
+    <tr>
+      <td><b>🐛 Issues</b></td>
+      <td><b>🔔 Open PRs</b></td>
+      <td><b>🔕 Closed PRs</b></td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><img alt="Issues" src="https://img.shields.io/github/issues/roshansuthar1105/codify?style=flat&logo=github"/></td>
+      <td><img alt="Open PRs" src="https://img.shields.io/github/issues-pr/roshansuthar1105/codify?style=flat&logo=github"/></td>
+      <td><img alt="Closed PRs" src="https://img.shields.io/github/issues-pr-closed/roshansuthar1105/codify?style=flat&color=critical&logo=github"/></td>
+    </tr>
+  </tbody>
+</table>
 
-Codify is a comprehensive educational platform designed to help users learn coding through interactive courses, personalized learning paths, and expert-curated roadmaps. The platform features a modern, responsive interface with dark/light theme support, progress tracking, and a robust course management system.
+<p align="center">
+  <a href="https://github-readme-stats.vercel.app/api/pin/?username=roshansuthar1105&repo=codify">
+    <img src="https://github-readme-stats.vercel.app/api/pin/?username=roshansuthar1105&repo=codify&show_owner=true" alt="Repo Card"/>
+  </a>
+</p>
 
-Our mission is to make coding education accessible, engaging, and effective for learners at all levels, from beginners to advanced developers.
-
-## ✨ Key Features
-
-### For Learners
-- **Interactive Courses**: Engage with dynamic coding lessons and tutorials
-- **Personalized Dashboard**: Track your progress, continue watching, and manage saved courses
-- **Course Roadmaps**: Follow structured learning paths for different programming domains
-- **Dark/Light Theme**: Choose your preferred visual experience with theme color customization
-- **Progress Tracking**: Monitor your learning journey with detailed statistics
-- **Responsive Design**: Seamless experience across all devices
-
-### For Administrators
-- **Comprehensive Admin Panel**: Manage users, courses, and content
-- **Course Management**: Add, edit, and organize courses and learning materials
-- **User Management**: Monitor user activity and progress
-- **Analytics Dashboard**: Track platform usage and engagement metrics
+![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
 ## 🛠️ Tech Stack
 
@@ -72,6 +81,21 @@ Our mission is to make coding education accessible, engaging, and effective for 
 - **Netlify**: Frontend deployment and hosting
 - **Git & GitHub**: Version control and collaboration
 
+
+![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
+
+
+## ✨ Highlights
+
+- 🎓 **Interactive Courses** with hands-on lessons  
+- 🧭 **Curated Roadmaps** for multiple tech stacks  
+- 🌓 **Dark/Light Themes** with customization  
+- 📈 **Progress Tracking** and resume learning  
+- 📱 **Responsive UI** across devices  
+- 🛡️ **JWT Auth**, role-based access (Admin/Learner)
+
+![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
+
 ## 🔧 Performance Optimizations
 
 Codify implements several performance optimization techniques:
@@ -83,33 +107,61 @@ Codify implements several performance optimization techniques:
 5. **SEO Optimization**: Comprehensive meta tags and structured data
 6. **Responsive Design**: Optimized for all device sizes
 
-## 📸 Screenshots
 
-<div align="center">
-  <img src="https://github.com/user-attachments/assets/18bb2c91-12e4-45e7-b1e6-2cbee943975c" alt="Home Page" width="400"/>
-  <img src="https://github.com/user-attachments/assets/b1a0dfcd-d7e5-4bb9-940f-ba6137ee2320" alt="Courses Page" width="400"/>
-  <img src="https://github.com/user-attachments/assets/1f856972-a964-42a6-a552-d10867f8dc85" alt="Dashboard" width="400"/>
-  <img src="https://github.com/user-attachments/assets/d9fb69da-0258-4a77-85be-f77cfcfd193d" alt="Course Player" width="400"/>
-</div>
+![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
+
+
+## 🗺️ Roadmap
+
+- [ ] Mobile application (React Native)
+- [ ] Interactive code editor and playground
+- [ ] Peer-to-peer learning and mentorship
+- [ ] Gamification elements (badges, achievements)
+- [ ] AI-powered learning recommendations
+- [ ] Community forums and discussion boards
+- [ ] Integration with GitHub for project-based learning
+
+
+![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
+
+
+## 🙏 Acknowledgments
+
+- Inspired by leading educational platforms like Coursera, Udemy, and freeCodeCamp
+- Special thanks to all contributors and the open-source community
+- YouTube API for video content integration
+- All the amazing instructors who provided course content
+
+
+![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
+
 
 ## 🌐 Live Demo
 
-Experience Codify in action: [https://codifylearn.netlify.app](https://codifylearn.netlify.app)
+**Try Codify:** https://codifylearn.netlify.app
 
-### Demo Accounts
-- **Regular User**:
-  - Email: demo@codify.com
-  - Password: demo123
-- **Admin User**:
-  - Email: admin@codify.com
-  - Password: admin123
+<details>
+  <summary><b>Demo Accounts</b></summary>
 
-## 📥 Installation
+- **User**: `demo@codify.com` • `demo123`  
+- **Admin**: `admin@codify.com` • `admin123`
+</details>
+
+![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
+
+
+## 🚀 Getting Started
+
+Follow these steps to set up **Codify** locally and begin contributing.
 
 ### Prerequisites
 - Node.js (v16 or higher)
 - npm or yarn
-- MongoDB (local or cloud instance)
+- MongoDB
+- Git
+- Code editor (VS Code recommended)
+
+### Installation : **Clone Codify Repository**
 
 ### Frontend Setup
 1. Clone the repository
@@ -123,53 +175,69 @@ Experience Codify in action: [https://codifylearn.netlify.app](https://codifylea
 3. Install dependencies
    ```bash
    npm install
-   # or
-   yarn install
    ```
-4. Create a `.env` file in the client directory with the following variables:
+4. Environment (Frontend)
+
+   Create .env in client/:
+   
+   ```bash
+    VITE_SERVER_API=http://localhost:5050
+    VITE_YOUTUBE_API=add_your_youtube_api_here
    ```
-   VITE_SERVER_API=http://localhost:5050
-   VITE_YOUTUBE_API=your_youtube_api_key
-   ```
-5. Start the development server
+5. Run Frontend
+   
    ```bash
    npm run dev
-   # or
-   yarn dev
    ```
 6. Open your browser and navigate to `http://localhost:5173`
 
 ### Backend Setup
-1. Clone the backend repository
+1. Navigate to the server directory
    ```bash
-   git clone https://github.com/Roshansuthar1105/Codify.git
-   ```
-2. Navigate to the server directory
-   ```bash
+   cd ..
    cd codify/server
    ```
-3. Install dependencies
+2. Install dependencies
    ```bash
    npm install
-   # or
-   yarn install
    ```
-4. Create a `.env` file with the following variables:
-   ```
-   MONGODB_URI=your_mongodb_connection_string/or ask the repo owner for the URI
-   PORT=5050
-   JWT_SECRET=your_jwt_secret
-   CLIENT_CORS=http://localhost:5173
-   ```
-5. Start the server
+3. Environment (Backend)
+
+   Create .env in server/:
+   
    ```bash
-   npm start
-   # or
-   yarn start
+    MONGODB_URI="mongodb+srv://publicuser:public_codify@cluster0.5bysaia.mongodb.net/" 
+    #this is the owner MONGODB URI, you can use it!
+    PORT=5050
+    JWT_SECRET=your_jwt_secret
+    CLIENT_CORS=http://localhost:5173
+    EMAIL_USER=your_email@gmail.com
+    EMAIL_PASS=your_app_password
    ```
+4. Run Backend
+
+   ```bash
+   npm run start
+   # API: http://localhost:5050
+   ```
+
+![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
+
+## 🔧 Troubleshooting
+
+| Issue | Possible Cause | Solution |
+|-------|----------------|----------|
+| **Banner image not showing** | Wrong path or file not uploaded | Check if the image exists in `/assets/` and update the correct path in README |
+| **Animations not visible** | Browser does not support CSS animations | Use a modern browser like Chrome/Edge/Firefox |
+| **Project not running after clone** | Dependencies not installed | Run `npm install` or `yarn install` |
+| **Git upstream not working** | Upstream not added properly | Run `git remote add upstream <repo-url>` and verify using `git remote -v` |
+| **Merge conflicts while updating fork** | Conflicting changes between fork and upstream | Resolve conflicts manually, then `git add .`, `git commit`, and `git push` |
+
+![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
 ## Note:
  You might need to run both the client and server simultaneously for fetching data in your local machine.
+
 
 ## 📁 Project Structure
 
@@ -197,40 +265,27 @@ server/
 └── server.js           # Server entry point
 ```
 
-## 📚 API Documentation
+![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-### Authentication Endpoints
-- `POST /api/auth/register` - Register a new user
-- `POST /api/auth/login` - Login a user
-- `GET /api/auth/me` - Get current user information
+## 🤝 Contributing to Codify
 
-### Course Endpoints
-- `GET /api/v1/courses` - Get all courses
-- `GET /api/v1/courses/:id` - Get a specific course
-- `POST /api/v1/courses` - Create a new course (admin only)
-- `PUT /api/v1/courses/:id` - Update a course (admin only)
-- `DELETE /api/v1/courses/:id` - Delete a course (admin only)
+| Step | Guideline |
+|------|------------|
+| **Pick Issues** | Choose an unassigned issue (or open a new one) and wait for approval. |
+| **Responsive Design** | Ensure Tailwind CSS responsiveness across breakpoints. |
+| **Code Quality** | Write clean, modular components inside `src/components/*`. Use **ESLint** & **Prettier**. |
+| **Pull Requests** | Submit one issue per PR with a clear description & screenshots (where relevant). |
+| **Communication** | Use Discussions/Issues for queries. Avoid spammy comments. |
 
-### User Progress Endpoints
-- `GET /api/progress` - Get user's progress for all courses
-- `GET /api/progress/:courseId` - Get user's progress for a specific course
-- `PUT /api/progress/:courseId` - Update user's progress for a course
+### Quick Flow 
 
-### User Activity Endpoints
-- `GET /api/activity` - Get user's activity history
-- `POST /api/activity/add` - Add a new activity record
-
-### Watchlist Endpoints
-- `GET /api/user/watchlist` - Get user's watchlist
-- `POST /api/user/addToWatchlist` - Add/remove a course to/from watchlist
-
-## 🤝 Contributing
-
-We welcome contributions to Codify! Here's how you can help:
-
-> **Contributor Guide:**  
-> Visit [`/ContributorsGuide`](https://codifylearn.netlify.app/ContributorsGuide) in the app for a step-by-step, beginner-friendly guide.  
-> This page covers the Git workflow, pull request creation, FAQs, and helpful resources to make your first contribution smooth and enjoyable.
+```bash
+git checkout -b feature/amazing-feature
+git commit -m "feat: add amazing feature"
+git push origin feature/amazing-feature
+# then open a Pull Request
+```
+### detailed description 
 
 1. Fork the repository
 2. Add an upstream to keep your fork synchronized with the original repository
@@ -255,37 +310,88 @@ We welcome contributions to Codify! Here's how you can help:
    ```
 6. Open a Pull Request
 
-Please read our [Contributing Guidelines](CONTRIBUTING.md) for more details.
 
-## 🗺️ Roadmap
+![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-- [ ] Mobile application (React Native)
-- [ ] Interactive code editor and playground
-- [ ] Peer-to-peer learning and mentorship
-- [ ] Gamification elements (badges, achievements)
-- [ ] AI-powered learning recommendations
-- [ ] Community forums and discussion boards
-- [ ] Integration with GitHub for project-based learning
+**🤝👤 Contribution Guidelines**
+
+We love our contributors! CONTRIBUTE.md `Will be Coming Soon`.
+
+>Thank you once again to all our contributors who has contributed to **Codify** Your efforts are truly appreciated. 💖👏
+<!-- Contributors badge (auto-updating) -->
+
+[![Contributors](https://img.shields.io/github/contributors/roshansuthar1105/codify?style=for-the-badge)](https://github.com/roshansuthar1105/codify/graphs/contributors)
+
+<p align="left"> <a href="https://github.com/roshansuthar1105/codify/graphs/contributors"> <img src="https://contrib.rocks/image?repo=roshansuthar1105/codify" alt="Contributors"/> </a> </p>
+
+See the full list of contributors and their contributions on the [`GitHub Contributors Graph`](https://github.com/roshansuthar1105/codify/graphs/contributors).
+
+<h2 align="center">
+<p style="font-family:var(--ff-philosopher);font-size:3rem;"><b> Show some <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Red%20Heart.png" alt="Red Heart" width="40" height="40" /> by starring this awesome repository!
+</p>
+</h2>
+
+<img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="150%">
+
+**💡 Suggestions & Feedback**
+
+Feel free to open issues or discussions if you have any feedback, feature suggestions, or want to collaborate!
+
+<img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="150%">
+
+**🙌 Support & Star**
+
+***If you find this project helpful, please give it a star ⭐ to support more such educational initiatives!***
+
+<img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
+
+**⭐ Stargazers**
+
+<div align="center">
+  <a href="https://github.com/roshansuthar1105/codify/graphs/stargazers">
+    <img src="https://reporoster.com/stars/roshansuthar1105/codify?type=svg&limit=100&names=false" alt="Stargazers" />
+  </a>
+</div>
+
+<img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="150%">
+
+**🍴 Forkers**
+
+<div align="center">
+  <a href="https://github.com/roshansuthar1105/codify/network/members">
+    <img src="https://reporoster.com/forks/roshansuthar1105/codify?type=svg&limit=100&names=false" alt="Forkers" />
+  </a>
+
+<img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="150%">
+
+<h2>🧑‍💻Project Admin:</h2>
+<table>
+<tr>
+<td align="center">
+<a href="https://github.com/Roshansuthar1105"><img src="https://avatars.githubusercontent.com/u/117620582?v=4" height="140px" width="140px" alt="Roshan Suthar"></a><br><sub><b>Roshan Suthar</b><br><a href="https://www.linkedin.com/in/roshansuthar/"><img src="https://github-production-user-asset-6210df.s3.amazonaws.com/73993775/278833250-adb040ea-e3ef-446e-bcd4-3e8d7d4c0176.png" width="45px" height="45px"></a></sub>
+</td>
+</tr>
+</table>
+
+<img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
+
+<img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="100%">
+
+<h1 align="center"><img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Travel%20and%20places/Glowing%20Star.png" alt="Glowing Star" width="25" height="25" /> Give us a Star and let's make magic! <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Travel%20and%20places/Glowing%20Star.png" alt="Glowing Star" width="25" height="25" /></h1>
+
+<p align="center">
+     <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Mirror%20Ball.png" alt="Mirror Ball" width="150" height="150" />
+</p>
+
+<img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="150%">
+
+**👨‍💻 Built with ❤️ by the Codify Team**
+**❤️ Roshan Suthar and Contributors ❤️** [open an issue](https://github.com/Roshansuthar1105/Codify/issues) | [Watch Demo](https://codifylearn.netlify.app/)
+
+<img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="150%">
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=65&section=footer"/>
 
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- Inspired by leading educational platforms like Coursera, Udemy, and freeCodeCamp
-- Special thanks to all contributors and the open-source community
-- YouTube API for video content integration
-- All the amazing instructors who provided course content
-
----
-
-<div align="center">
-  <p>Made with ❤️ by the Codify Team</p>
-  <p>
-    <a href="https://twitter.com/codifylearn">Twitter</a> •
-    <a href="https://facebook.com/codifylearn">Facebook</a> •
-    <a href="https://instagram.com/codifylearn">Instagram</a> •
-    <a href="mailto:contact@codifylearn.com">Contact</a>
-  </p>
-</div>
