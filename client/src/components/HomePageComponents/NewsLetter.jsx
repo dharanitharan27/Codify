@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTheme } from "../../context/ThemeContext";
 import { FaPaperPlane } from "react-icons/fa";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const NewsLetter = () => {
   const { theme } = useTheme();
@@ -14,8 +16,12 @@ const NewsLetter = () => {
     setEmail("");
   };
 
+  useEffect(() => {
+    AOS.init({ duration: 1000, once: true });
+  }, []);
+
   return (
-    <section className="py-20 px-4">
+    <section className="py-20 px-4" data-aos="fade-right">
       <div
         className={`
           max-w-5xl mx-auto rounded-2xl p-12 ${isDark ? 'bg-dark-bg-secondary border-dark-border' : 'bg-light-bg-secondary border-light-border'}
