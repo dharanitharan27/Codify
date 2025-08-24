@@ -16,7 +16,7 @@ const courses = async(req,res)=>{
 }
 
 // Enroll in a course
-export const enrollCourse = async (req, res) => {
+const enrollCourse = async (req, res) => {
     try {
         const { courseId } = req.body;
         const userId = req.user.id;

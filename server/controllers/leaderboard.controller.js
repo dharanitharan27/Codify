@@ -52,7 +52,6 @@ export const fetchLeaderboard = async (req, res) => {
         profileUrl: c.html_url || `https://github.com/${c.login}`, // ✅ Add profile link
       };
     });
-    console.log(leaderboard)
 
     // Sort & add progress bar %
     leaderboard.sort((a, b) => b.points - a.points);
