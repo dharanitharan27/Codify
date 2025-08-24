@@ -339,6 +339,7 @@ const handleResendOtp = async () => {
                     type={show ? "text" : "password"}
                     id="password"
                     name="password"
+                    autoComplete="new-password"
                     placeholder="Enter your password"
                     value={user.password}
                     onChange={handleChange}
