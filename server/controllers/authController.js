@@ -149,37 +149,7 @@ const forgotPasswordCheck = async (req, res) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 };
-
-
-// Reset password
-
-// const resetPassword = async (req, res) => {
-//   try {
-//     const { email, newPassword } = req.body;
-
-//     if (!email || !newPassword) {
-//       return res.status(400).json({ message: "Email and new password are required" });
-//     }
-
-//     const user = await User.findOne({ email });
-//     if (!user) {
-//       return res.status(404).json({ message: "Email not found" });
-//     }
-
-//     // Directly hash password here instead of relying on pre-save hook
-//     const hashedPassword = await bcryptjs.hash(newPassword, 10);
-//     user.password = hashedPassword;
-
-//     await user.save();
-
-//     return res.status(200).json({ message: "Password updated successfully" });
-//   } catch (error) {
-//     console.error(error);
-//     return res.status(500).json({ message: "Internal server error" });
-//   }
-// };
-
-
+//Reset Password
 const resetPassword = async (req, res) => {
   try {
     const { email, newPassword } = req.body;

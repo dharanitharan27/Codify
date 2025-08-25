@@ -49,80 +49,49 @@ function ForgotPassword() {
       setIsLoading(false);
     }
   };
+    const verifyOtp = async () => {
+        try {
+            setIsLoading(true);
+            const otpString = otp.join("");
 
-//   const verifyOtp = async () => {
-//     try {
-//       setIsLoading(true);
-//       const otpString = otp.join("");
-//       const response = await fetch(`${API}/api/v1/auth/verify-otp`, {
-//         method: "POST",
-//         headers: { "Content-Type": "application/json" },
-//         body: JSON.stringify({ email, otp: otpString }),
-//       });
+            // Step 1: Verify OTP
+            const response = await fetch(`${API}/api/v1/auth/verify-otp`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, otp: otpString }),
+            });
 
-//       const result = await response.json();
+            const result = await response.json();
 
-//       if (response.ok) {
-//         const stored = JSON.parse(localStorage.getItem("forgotEmail"));
-//         if (stored && stored.exists) {
-//           toast.success("OTP verified! You can now reset your password.");
-//           setShowReset(true);
-//         } else {
-//           toast.error("Email does not exist in our records.");
-//         }
-//       } else {
-//         toast.error("Invalid OTP");
-//       }
-//     } catch (error) {
-//       toast.error("Error verifying OTP");
-//     } finally {
-//       setIsLoading(false);
-//       setShowOtpModal(false);
-//     }
-//   };
- const verifyOtp = async () => {
-  try {
-    setIsLoading(true);
-    const otpString = otp.join("");
+            if (response.ok) {
+                // Step 2: Check if email exists
+                const emailCheckRes = await fetch(`${API}/api/v1/auth/forgot-password/check`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email }),
+                });
 
-    // Step 1: Verify OTP
-    const response = await fetch(`${API}/api/v1/auth/verify-otp`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, otp: otpString }),
-    });
+                const emailCheckData = await emailCheckRes.json();
 
-    const result = await response.json();
+                if (emailCheckRes.ok) {
+                    toast.success("OTP verified! You can reset your password.");
+                    setShowReset(true); // Show password reset input
+                } else {
+                    toast.error(emailCheckData.message || "Email is not registered in our system.");
+                    setShowReset(false);
+                    setEmail(""); // Clear email input
+                }
 
-    if (response.ok) {
-      // Step 2: Check if email exists
-      const emailCheckRes = await fetch(`${API}/api/v1/auth/forgot-password/check`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-
-      const emailCheckData = await emailCheckRes.json();
-
-      if (emailCheckRes.ok) {
-        toast.success("OTP verified! You can reset your password.");
-        setShowReset(true); // Show password reset input
-      } else {
-        toast.error(emailCheckData.message || "Email is not registered in our system.");
-        setShowReset(false);
-        setEmail(""); // Clear email input
-      }
-
-      setShowOtpModal(false); // Close OTP modal
-    } else {
-      toast.error(result.message || "Invalid OTP, please try again.");
-    }
-  } catch (error) {
-    toast.error("Error verifying OTP");
-  } finally {
-    setIsLoading(false);
-  }
-};
+                setShowOtpModal(false); // Close OTP modal
+            } else {
+                toast.error(result.message || "Invalid OTP, please try again.");
+            }
+        } catch (error) {
+            toast.error("Error verifying OTP");
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
 
   const handleResetPassword = async () => {
