@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Users, GitPullRequest, Activity, Star, Loader2, AlertCircle, PlusCircle } from 'lucide-react';
+import { Users, GitPullRequest, Activity, Star, AlertCircle, PlusCircle } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext'; // Adjust import path as needed
 import { useAuth } from '../store/auth';
+import Loader from '../components/Loader'
 
 const ContributorsPage = () => {
     
@@ -86,11 +87,7 @@ const ContributorsPage = () => {
 
   if (loading) {
     return (
-      <div className={`min-h-screen flex items-center justify-center ${
-        isDark ? 'bg-dark-bg-primary' : 'bg-light-bg-primary'
-      }`}>
-        <Loader2 className="w-12 h-12 text-primary animate-spin mx-auto" />
-      </div>
+      <Loader />
     );
   }
 
