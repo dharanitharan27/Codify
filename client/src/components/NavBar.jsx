@@ -65,9 +65,9 @@ function NavBar() {
   <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex-shrink-0 flex items-center">
-            <NavLink to="/" className={`flex items-center space-x-2 font-bold text-xl text-primary-500 transition-colors`}>
-              <FaGraduationCap className="text-2xl" />
-              <span className="font-righteous">Codify</span>
+            <NavLink to="/" className={`flex items-center space-x-2 font-bold text-3xl text-primary-500 transition-colors`}>
+              <FaGraduationCap className="text-3xl" />
+              <span className="font-righteous text-3xl">Codify</span>
             </NavLink>
           </div>
 
@@ -77,7 +77,7 @@ function NavBar() {
               <NavLink
                 to="/"
                 className={({ isActive }) => `
-                  px-3 py-2 rounded-md text-sm font-medium transition-colors
+                  px-3 py-2 rounded-md text-lg font-medium transition-colors
                   ${isActive
                     ? 'bg-primary text-white'
                     : `${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'} hover:bg-primary-400 hover:text-white`}
@@ -89,7 +89,7 @@ function NavBar() {
               <NavLink
                 to="/about"
                 className={({ isActive }) => `
-                  px-3 py-2 rounded-md text-sm font-medium transition-colors
+                  px-3 py-2 rounded-md text-lg font-medium transition-colors
                   ${isActive
                     ? 'bg-primary text-white'
                     : `${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'} hover:bg-primary-400 hover:text-white`}
@@ -101,7 +101,7 @@ function NavBar() {
               <NavLink
                 to="/courses"
                 className={({ isActive }) => `
-                  px-3 py-2 rounded-md text-sm font-medium transition-colors
+                  px-3 py-2 rounded-md text-lg font-medium transition-colors
                   ${isActive
                     ? 'bg-primary text-white'
                     : `${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'} hover:bg-primary-400 hover:text-white`}
@@ -113,7 +113,7 @@ function NavBar() {
               <NavLink
                 to="/roadmap"
                 className={({ isActive }) => `
-                  px-3 py-2 rounded-md text-sm font-medium transition-colors
+                  px-3 py-2 rounded-md text-lg font-medium transition-colors
                   ${isActive
                     ? 'bg-primary text-white'
                     : `${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'} hover:bg-primary-400 hover:text-white`}
@@ -125,7 +125,7 @@ function NavBar() {
               <NavLink
                 to="/C"
                 className={({ isActive }) => `
-                  px-3 py-2 rounded-md text-sm font-medium transition-colors
+                  px-3 py-2 rounded-md text-lg font-medium transition-colors
                   ${isActive
                     ? 'bg-primary text-white'
                     : `${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'} hover:bg-primary-400 hover:text-white`}
@@ -137,7 +137,7 @@ function NavBar() {
               <NavLink
                 to="/contact"
                 className={({ isActive }) => `
-                  px-3 py-2 rounded-md text-sm font-medium transition-colors
+                  px-3 py-2 rounded-md text-lg font-medium transition-colors
                   ${isActive
                     ? 'bg-primary text-white'
                     : `${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'} hover:bg-primary-400 hover:text-white`}
@@ -151,7 +151,7 @@ function NavBar() {
                   <NavLink
                     to="/dashboard"
                     className={({ isActive }) => `
-                      px-3 py-2 rounded-md text-sm font-medium transition-colors
+                      px-3 py-2 rounded-md text-lg font-medium transition-colors
                       ${isActive
                         ? 'bg-primary text-white'
                         : `${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'} hover:bg-primary-400 hover:text-white`}
@@ -164,7 +164,7 @@ function NavBar() {
                     <NavLink
                       to="/admin"
                       className={({ isActive }) => `
-                        px-3 py-2 rounded-md text-sm font-medium transition-colors
+                        px-3 py-2 rounded-md text-lg font-medium transition-colors
                         ${isActive
                           ? 'bg-primary text-white'
                     : `${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'} hover:bg-primary-400 hover:text-white`}
@@ -176,7 +176,7 @@ function NavBar() {
 
                   <NavLink
                     to="/logout"
-                    className={`px-3 py-2 rounded-md text-sm font-medium ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary '} hover:bg-primary-400 hover:text-white transition-colors`}
+                    className={`px-3 py-2 rounded-md text-lg font-medium ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary '} hover:bg-primary-400 hover:text-white transition-colors`}
                   >
                     Logout
                   </NavLink>
@@ -185,14 +185,14 @@ function NavBar() {
                 <>
                   <NavLink
                     to="/login"
-                    className={`px-3 py-2 rounded-md text-sm font-medium ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary '} hover:bg-primary-400 hover:text-white transition-colors`}
+                    className={`px-3 py-2 rounded-md text-lg font-medium ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary '} hover:bg-primary-400 hover:text-white transition-colors`}
                   >
                     Login
                   </NavLink>
 
                   <NavLink
                     to="/signup"
-                    className={`px-3 py-2 rounded-md text-sm font-medium ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary '} hover:bg-primary-400 hover:text-white transition-colors`}
+                    className={`px-3 py-2 rounded-md text-lg font-medium ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary '} hover:bg-primary-400 hover:text-white transition-colors`}
                   >
                     Sign Up
                   </NavLink>
