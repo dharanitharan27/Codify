@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Users, GitPullRequest, Activity, Star, Loader2, AlertCircle, PlusCircle } from 'lucide-react';
+import { Users, GitPullRequest, Activity, Star, AlertCircle, PlusCircle } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext'; // Adjust import path as needed
 import { useAuth } from '../store/auth';
+import Loader from '../components/Loader'
 
 const ContributorsPage = () => {
     
@@ -13,7 +14,7 @@ const ContributorsPage = () => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const API = import.meta.env.VITE_SERVER_API;
-  console.log(API);
+  // console.log(API);
   const API_ENDPOINT = `${API}/api/v1/leaderboard`;
 
   useEffect(() => {
@@ -40,6 +41,8 @@ const ContributorsPage = () => {
       setLoading(false);
     }
   };
+
+  const gradientBg = "bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-secondary-1000 backdrop-blur-xl";
 
   const sortedContributors = [...contributors].sort((a, b) => {
     switch(sortBy) {
@@ -84,11 +87,7 @@ const ContributorsPage = () => {
 
   if (loading) {
     return (
-      <div className={`min-h-screen flex items-center justify-center ${
-        isDark ? 'bg-dark-bg-primary' : 'bg-light-bg-primary'
-      }`}>
-        <Loader2 className="w-12 h-12 text-primary animate-spin mx-auto" />
-      </div>
+      <Loader />
     );
   }
 
@@ -121,11 +120,11 @@ const ContributorsPage = () => {
   return (
     <div className={`min-h-screen ${isDark ? 'bg-dark-bg-primary' : 'bg-light-bg-primary'}`}>
       {/* Header Section */}
-      <div className="py-16 px-6 text-center">
-        <h1 className="text-5xl font-bold text-primary mb-4">
+      <div className="py-8 sm:py-12 lg:py-16 px-4 sm:px-6 text-center">
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-primary mb-4">
           GSSoC'25 Leaderboard
         </h1>
-        <p className={`text-lg max-w-2xl mx-auto ${
+        <p className={`text-base sm:text-lg max-w-2xl mx-auto ${
           isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'
         }`}>
           Celebrating the amazing contributions from GSSoC'25 participants.
@@ -133,9 +132,9 @@ const ContributorsPage = () => {
       </div>
 
       {/* Stats Section */}
-      <div className="px-6 mb-12">
+      <div className="px-4 sm:px-6 mb-8 sm:mb-12">
         <div className="max-w-5xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             <StatCard icon={Users} value={`${totalContributors}+`} label="Contributors" isDark={isDark} />
             <StatCard icon={GitPullRequest} value={`${totalPRs}+`} label="Pull Requests" isDark={isDark} />
             <StatCard icon={PlusCircle} value={`${totalContributions}+`} label="Contributions" isDark={isDark} />
@@ -145,22 +144,19 @@ const ContributorsPage = () => {
       </div>
 
       {/* Leaderboard */}
-      <div className="px-6 pb-12">
+      <div className="px-4 sm:px-6 pb-12">
         <div className="max-w-5xl mx-auto">
-          <div className={`rounded-xl overflow-hidden border ${
-            isDark 
-              ? 'bg-dark-bg-secondary border-dark-border' 
-              : 'bg-light-bg-secondary border-light-border'
-          }`}>
+          {/* Desktop Table */}
+          <div className={`hidden lg:block rounded-xl overflow-hidden border ${gradientBg} ${isDark ? 'border-dark-border' : 'border-light-border'}`}>
             {/* Table Header */}
             <div className={`p-4 border-b ${isDark ? 'border-dark-border' : 'border-light-border'}`}>
               <div className="grid grid-cols-12 gap-4 items-center text-sm font-medium">
                 <div className={`col-span-1 ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>#</div>
-                <div className={`col-span-4 ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>Contributor</div>
+                <div className={`col-span-3 ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>Contributor</div>
                 <div className={`col-span-2 text-center ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>PRs</div>
                 <div className={`col-span-2 text-center ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>Contributions</div>
-                
-                <div className={`col-span-2 text-center ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>Progress</div>
+                <div className={`col-span-1 text-center ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>Points</div>
+                <div className={`col-span-3 text-center ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>Progress</div>
               </div>
             </div>
 
@@ -175,7 +171,7 @@ const ContributorsPage = () => {
                     </div>
 
                     {/* Contributor Info */}
-                    <div className="col-span-4 flex items-center space-x-3">
+                    <div className="col-span-3 flex items-center space-x-3">
                       <a href={contributor.profileUrl} target="_blank" rel="noopener noreferrer">
                         <img
                           src={contributor.avatar}
@@ -214,9 +210,12 @@ const ContributorsPage = () => {
                     </div>
 
                     {/* Points */}
+                    <div className="col-span-1 text-center">
+                      <div className="text-primary font-semibold">{contributor.points}</div>
+                    </div>
                      
                     {/* Progress */}
-                    <div className="col-span-2">
+                    <div className="col-span-3">
                       <div className="flex items-center space-x-2">
                         <div className={`flex-1 rounded-full h-2 overflow-hidden ${isDark ? 'bg-dark-bg-tertiary' : 'bg-light-bg-tertiary'}`}>
                           <div
@@ -233,6 +232,73 @@ const ContributorsPage = () => {
                 </div>
               ))}
             </div>
+          </div>
+
+          {/* Mobile and Tablet Cards */}
+          <div className="lg:hidden space-y-4">
+            {sortedContributors.map((contributor, index) => (
+              <div key={contributor.username} className={`rounded-xl p-4 border ${gradientBg} ${isDark ? 'border-dark-border' : 'border-light-border'}`}>
+                <div className="flex items-center space-x-3 mb-4">
+                  {getRankBadge(index)}
+                  <a href={contributor.profileUrl} target="_blank" rel="noopener noreferrer">
+                    <img
+                      src={contributor.avatar}
+                      alt={contributor.username}
+                      className="w-12 h-12 rounded-full ring-2 ring-primary/50"
+                      onError={(e) => {
+                        e.target.src = `https://ui-avatars.com/api/?name=${contributor.username}&background=6366f1&color=ffffff`;
+                      }}
+                    />
+                  </a>
+                  <div className="flex-1">
+                    <a 
+                      href={contributor.profileUrl} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className={`font-medium hover:underline block ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'}`}
+                    >
+                      {contributor.username}
+                    </a>
+                    <div className={`text-xs hover:underline ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>
+                      <a href={contributor.profileUrl} target="_blank" rel="noopener noreferrer">
+                        View Contributions →
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
+                  <div className="text-center">
+                    <div className="text-primary font-semibold text-lg sm:text-xl">{contributor.prs}</div>
+                    <div className={`text-xs ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>PRs</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-primary font-semibold text-lg sm:text-xl">{contributor.contributions}</div>
+                    <div className={`text-xs ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>Contributions</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-primary font-semibold text-lg sm:text-xl">{contributor.points}</div>
+                    <div className={`text-xs ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>Points</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-primary font-semibold text-lg sm:text-xl">{contributor.progress}%</div>
+                    <div className={`text-xs ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>Progress</div>
+                  </div>
+                </div>
+                
+                <div className="flex items-center space-x-2">
+                  <div className={`flex-1 rounded-full h-2 overflow-hidden ${isDark ? 'bg-dark-bg-tertiary' : 'bg-light-bg-tertiary'}`}>
+                    <div
+                      className="bg-primary h-full transition-all duration-1000 rounded-full"
+                      style={{ width: `${Math.min(contributor.progress, 100)}%` }}
+                    />
+                  </div>
+                  <span className={`text-xs w-10 text-right ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>
+                    {contributor.progress}%
+                  </span>
+                </div>
+              </div>
+            ))}
           </div>
 
           {/* Refresh Button */}
@@ -252,14 +318,12 @@ const ContributorsPage = () => {
 };
 
 const StatCard = ({ icon: Icon, value, label, isDark }) => (
-  <div className={`p-6 rounded-xl text-center border ${
-    isDark ? 'bg-dark-bg-secondary border-dark-border' : 'bg-light-bg-secondary border-light-border'
-  }`}>
-    <Icon className="w-8 h-8 text-primary mx-auto mb-3" />
-    <div className={`text-3xl font-bold mb-1 ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'}`}>
+  <div className={`p-4 sm:p-6 rounded-xl text-center border bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-secondary-1000 backdrop-blur-xl ${isDark ? 'border-dark-border' : 'border-light-border'}`}>
+    <Icon className="w-6 h-6 sm:w-8 sm:h-8 text-primary mx-auto mb-2 sm:mb-3" />
+    <div className={`text-xl sm:text-2xl lg:text-3xl font-bold mb-1 ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'}`}>
       {value}
     </div>
-    <div className="text-primary text-sm">{label}</div>
+    <div className="text-primary text-xs sm:text-sm">{label}</div>
   </div>
 );
 
