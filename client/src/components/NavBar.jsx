@@ -65,9 +65,9 @@ function NavBar() {
   <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex-shrink-0 flex items-center">
-            <NavLink to="/" className={`flex items-center space-x-2 font-bold text-2xl text-primary-500 transition-colors`}>
-              <FaGraduationCap className="text-4xl" />
-              <span className="font-righteous">Codify</span>
+            <NavLink to="/" className={`flex items-center space-x-2 font-bold text-4xl text-primary-500 transition-colors`}>
+              <FaGraduationCap className="text-3xl" />
+              <span className="font-righteous text-4xl">Codify</span>
             </NavLink>
           </div>
 
