@@ -132,6 +132,37 @@ const verifyOTP = async (req, res) => {
     return res.status(500).json({ message: "Failed to verify OTP" });
   }
 };
+// Check if email exists in DB before forgot password reset
+const forgotPasswordCheck = async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ message: "Email is required" });
+    }
+    const userExist = await User.findOne({ email });
+    if (!userExist) {
+      return res.status(404).json({ message: "Email does not exist" });
+    }
+    return res.status(200).json({ message: "Email exists" });
+  } catch (error) {
+    console.error("Error in forgotPasswordCheck:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+//Reset Password
+const resetPassword = async (req, res) => {
+  try {
+    const { email, newPassword } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) return res.status(400).send({ message: "User not found" });
 
+    user.password = newPassword; // plain text
+    await user.save(); // hash will happen here
+    
+    res.status(200).send({ message: "Password reset successful" });
+  } catch (error) {
+    res.status(500).send({ message: "Internal server error" });
+  }
+};
 
-export { homePage, regPage, login, contact , user ,courses ,defcontroller,sendOTP,verifyOTP };
+export { homePage, regPage, login, contact , user ,courses ,defcontroller,sendOTP,verifyOTP ,resetPassword,forgotPasswordCheck  };
