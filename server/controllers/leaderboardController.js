@@ -1,5 +1,5 @@
 import fetch from "node-fetch";
-import { Contributor, Cache } from "../models/contributor.js";
+import { Contributor, Cache } from "../models/Contributor.js";
 
 const GITHUB_URL = "https://api.github.com/repos/Roshansuthar1105/Codify";
 const CACHE_KEY = "leaderboard";
