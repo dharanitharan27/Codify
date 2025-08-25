@@ -48,21 +48,23 @@ function NavBar() {
   };
 
   return (
-    <nav 
-    // className={`
-    //   sticky top-0 z-50 w-full transition-all duration-300 ${isDark ? 'bg-dark-bg-primary/95' : 'bg-light-bg-primary/95'} shadow-nav backdrop-blur-sm
-    //   ${isDark ? 'text-dark-text-primary' : 'text-white'}
-    // `}
-    className={`
+
+
+    <nav
+      // className={`
+      //   sticky top-0 z-50 w-full transition-all duration-300 ${isDark ? 'bg-dark-bg-primary/95' : 'bg-light-bg-primary/95'} shadow-nav backdrop-blur-sm
+      //   ${isDark ? 'text-dark-text-primary' : 'text-white'}
+      // `}
+      className={`
       sticky top-0 z-50 w-full transition-all duration-300
       ${scrolled
-        ? `${isDark ? 'bg-dark-bg-primary/70 border-white/50' : 'bg-light-bg-primary/70 border-black/50'} border-b-2 shadow-nav backdrop-blur-sm`
-        : `${isDark ? 'border-white' : ' border-black'} border-0`}
+          ? `${isDark ? 'bg-dark-bg-primary/70 border-white/50' : 'bg-light-bg-primary/70 border-black/50'} border-b-2 shadow-nav backdrop-blur-sm`
+          : `${isDark ? 'border-white' : ' border-black'} border-0`}
       ${isDark ? 'text-dark-text-primary' : 'text-white'}
     `}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-  <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex-shrink-0 flex items-center">
             <NavLink to="/" className={`flex items-center space-x-2 font-bold text-3xl text-primary-500 transition-colors`}>
@@ -167,7 +169,7 @@ function NavBar() {
                         px-3 py-2 rounded-md text-lg font-medium transition-colors
                         ${isActive
                           ? 'bg-primary text-white'
-                    : `${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'} hover:bg-primary-400 hover:text-white`}
+                          : `${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'} hover:bg-primary-400 hover:text-white`}
                       `}
                     >
                       Admin
@@ -232,7 +234,9 @@ function NavBar() {
             <ThemeColorSelector />
             <button
               onClick={toggleMenu}
-              className={`inline-flex items-center justify-center p-2 rounded-md ${isDark ? 'text-white hover:bg-white/10' : 'text-black hover:bg-black/10'} focus:outline-none`}
+              className={`inline-flex items-center justify-center p-2 rounded-md 
+    ${isDark ? "text-white" : "text-black"} 
+    hover:bg-white/10 focus:outline-none`}
             >
               <span className="sr-only">Open main menu</span>
               <RiMenu3Fill className="block h-6 w-6" />
