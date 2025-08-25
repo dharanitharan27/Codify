@@ -125,7 +125,7 @@ function NavBar() {
               </NavLink>
 
               <NavLink
-                to="/C"
+                to="/contributors"
                 className={({ isActive }) => `
                   px-3 py-2 rounded-md text-lg font-medium transition-colors
                   ${isActive
