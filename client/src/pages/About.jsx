@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useAuth } from "../store/auth";
 import { useTheme } from "../context/ThemeContext";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import { FaUsers, FaLaptopCode, FaGraduationCap, FaChalkboardTeacher, FaAward, FaHandshake } from "react-icons/fa";
 
 function About() {
@@ -46,31 +47,130 @@ function About() {
     { icon: <FaChalkboardTeacher />, value: "50+", label: "Expert Instructors" }
   ];
 
+  // Animation variants matching Roadmaps page
+  const backgroundVariants = {
+    hidden: { opacity: 0, scale: 1.05 },
+    visible: { 
+      opacity: 1, 
+      scale: 1,
+      transition: {
+        duration: 1,
+        ease: "easeOut"
+      }
+    }
+  };
+
+  const headerVariants = {
+    hidden: { opacity: 0, y: -20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: "easeOut"
+      }
+    }
+  };
+
+  const sectionVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: "easeOut"
+      }
+    }
+  };
+
+  const cardVariants = {
+    hidden: { 
+      opacity: 0, 
+      y: 30,
+      scale: 0.95
+    },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      scale: 1,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut"
+      }
+    },
+    hover: {
+      y: -8,
+      scale: 1.02,
+      transition: {
+        duration: 0.2,
+        ease: "easeInOut"
+      }
+    }
+  };
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.08,
+        delayChildren: 0.3
+      }
+    }
+  };
+
   return (
     <div className={`relative min-h-screen-minus-nav overflow-hidden z-10 ${isDark ? 'bg-dark-bg-primary text-dark-text-primary' : 'bg-light-bg-primary text-light-text-primary'}`}>
-      {/* Background with gradient */}
-      <div className={`absolute top-0 left-0 w-full h-full -z-10 bg-[size:50px_50px] ${isDark ? 'bg-grid-pattern-dark' : 'bg-grid-pattern-light'}`}></div>
+      {/* Enhanced Background with gradient overlay - matching Roadmaps */}
+      <motion.div 
+        variants={backgroundVariants}
+        initial="hidden"
+        animate="visible"
+        className={`absolute top-0 left-0 w-full h-full -z-10 bg-[size:30px_30px] ${isDark ? 'bg-grid-pattern-dark' : 'bg-grid-pattern-light'}`}
+      >
+        <div className={`absolute inset-0 ${isDark ? 'bg-gradient-to-br from-dark-bg-primary/90 via-transparent to-dark-bg-primary/50' : 'bg-gradient-to-br from-light-bg-primary/90 via-transparent to-light-bg-primary/50'}`}></div>
+      </motion.div>
 
-      {/* Decorative elements */}
-      <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-primary/5 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-1/4 left-1/4 w-64 h-64 bg-primary/5 rounded-full blur-3xl"></div>
-
-      <div className="max-w-7xl mx-auto px-4 py-12 md:py-16">
-        {/* Hero section */}
-        <div className="text-center mb-16 relative">
-          <h1 className="text-4xl md:text-5xl font-righteous tracking-wider mb-6 animate-fadeIn">
-            Welcome <span className="text-primary">{userdata.username ? userdata.username.toUpperCase() : "to Codify"}</span>
-          </h1>
-
-          <p className={`text-xl max-w-3xl mx-auto ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'} animate-fadeIn animation-delay-200`}>
+      <div className="max-w-7xl mx-auto px-4 py-12 md:py-16 lg:py-20">
+        {/* Enhanced Header Section - matching Roadmaps typography */}
+        <motion.div 
+          variants={headerVariants}
+          initial="hidden"
+          animate="visible"
+          className="text-center mb-12"
+        >
+          <div className="inline-block">
+            <h1 className={`text-3xl md:text-5xl font-righteous tracking-wider mb-4 ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'}`}>
+              Welcome <span className="text-primary">{userdata.username ? userdata.username.toUpperCase() : "to Codify"}</span>
+            </h1>
+            <motion.div 
+              initial={{ width: 0 }}
+              animate={{ width: "100%" }}
+              transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
+              className={`h-1 rounded-full bg-gradient-to-r ${isDark ? 'from-primary via-primary-dark to-primary' : 'from-primary via-primary-dark to-primary'}`}
+            ></motion.div>
+          </div>
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+            className={`mt-6 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}
+          >
             We're on a mission to transform coding education and make technology skills accessible to everyone.
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
 
-        {/* Introduction section */}
-        <div className="flex flex-col md:flex-row items-center gap-8 md:gap-16 mb-20">
+        {/* Introduction section with enhanced styling */}
+        <motion.div 
+          variants={sectionVariants}
+          initial="hidden"
+          animate="visible"
+          transition={{ delay: 0.8 }}
+          className="flex flex-col md:flex-row items-center gap-8 md:gap-16 mb-20"
+        >
           {/* Left side - Image */}
-          <div className="w-full md:w-1/2 animate-fadeIn animation-delay-300">
+          <div className="w-full md:w-1/2">
             <div className="relative">
               <img
                 src="aboutus.png"
@@ -83,8 +183,8 @@ function About() {
           </div>
 
           {/* Right side - Text */}
-          <div className="w-full md:w-1/2 animate-fadeIn animation-delay-400">
-            <h2 className={`text-3xl font-bold mb-6 ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'}`}>
+          <div className="w-full md:w-1/2">
+            <h2 className={`text-3xl md:text-4xl font-bold mb-6 ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'}`}>
               Your Gateway to <span className="text-primary">Tech Excellence</span>
             </h2>
 
@@ -105,33 +205,60 @@ function About() {
               meets innovation at Codify.
             </p>
           </div>
-        </div>
+        </motion.div>
 
-        {/* Stats Section */}
-        <div className={`p-10 rounded-2xl mb-20 ${isDark ? 'bg-dark-bg-secondary/50' : 'bg-light-bg-secondary/50'} backdrop-blur-sm border ${isDark ? 'border-dark-border' : 'border-light-border'}`}>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        {/* Enhanced Stats Section - matching Roadmaps card styling */}
+        <motion.div 
+          variants={sectionVariants}
+          initial="hidden"
+          animate="visible"
+          transition={{ delay: 1.0 }}
+          className={`p-8 sm:p-10 rounded-2xl mb-20 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-secondary-1000 backdrop-blur-xl ${isDark ? 'border border-dark-border' : 'border border-light-border'} shadow-lg`}
+        >
+          <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            transition={{ delay: 1.2 }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+          >
             {stats.map((stat, index) => (
-              <div
+              <motion.div
                 key={index}
-                className="text-center animate-fadeIn"
-                style={{ animationDelay: `${index * 100 + 200}ms` }}
+                variants={cardVariants}
+                className="text-center"
               >
                 <div className="text-primary text-3xl mb-3 flex justify-center">
                   {stat.icon}
                 </div>
                 <h3 className="text-3xl font-bold mb-1">{stat.value}</h3>
                 <p className={`${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>{stat.label}</p>
-              </div>
+              </motion.div>
             ))}
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
-        {/* Tabs Section */}
-        <div className="mb-20">
+        {/* Enhanced Tabs Section */}
+        <motion.div 
+          variants={sectionVariants}
+          initial="hidden"
+          animate="visible"
+          transition={{ delay: 1.4 }}
+          className="mb-20"
+        >
+          {/* Section Header */}
+          <div className="flex items-center justify-center mb-12">
+            <div className={`h-px flex-1 ${isDark ? 'bg-dark-border' : 'bg-light-border'}`}></div>
+            <h2 className={`text-2xl sm:text-3xl md:text-4xl font-righteous tracking-wider px-4 sm:px-8 ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'}`}>
+              Our Story
+            </h2>
+            <div className={`h-px flex-1 ${isDark ? 'bg-dark-border' : 'bg-light-border'}`}></div>
+          </div>
+
           <div className="flex flex-wrap justify-center mb-8 border-b border-gray-200 dark:border-gray-700">
             <button
               onClick={() => setActiveTab('story')}
-              className={`inline-block p-4 text-lg font-medium rounded-t-lg ${
+              className={`inline-block p-4 text-lg font-medium rounded-t-lg transition-colors duration-200 ${
                 activeTab === 'story'
                   ? 'text-primary border-b-2 border-primary'
                   : `${isDark ? 'text-dark-text-secondary hover:text-dark-text-primary' : 'text-light-text-secondary hover:text-light-text-primary'}`
@@ -141,7 +268,7 @@ function About() {
             </button>
             <button
               onClick={() => setActiveTab('mission')}
-              className={`inline-block p-4 text-lg font-medium rounded-t-lg ${
+              className={`inline-block p-4 text-lg font-medium rounded-t-lg transition-colors duration-200 ${
                 activeTab === 'mission'
                   ? 'text-primary border-b-2 border-primary'
                   : `${isDark ? 'text-dark-text-secondary hover:text-dark-text-primary' : 'text-light-text-secondary hover:text-light-text-primary'}`
@@ -151,7 +278,7 @@ function About() {
             </button>
             <button
               onClick={() => setActiveTab('team')}
-              className={`inline-block p-4 text-lg font-medium rounded-t-lg ${
+              className={`inline-block p-4 text-lg font-medium rounded-t-lg transition-colors duration-200 ${
                 activeTab === 'team'
                   ? 'text-primary border-b-2 border-primary'
                   : `${isDark ? 'text-dark-text-secondary hover:text-dark-text-primary' : 'text-light-text-secondary hover:text-light-text-primary'}`
@@ -161,18 +288,18 @@ function About() {
             </button>
           </div>
 
-          {/* Tab Content */}
-          <div className={`p-8 rounded-lg ${isDark ? 'bg-dark-bg-secondary border-dark-border' : 'bg-light-bg-secondary border-light-border'} border shadow-lg animate-fadeIn`}>
+          {/* Tab Content with enhanced styling */}
+          <div className={`p-8 rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-secondary-1000 backdrop-blur-xl ${isDark ? 'border border-dark-border' : 'border border-light-border'} shadow-lg`}>
             {activeTab === 'story' && (
               <div>
-                <h3 className="text-2xl font-bold text-primary mb-4">Our Story</h3>
-                <p className={`mb-4 ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>
+                <h3 className="text-2xl md:text-3xl font-bold text-primary mb-4">Our Story</h3>
+                <p className={`mb-4 text-lg leading-relaxed ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>
                   Codify began in 2018 when a group of passionate educators and industry professionals recognized a gap in coding education. Traditional learning methods weren't keeping pace with the rapidly evolving tech landscape, leaving many aspiring developers struggling to gain relevant skills.
                 </p>
-                <p className={`mb-4 ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>
+                <p className={`mb-4 text-lg leading-relaxed ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>
                   Our founders set out to create a platform that combines theoretical knowledge with practical application, making coding education accessible, engaging, and aligned with industry needs. What started as a small collection of web development courses has grown into a comprehensive learning ecosystem covering the full spectrum of programming disciplines.
                 </p>
-                <p className={`${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>
+                <p className={`text-lg leading-relaxed ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>
                   Today, Codify serves learners in over 150 countries, partnering with leading tech companies to ensure our curriculum remains cutting-edge and our graduates are job-ready.
                 </p>
               </div>
@@ -180,126 +307,190 @@ function About() {
 
             {activeTab === 'mission' && (
               <div>
-                <h3 className="text-2xl font-bold text-primary mb-4">Our Mission & Values</h3>
-                <p className={`mb-6 ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>
+                <h3 className="text-2xl md:text-3xl font-bold text-primary mb-4">Our Mission & Values</h3>
+                <p className={`mb-6 text-lg leading-relaxed ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>
                   At Codify, our mission is to democratize coding education and empower individuals to thrive in the digital economy, regardless of their background or prior experience.
                 </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className={`p-4 rounded-lg ${isDark ? 'bg-dark-bg-tertiary' : 'bg-light-bg-tertiary'}`}>
-                    <div className="flex items-center mb-2">
-                      <FaAward className="text-primary mr-2" />
-                      <h4 className="text-lg font-semibold">Excellence</h4>
+                  <motion.div 
+                    whileHover={cardVariants.hover}
+                    className={`p-6 rounded-xl shadow-lg ${isDark ? 'bg-dark-bg-secondary border border-dark-border' : 'bg-light-bg-secondary border border-light-border'} transition-all duration-300`}
+                  >
+                    <div className="flex items-center mb-3">
+                      <FaAward className="text-primary mr-3 text-xl" />
+                      <h4 className="text-xl font-semibold">Excellence</h4>
                     </div>
-                    <p className={`${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>
+                    <p className={`text-lg leading-relaxed ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>
                       We're committed to delivering the highest quality educational content and continuously improving our platform based on student feedback and industry developments.
                     </p>
-                  </div>
+                  </motion.div>
 
-                  <div className={`p-4 rounded-lg ${isDark ? 'bg-dark-bg-tertiary' : 'bg-light-bg-tertiary'}`}>
-                    <div className="flex items-center mb-2">
-                      <FaHandshake className="text-primary mr-2" />
-                      <h4 className="text-lg font-semibold">Inclusivity</h4>
+                  <motion.div 
+                    whileHover={cardVariants.hover}
+                    className={`p-6 rounded-xl shadow-lg ${isDark ? 'bg-dark-bg-secondary border border-dark-border' : 'bg-light-bg-secondary border border-light-border'} transition-all duration-300`}
+                  >
+                    <div className="flex items-center mb-3">
+                      <FaHandshake className="text-primary mr-3 text-xl" />
+                      <h4 className="text-xl font-semibold">Inclusivity</h4>
                     </div>
-                    <p className={`${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>
+                    <p className={`text-lg leading-relaxed ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>
                       We believe everyone should have access to quality coding education, and we design our platform to accommodate diverse learning styles and backgrounds.
                     </p>
-                  </div>
+                  </motion.div>
                 </div>
               </div>
             )}
 
             {activeTab === 'team' && (
               <div>
-                <h3 className="text-2xl font-bold text-primary mb-6">Meet Our Team</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <h3 className="text-2xl md:text-3xl font-bold text-primary mb-6">Meet Our Team</h3>
+                <motion.div 
+                  variants={containerVariants}
+                  initial="hidden"
+                  animate="visible"
+                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+                >
                   {teamMembers.map((member, index) => (
-                    <div
+                    <motion.div
                       key={index}
-                      className={`p-4 rounded-lg ${isDark ? 'bg-dark-bg-tertiary' : 'bg-light-bg-tertiary'} text-center`}
+                      variants={cardVariants}
+                      whileHover="hover"
+                      className={`p-6 rounded-xl shadow-lg ${isDark ? 'bg-dark-bg-secondary border border-dark-border' : 'bg-light-bg-secondary border border-light-border'} text-center transition-all duration-300`}
                     >
                       <img
                         src={member.image}
                         alt={member.name}
                         className="w-24 h-24 rounded-full mx-auto mb-4 border-2 border-primary"
                       />
-                      <h4 className="text-lg font-semibold">{member.name}</h4>
-                      <p className="text-primary text-sm mb-2">{member.role}</p>
-                      <p className={`text-sm ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>
+                      <h4 className="text-lg font-semibold mb-2">{member.name}</h4>
+                      <p className="text-primary text-sm font-medium mb-3">{member.role}</p>
+                      <p className={`text-sm leading-relaxed ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>
                         {member.bio}
                       </p>
-                    </div>
+                    </motion.div>
                   ))}
-                </div>
+                </motion.div>
               </div>
             )}
           </div>
-        </div>
+        </motion.div>
 
-        {/* Features section */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-          {/* What We Offer */}
-          <div className={`p-8 rounded-xl shadow-lg ${isDark ? 'bg-dark-bg-secondary border border-dark-border' : 'bg-light-bg-secondary border border-light-border'} transition-transform duration-300 hover:-translate-y-2`}>
-            <h3 className="text-2xl font-semibold text-primary mb-4">What We Offer</h3>
-            <ul className={`${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'} space-y-3`}>
-              <li className="flex items-start">
-                <span className="text-primary mr-2">✓</span>
-                <span>Comprehensive programming courses from beginner to advanced levels</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-primary mr-2">✓</span>
-                <span>Interactive coding exercises and real-world projects</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-primary mr-2">✓</span>
-                <span>Expert-led tutorials and detailed documentation</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-primary mr-2">✓</span>
-                <span>Supportive community of learners and mentors</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-primary mr-2">✓</span>
-                <span>Regular updates with latest programming trends</span>
-              </li>
-            </ul>
+        {/* Enhanced Features section with grid layout */}
+        <motion.div 
+          variants={sectionVariants}
+          initial="hidden"
+          animate="visible"
+          transition={{ delay: 1.6 }}
+          className="mb-16"
+        >
+          {/* Section Header */}
+          <div className="flex items-center justify-center mb-12">
+            <div className={`h-px flex-1 ${isDark ? 'bg-dark-border' : 'bg-light-border'}`}></div>
+            <h2 className={`text-2xl sm:text-3xl md:text-4xl font-righteous tracking-wider px-4 sm:px-8 ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'}`}>
+              What We Offer
+            </h2>
+            <div className={`h-px flex-1 ${isDark ? 'bg-dark-border' : 'bg-light-border'}`}></div>
           </div>
 
-          {/* Technologies */}
-          <div className={`p-8 rounded-xl shadow-lg ${isDark ? 'bg-dark-bg-secondary border border-dark-border' : 'bg-light-bg-secondary border border-light-border'} transition-transform duration-300 hover:-translate-y-2`}>
-            <h3 className="text-2xl font-semibold text-primary mb-4">Technologies We Cover</h3>
-            <div className="flex flex-wrap gap-2">
-              {['HTML', 'CSS', 'JavaScript', 'React', 'Python', 'Java', 'C++', 'Django', 'Node.js', 'MongoDB', 'Express', 'TypeScript', 'Angular', 'Vue.js', 'Flutter'].map((tech, index) => (
-                <span
-                  key={index}
-                  className={`px-3 py-1 rounded-full text-sm ${isDark ? 'bg-dark-bg-tertiary text-primary' : 'bg-light-bg-tertiary text-primary'} hover:bg-primary hover:text-white transition-colors cursor-pointer`}
-                >
-                  {tech}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {/* Join Us */}
-          <div className={`p-8 rounded-xl shadow-lg ${isDark ? 'bg-dark-bg-secondary border border-dark-border' : 'bg-light-bg-secondary border border-light-border'} transition-transform duration-300 hover:-translate-y-2`}>
-            <h3 className="text-2xl font-semibold text-primary mb-4">Join Our Community</h3>
-            <p className={`${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'} mb-6`}>
-              Become part of our growing community of learners and start your coding journey today. Get access to:
-            </p>
-            <ul className={`${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'} space-y-2 mb-6`}>
-              <li>• Discussion forums with peers and mentors</li>
-              <li>• Live coding sessions and workshops</li>
-              <li>• Networking opportunities with industry professionals</li>
-              <li>• Job placement assistance and career guidance</li>
-            </ul>
-            <Link
-              to="/signup"
-              className="block w-full py-3 text-center bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors"
+          <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            transition={{ delay: 1.8 }}
+            className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8"
+          >
+            {/* What We Offer */}
+            <motion.div 
+              variants={cardVariants}
+              whileHover="hover"
+              className={`group p-6 lg:p-8 rounded-2xl shadow-lg bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-secondary-1000 backdrop-blur-xl ${isDark ? 'border border-dark-border hover:border-primary/50' : 'border border-light-border hover:border-primary/50'} transition-all duration-300`}
             >
-              Start Learning Today
-            </Link>
-          </div>
-        </div>
+              <h3 className="text-2xl md:text-3xl font-bold text-primary mb-6">What We Offer</h3>
+              <ul className={`${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'} space-y-4`}>
+                <li className="flex items-start">
+                  <span className="text-primary mr-3 mt-1">✓</span>
+                  <span className="text-lg">Comprehensive programming courses from beginner to advanced levels</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-primary mr-3 mt-1">✓</span>
+                  <span className="text-lg">Interactive coding exercises and real-world projects</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-primary mr-3 mt-1">✓</span>
+                  <span className="text-lg">Expert-led tutorials and detailed documentation</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-primary mr-3 mt-1">✓</span>
+                  <span className="text-lg">Supportive community of learners and mentors</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-primary mr-3 mt-1">✓</span>
+                  <span className="text-lg">Regular updates with latest programming trends</span>
+                </li>
+              </ul>
+            </motion.div>
+
+            {/* Technologies */}
+            <motion.div 
+              variants={cardVariants}
+              whileHover="hover"
+              className={`group p-6 lg:p-8 rounded-2xl shadow-lg bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-secondary-1000 backdrop-blur-xl ${isDark ? 'border border-dark-border hover:border-primary/50' : 'border border-light-border hover:border-primary/50'} transition-all duration-300`}
+            >
+              <h3 className="text-2xl md:text-3xl font-bold text-primary mb-6">Technologies We Cover</h3>
+              <div className="flex flex-wrap gap-3">
+                {['HTML', 'CSS', 'JavaScript', 'React', 'Python', 'Java', 'C++', 'Django', 'Node.js', 'MongoDB', 'Express', 'TypeScript', 'Angular', 'Vue.js', 'Flutter'].map((tech, index) => (
+                  <span
+                    key={index}
+                    className={`px-4 py-2 rounded-full text-sm font-medium ${isDark ? 'bg-dark-bg-primary text-primary border border-primary/20' : 'bg-light-bg-primary text-primary border border-primary/20'} hover:bg-primary hover:text-white transition-colors duration-200 cursor-pointer`}
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* Join Us */}
+            <motion.div 
+              variants={cardVariants}
+              whileHover="hover"
+              className={`group p-6 lg:p-8 rounded-2xl shadow-lg bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-secondary-1000 backdrop-blur-xl ${isDark ? 'border border-dark-border hover:border-primary/50' : 'border border-light-border hover:border-primary/50'} transition-all duration-300`}
+            >
+              <h3 className="text-2xl md:text-3xl font-bold text-primary mb-6">Join Our Community</h3>
+              <p className={`text-lg leading-relaxed ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'} mb-6`}>
+                Become part of our growing community of learners and start your coding journey today. Get access to:
+              </p>
+              <ul className={`${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'} space-y-3 mb-8`}>
+                <li className="text-lg">• Discussion forums with peers and mentors</li>
+                <li className="text-lg">• Live coding sessions and workshops</li>
+                <li className="text-lg">• Networking opportunities with industry professionals</li>
+                <li className="text-lg">• Job placement assistance and career guidance</li>
+              </ul>
+              <Link
+                to="/signup"
+                className="block w-full py-4 text-center bg-primary hover:bg-primary-dark text-white font-semibold rounded-xl transition-colors duration-300 text-lg"
+              >
+                Start Learning Today
+              </Link>
+            </motion.div>
+          </motion.div>
+        </motion.div>
+
+        {/* Call to Action Section - matching Roadmaps */}
+        <motion.section 
+          variants={sectionVariants}
+          initial="hidden"
+          animate="visible"
+          transition={{ delay: 2.0 }}
+          className={`text-center p-8 sm:p-12 rounded-3xl bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-secondary-1000 backdrop-blur-xl ${isDark ? 'border border-dark-border' : 'border border-light-border'} shadow-lg`}
+        >
+          <h3 className={`text-2xl sm:text-3xl md:text-4xl font-righteous tracking-wider mb-4 ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'}`}>
+            Ready to Start Your Learning Journey?
+          </h3>
+          <p className={`text-lg md:text-xl ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'} max-w-3xl mx-auto leading-relaxed`}>
+            Join thousands of learners who have transformed their careers with Codify. Your journey to tech excellence starts here.
+          </p>
+        </motion.section>
       </div>
     </div>
   );
