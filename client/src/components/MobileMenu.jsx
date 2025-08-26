@@ -199,7 +199,7 @@ function MobileMenu({ isOpen, onClose, isLoggedIn, userdata }) {
                       <FaUser className='text-xl' /> <span className='text-xl'>Dashboard</span>
                     </NavLink>
 
-                    {userdata?.isAdmin && (
+                    {(userdata?.isAdmin || userdata?.isReadOnlyAdmin) && (
                       <NavLink
                         to="/admin"
                         onClick={onClose}

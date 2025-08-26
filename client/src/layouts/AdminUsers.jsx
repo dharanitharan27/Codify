@@ -235,10 +235,11 @@ function AdminUsers() {
                   <td className="px-4 py-3 text-center">
                     <span className={`px-3 py-1 rounded-full text-xs font-medium ${
                       user.isAdmin 
-                        ? 'bg-primary/20 text-primary' 
+                        ? 'bg-primary/20 text-primary' :
+                        user.isReadOnlyAdmin ? 'bg-primary/40 text-primary'
                         : isDark ? 'bg-dark-bg-tertiary text-dark-text-secondary' : 'bg-light-bg-tertiary text-light-text-secondary'
                     }`}>
-                      {user.isAdmin ? 'Admin' : 'User'}
+                      {user.isAdmin ? 'Admin' :user.isReadOnlyAdmin ? 'Read Only Admin': 'User'}
                     </span>
                   </td>
                   <td className="px-4 py-3">

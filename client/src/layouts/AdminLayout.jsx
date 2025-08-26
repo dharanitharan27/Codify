@@ -14,7 +14,7 @@ function AdminLayout() {
   const isDark = theme === 'dark';
   const navigate = useNavigate();
 
-  if (!userdata.isAdmin) {
+  if (!(userdata.isAdmin || userdata.isReadOnlyAdmin)) {
     toast.error("Access denied. Admin privileges required.");
     return <Navigate to="/" />
   }

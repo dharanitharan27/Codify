@@ -158,7 +158,7 @@ function NavBar() {
                     Dashboard
                   </NavLink>
 
-                  {userdata?.isAdmin && (
+                  {(userdata?.isAdmin ||userdata?.isReadOnlyAdmin ) && (
                     <NavLink
                       to="/admin"
                       className={({ isActive }) => `
