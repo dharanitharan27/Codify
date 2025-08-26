@@ -19,7 +19,7 @@ const app= express();
 const corsOption = {
     origin: "*",   // any domain can access,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    credentials: true
+    credentials: false
 };
 app.use(cors(corsOption));
 
