@@ -144,6 +144,18 @@ function NavBar() {
                 Contact
               </NavLink>
 
+              <NavLink
+                to="/bookmarks"
+                className={({ isActive }) => `
+                  px-3 py-2 rounded-md text-lg font-medium transition-colors
+                  ${isActive
+                    ? 'bg-primary text-white'
+                    : `${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'} hover:bg-primary-400 hover:text-white`}
+                `}
+              >
+                Bookmark
+              </NavLink>
+
               {isLoggedIn ? (
                 <>
                   <NavLink
