@@ -7,4 +7,8 @@ const authRouter = express.Router();
 authRouter.route("/").get(controllers.homePage)
 authRouter.route("/register").post(validate(signUpSchema),controllers.regPage);
 authRouter.route("/login").post(validate(loginSchema),controllers.login);
+authRouter.route("/send-otp").post(controllers.sendOTP);
+authRouter.route("/verify-otp").post(controllers.verifyOTP);
+authRouter.route("/reset-password").post(controllers.resetPassword);
+authRouter.route("/forgot-password/check").post(controllers.forgotPasswordCheck);
 export default authRouter;

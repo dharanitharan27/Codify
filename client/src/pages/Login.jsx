@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
+import OtpModal from "../components/OtpModal";
 import { useAuth } from "../store/auth";
 import { useTheme } from "../context/ThemeContext";
 import { toast } from "react-toastify";
@@ -17,6 +18,13 @@ function Login() {
   const { storeTokenInLS, API, userdata, isLoggedIn } = useAuth();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [serverOtp, setServerOtp] = useState(null);
+  const [showOtpModal, setShowOtpModal] = useState(false);
+  const [resending, setResending] = useState(false);
+  const [loginVerdict, setLoginVerdict] = useState(null); // "success" or "fail"
+  const otpRefs = useRef([]);
+  const otpLength = 6;
 
   const handleChange = (e) => {
     const name = e.target.name;
@@ -28,37 +36,101 @@ function Login() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      setIsLoading(true);
-      const response = await fetch(`${API}/api/v1/auth/login`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
+  e.preventDefault();
+  try {
+    setIsLoading(true);
+
+    // Step 1: Send OTP immediately
+    const otpResponse = await fetch(`${API}/api/v1/auth/send-otp`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: user.email }),
+    });
+    const otpData = await otpResponse.json();
+
+    if (otpResponse.ok) {
+      setServerOtp(otpData.otp);
+      setShowOtpModal(true);
+      toast.success("OTP sent to your email!");
+    } else {
+      toast.error("Failed to send OTP");
+    }
+  } catch (err) {
+    console.error(err);
+    toast.error("Something went wrong!");
+  } finally {
+    setIsLoading(false);
+  }
+};
+
+
+const verifyOtp = async () => {
+  try {
+    setIsLoading(true);
+    const otpString = otp.join("");
+
+    // Verify OTP first
+    const response = await fetch(`${API}/api/v1/auth/verify-otp`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: user.email, otp: otpString }),
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+      // OTP is correct → now call actual login
+      const loginResponse = await fetch(`${API}/api/v1/auth/login`, {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(user),
       });
-      if (response.ok) {
-        setUser({ email: "", password: "" });
-        const res_data = await response.json();
-        storeTokenInLS(res_data.token);
-        toast.success("Logged in Successfully");
+
+      const loginData = await loginResponse.json();
+
+      if (loginResponse.ok) {
+        storeTokenInLS(loginData.token);
+        toast.success("Login successful!");
         window.location.href = "/";
       } else {
-        const err_data = await response.json();
-        toast.warn(
-          err_data.extraDetails ? err_data.extraDetails : err_data.message
-        );
+        toast.error(loginData.message || "Unexpected error while logging in");
+      }
+    } else {
+      toast.error("Invalid OTP");
+    }
+  } catch (error) {
+    toast.error("Error verifying OTP");
+  } finally {
+    setIsLoading(false);
+    setShowOtpModal(false);
+  }
+};
+
+  const handleResendOtp = async () => {
+    try {
+      setResending(true);
+      const res = await fetch(`${API}/api/v1/auth/send-otp`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: user.email }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        toast.success("OTP resent!");
+        setServerOtp(data.otp);
+      } else {
+        toast.error(data.message || "Failed to resend OTP");
       }
     } catch (error) {
-      console.log("response error : ", error);
-      toast.error("Failed to login. Please try again.");
+      toast.error("Error resending OTP");
     } finally {
-      setIsLoading(false);
+      setResending(false);
     }
   };
 
+
   return (
+    <>
     <div className={`relative min-h-screen-minus-nav flex items-center justify-center p-4 md:p-8 overflow-hidden z-10 ${
       isDark ? 'bg-dark-bg-primary text-dark-text-primary' : 'bg-light-bg-primary text-light-text-primary'
     }`}>
@@ -193,6 +265,17 @@ function Login() {
         </div>
       </div>
     </div>
+      <OtpModal
+        isDark={isDark}
+        show={showOtpModal}
+        otp={otp}
+        setOtp={setOtp}
+        otpLength={otpLength}
+        verifyOtp={verifyOtp}
+        resending={resending}
+        handleResendOtp={handleResendOtp}
+      />
+    </>
   );
 }
 

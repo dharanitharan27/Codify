@@ -1,11 +1,39 @@
 import { Link } from "react-router-dom";
 import { useTheme } from "../../context/ThemeContext";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useLayoutEffect } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+gsap.registerPlugin(ScrollTrigger);
 
 const CreatorsContainer = ({ count = 3 }) => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const [creators, setCreators] = useState([]);
+  const gridRef = useRef(null);
+
+  // ✅ Animate when creators are loaded
+  useLayoutEffect(() => {
+    if (!gridRef.current || creators.length === 0) return;
+
+    const cards = gridRef.current.querySelectorAll(".creator-card");
+
+    gsap.set(cards, { y: 60, opacity: 0 });
+    gsap.to(cards, {
+      y: 0,
+      opacity: 1,
+      duration: 0.8,
+      ease: "power2.out",
+      stagger: 0.2,
+      scrollTrigger: {
+        trigger: gridRef.current,
+        start: "top 80%",
+        once: true,
+      },
+    });
+
+    // Refresh ScrollTrigger in case elements were added later
+    ScrollTrigger.refresh();
+  }, [creators]);
 
   // Creator data with CORRECT YouTube channel profile images
   const creatorInfo = [
@@ -40,8 +68,9 @@ const CreatorsContainer = ({ count = 3 }) => {
     setCreators(creatorInfo);
   }, []);
 
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+    <div ref={gridRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto" data-aos="fade-up">
       {/* Loading state */}
       {creators.length === 0 && (
         <>
@@ -55,13 +84,13 @@ const CreatorsContainer = ({ count = 3 }) => {
             >
               {/* Loading skeleton for profile picture */}
               <div className="relative mb-4 w-24 h-24 rounded-full border-4 border-primary bg-gray-300 animate-pulse"></div>
-              
+
               {/* Loading skeleton for name */}
               <div className="w-24 h-6 bg-gray-300 rounded mb-2 animate-pulse"></div>
-              
+
               {/* Loading skeleton for description */}
               <div className="w-32 h-4 bg-gray-300 rounded mb-4 animate-pulse"></div>
-              
+
               {/* Loading skeleton for button */}
               <div className="w-28 h-10 bg-gray-300 rounded animate-pulse"></div>
             </div>
@@ -74,7 +103,7 @@ const CreatorsContainer = ({ count = 3 }) => {
         <div
           key={index}
           className={`
-            group flex flex-col items-center p-6 rounded-2xl border shadow-lg
+            creator-card group flex flex-col items-center p-6 rounded-2xl border shadow-lg
             ${isDark ? 'bg-dark-bg-secondary border-dark-border' : 'bg-light-bg-secondary border-light-border'}
             transition-all duration-300 hover:-translate-y-2 hover:shadow-xl
           `}
@@ -110,7 +139,7 @@ const CreatorsContainer = ({ count = 3 }) => {
             className="mt-auto py-3 px-6 rounded-xl text-white bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 transition-all duration-300 flex items-center gap-2 shadow-lg hover:shadow-xl"
           >
             <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
             </svg>
             View Channel
           </a>
@@ -120,7 +149,7 @@ const CreatorsContainer = ({ count = 3 }) => {
       {/* "And Many More" card */}
       <div
         className={`
-          group flex flex-col items-center p-6 rounded-2xl border shadow-lg overflow-hidden
+          creator-card group flex flex-col items-center p-6 rounded-2xl border shadow-lg overflow-hidden
           ${isDark ? 'bg-dark-bg-secondary border-dark-border' : 'bg-light-bg-secondary border-light-border'}
           transition-all duration-300 hover:-translate-y-2 hover:shadow-xl
         `}
@@ -128,7 +157,7 @@ const CreatorsContainer = ({ count = 3 }) => {
         {/* Icon */}
         <div className="relative mb-4 w-24 h-24 rounded-full border-4 border-primary flex items-center justify-center bg-gradient-to-r from-primary to-secondary">
           <svg className="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M7.375 16.781l1.25-1.562L4.601 12l4.024-3.219-1.25-1.562-5 4a1 1 0 000 1.562l5 4zm9.25-9.562l-1.25 1.562L19.399 12l-4.024 3.219 1.25 1.562 5-4a1 1 0 000-1.562l-5-4zM14.976 3.216l-4 18-1.953-.434 4-18 1.953.434z"/>
+            <path d="M7.375 16.781l1.25-1.562L4.601 12l4.024-3.219-1.25-1.562-5 4a1 1 0 000 1.562l5 4zm9.25-9.562l-1.25 1.562L19.399 12l-4.024 3.219 1.25 1.562 5-4a1 1 0 000-1.562l-5-4zM14.976 3.216l-4 18-1.953-.434 4-18 1.953.434z" />
           </svg>
         </div>
 
