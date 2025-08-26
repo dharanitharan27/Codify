@@ -42,13 +42,12 @@ const userSchema = mongoose.Schema({
 userSchema.pre("save", async function (next) {
   const user = this;
   if (!user.isModified("password")) {
-    return next();
+    next();
   }
   try {
     const salt = await bcryptjs.genSalt(10);
     const hashedPassword = await bcryptjs.hash(user.password, salt);
     user.password = hashedPassword;
-    next();
   } catch (error) {
     next(error);
   }
