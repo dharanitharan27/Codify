@@ -69,16 +69,18 @@
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
-## 🌐 Live Demo
 
-**Try Codify:** https://codifylearn.netlify.app
+# 🌐 Try Codify: [https://codifylearn.netlify.app](https://codifylearn.netlify.app)
 
-<details>
-  <summary><b>Demo Accounts</b></summary>
+## Demo Accounts
 
-- **User**: `demo@codify.com` • `demo123`  
-- **Admin**: `admin@codify.com` • `admin123`
-</details>
+### 👤 User Account
+- **Email:** `demo@gmail.com`
+- **Password:** `demo123`
+
+### 👨‍💼 Read Only Admin Account
+- **Email:** `admin@gmail.com`
+- **Password:** `admin123`
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
