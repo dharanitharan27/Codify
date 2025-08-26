@@ -51,10 +51,6 @@ function NavBar() {
 
 
     <nav
-      // className={`
-      //   sticky top-0 z-50 w-full transition-all duration-300 ${isDark ? 'bg-dark-bg-primary/95' : 'bg-light-bg-primary/95'} shadow-nav backdrop-blur-sm
-      //   ${isDark ? 'text-dark-text-primary' : 'text-white'}
-      // `}
       className={`
       sticky top-0 z-50 w-full transition-all duration-300
       ${scrolled
@@ -125,7 +121,7 @@ function NavBar() {
               </NavLink>
 
               <NavLink
-                to="/C"
+                to="/contributors"
                 className={({ isActive }) => `
                   px-3 py-2 rounded-md text-lg font-medium transition-colors
                   ${isActive

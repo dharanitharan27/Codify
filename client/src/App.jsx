@@ -25,6 +25,7 @@ const Dashboard = lazy(() => import("./pages/Dashboard"));
 const CoursePlayer = lazy(() => import("./pages/CoursePlayer"));
 const Roadmap = lazy(() => import("./pages/Roadmap"));
 const ContributorsGuide = lazy(() => import("./pages/ContributorGuide.jsx"))
+const ContributorsPage = lazy(()=>import("./components/Contributor.jsx"))
 
 // Admin components
 const AdminLayout = lazy(() => import("./layouts/AdminLayout"));
@@ -34,7 +35,6 @@ const AdminCourses = lazy(() => import("./layouts/CourseLayout/AdminCourses"));
 const AdminUpdate = lazy(() => import("./layouts/AdminUpdate"));
 const AddNewCourse = lazy(() => import("./layouts/CourseLayout/AddNewCourse.jsx"));
 const CourseUpdate = lazy(() => import("./layouts/CourseLayout/CourseUpdate"));
-const ContributorsPage = lazy(()=>import("./components/Contributor.jsx"))
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const ScrollToTop = ({ children }) => {
   const location = useLocation();
@@ -72,7 +72,7 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/logout" element={<LogOut />} />
-                <Route path="/C" element = {<ContributorsPage/>}/>
+                <Route path="/contributors" element = {<ContributorsPage/>}/>
                 <Route path="*" element={<ErrorPage />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/contributorGuide" element={<ContributorsGuide />} />

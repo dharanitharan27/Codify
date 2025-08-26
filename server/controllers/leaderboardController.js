@@ -73,7 +73,8 @@ export const fetchLeaderboard = async (req, res) => {
 
     res.json({ success: true, data: leaderboard });
   } catch (err) {
-    console.error("❌ Error in fetchLeaderboard:", err.message);
+    console.log(err)
+    // console.error("❌ Error in fetchLeaderboard:", err.message);
     res.status(500).json({ success: false, error: "Failed to fetch leaderboard" });
   }
 };

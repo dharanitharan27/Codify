@@ -144,6 +144,24 @@ function MobileMenu({ isOpen, onClose, isLoggedIn, userdata }) {
                 </NavLink>
 
                 <NavLink
+                  to="/contributors"
+                  onClick={onClose}
+                  className={({ isActive }) => `
+                    px-3 py-2 rounded-md text-base font-medium transition-colors flex items-center gap-2
+                    ${isActive
+                      ? isDark
+                        ? 'bg-dark-bg-tertiary text-primary'
+                        : 'bg-light-bg-tertiary text-primary'
+                      : isDark
+                        ? 'text-dark-text-primary hover:bg-dark-bg-tertiary'
+                        : 'text-light-text-primary hover:bg-light-bg-tertiary'
+                    }
+                  `}
+                >
+                  <FaUser className='text-xl' /> <span className='text-xl'>Contributors</span>
+                </NavLink>
+
+                <NavLink
                   to="/contact"
                   onClick={onClose}
                   className={({ isActive }) => `
