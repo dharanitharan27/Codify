@@ -401,7 +401,7 @@ const Roadmap = () => {
           </motion.div>
         )}
         {loading ? (
-          <div className="flex justify-center items-center py-20">
+          <div className="flex justify-center items-center py-20 h-screen-minus-nav">
             <motion.div 
               animate={{ rotate: 360 }} 
               transition={{ repeat: Infinity, duration: 1, ease: "linear" }} 
