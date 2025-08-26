@@ -4,9 +4,8 @@ import { useTheme } from "../context/ThemeContext";
 import { useLoading } from "../components/loadingContext";
 import { useAuth } from "../store/auth";
 import OtpModal from "../components/OtpModal";
-import { FaEnvelope, FaLock, FaShieldAlt } from "react-icons/fa";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { FaEnvelope, FaLock, FaShieldAlt, FaEye, FaEyeSlash, FaArrowLeft } from "react-icons/fa";
+// import { Link } from "react-router-dom"; // Commented out for demo
 
 function ForgotPassword() {
   const { theme } = useTheme();
@@ -56,7 +55,6 @@ function ForgotPassword() {
       setIsLoading(true);
       const otpString = otp.join("");
 
-      // Step 1: Verify OTP
       const response = await fetch(`${API}/api/v1/auth/verify-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -66,7 +64,6 @@ function ForgotPassword() {
       const result = await response.json();
 
       if (response.ok) {
-        // Step 2: Check if email exists
         const emailCheckRes = await fetch(`${API}/api/v1/auth/forgot-password/check`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -77,14 +74,14 @@ function ForgotPassword() {
 
         if (emailCheckRes.ok) {
           toast.success("OTP verified! You can reset your password.");
-          setShowReset(true); // Show password reset input
+          setShowReset(true);
         } else {
           toast.error(emailCheckData.message || "Email is not registered in our system.");
           setShowReset(false);
-          setEmail(""); // Clear email input
+          setEmail("");
         }
 
-        setShowOtpModal(false); // Close OTP modal
+        setShowOtpModal(false);
       } else {
         toast.error(result.message || "Invalid OTP, please try again.");
       }
@@ -143,142 +140,165 @@ function ForgotPassword() {
 
   return (
     <>
-      <div className={`relative min-h-screen-minus-nav flex items-center justify-center p-4 md:p-8 overflow-hidden z-10 ${
-        isDark ? 'bg-dark-bg-primary text-dark-text-primary' : 'bg-light-bg-primary text-light-text-primary'
-      }`}>
-        {/* Animated background pattern */}
-        <div className={`absolute top-0 left-0 w-full h-full -z-10 bg-[size:30px_30px] opacity-30 ${
-          isDark ? 'bg-grid-pattern-dark' : 'bg-grid-pattern-light'
-        }`}></div>
+      {/* Main container with grid background */}
+      <div className="relative min-h-screen bg-black overflow-hidden">
+        
+        {/* Grid background pattern - exactly like roadmaps */}
+        <div 
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px)
+            `,
+            backgroundSize: '30px 30px'
+          }}
+        />
+        
+        {/* Left to right fade overlay - subtle like roadmaps */}
+        <div 
+          className="absolute inset-0"
+          style={{
+            background: `linear-gradient(90deg, 
+              rgba(0, 0, 0, 0.8) 0%,
+              rgba(0, 0, 0, 0.6) 25%,
+              rgba(0, 0, 0, 0.3) 50%,
+              rgba(0, 0, 0, 0.1) 75%,
+              transparent 100%
+            )`
+          }}
+        />
 
-        {/* Decorative elements */}
-        <div className="absolute top-20 right-20 w-72 h-72 rounded-full bg-primary/10 blur-3xl -z-5"></div>
-        <div className="absolute bottom-20 left-20 w-72 h-72 rounded-full bg-primary/10 blur-3xl -z-5"></div>
+        <div className="relative z-10">
+          {/* Header Section - Matching Roadmaps page */}
+          <div className="text-center pt-16 pb-12">
+            <h1 className="text-5xl md:text-6xl font-bold text-white mb-4 tracking-tight">
+              Reset Password
+            </h1>
+            <div className="w-24 h-1 bg-gradient-to-r from-purple-500 to-blue-500 mx-auto rounded-full mb-6"></div>
+            <p className="text-gray-400 text-lg max-w-2xl mx-auto px-4">
+              {!showReset 
+                ? "Enter your registered email address and we'll send you a verification code to reset your password"
+                : "Create a new secure password to regain access to your account"
+              }
+            </p>
+          </div>
 
-        <div className="w-full max-w-6xl mx-auto">
-          <div className="w-full flex flex-col md:flex-row items-center justify-between gap-8 md:gap-16">
-            {/* Left side - Image and text */}
-            <div className="w-full md:w-1/2 flex flex-col items-center md:items-start">
-              <h1 className="text-4xl md:text-5xl font-righteous text-center md:text-left tracking-wider mb-6">
-                <span className="text-primary">Forgot</span> Password?
-              </h1>
-
-              <p className={`text-center md:text-left mb-8 max-w-md ${
-                isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'
-              }`}>
-                {!showReset 
-                  ? "Enter your registered email to receive an OTP for password reset."
-                  : "Create your new secure password to regain access to your account."
-                }
-              </p>
-
-              <div className="relative max-w-md sm:w-full hidden md:block">
-                <img
-                  src="login.svg"
-                  alt="Forgot password illustration"
-                  className="w-full drop-shadow-xl animate-float"
-                />
-                <div className="absolute -bottom-4 left-0 w-full h-8 bg-gradient-to-t from-dark-bg-primary/30 to-transparent blur-sm"></div>
+          {/* Card Container - Styled like roadmap cards */}
+          <div className="flex justify-center px-4 pb-16">
+            <div className="w-full max-w-md">
+              
+              {/* Back to Login */}
+              <div 
+                onClick={() => console.log('Navigate to login')}
+                className="inline-flex items-center text-gray-400 hover:text-white transition-colors duration-300 mb-6 cursor-pointer group"
+              >
+                <FaArrowLeft className="mr-2 group-hover:-translate-x-1 transition-transform duration-200" />
+                Back to Login
               </div>
-            </div>
 
-            {/* Right side - Form */}
-            <div className="w-full md:w-1/2 flex flex-col items-center">
-              <div className={`w-full max-w-md p-8 rounded-xl shadow-xl backdrop-blur-sm transition-all duration-300 hover:shadow-2xl ${
-                isDark
-                  ? 'bg-dark-bg-secondary/90 border border-dark-border'
-                  : 'bg-light-bg-secondary/90 border border-light-border'
-              }`}>
-                <h2 className="text-3xl font-righteous text-center mb-8">
-                  Forgot Password
-                </h2>
-
-                {!showReset ? (
-                  <form onSubmit={handleSendOtp}>
-                    <div className="mb-6">
-                      <label
-                        htmlFor="email"
-                        className={`block mb-2 text-sm font-medium ${
-                          isDark ? 'text-dark-text-primary' : 'text-light-text-primary'
-                        }`}
-                      >
-                        <div className="flex items-center">
-                          <FaEnvelope className="mr-2 text-primary" />
-                          Email
-                        </div>
-                      </label>
-                      <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        required
-                        placeholder="Enter your email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className={`w-full px-4 py-3 rounded-lg ${
-                          isDark
-                            ? 'bg-dark-bg-tertiary text-dark-text-primary border-dark-border'
-                            : 'bg-light-bg-tertiary text-light-text-primary border-light-border'
-                        } border focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-300`}
-                      />
-                    </div>
-                    <button
-                      type="submit"
-                      className="w-full py-3 px-4 bg-primary hover:bg-primary-dark text-white font-medium rounded-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center"
-                    >
-                      <FaShieldAlt className="mr-2" />
-                      Send OTP
-                    </button>
-                  </form>
-                ) : (
-                  <div>
-                    <div className="mb-6 relative">
-                      <label
-                        className={`block mb-2 text-sm font-medium ${
-                          isDark ? 'text-dark-text-primary' : 'text-light-text-primary'
-                        }`}
-                      >
-                        <div className="flex items-center">
-                          <FaLock className="mr-2 text-primary" />
-                          New Password
-                        </div>
-                      </label>
-                      <input
-                        type={showPassword ? "text" : "password"}
-                        placeholder="Enter new password"
-                        value={newPassword}
-                        onChange={(e) => setNewPassword(e.target.value)}
-                        className={`w-full px-4 py-3 rounded-lg ${
-                          isDark
-                            ? 'bg-dark-bg-tertiary text-dark-text-primary border-dark-border'
-                            : 'bg-light-bg-tertiary text-light-text-primary border-light-border'
-                        } border focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-300`}
-                      />
-                      <div
-                        className="absolute right-3 top-[42px] cursor-pointer text-xl p-1 rounded-full hover:bg-primary/10 transition-colors"
-                        onClick={() => setShowPassword(!showPassword)}
-                      >
-                        {showPassword ? <FaEyeSlash className="text-primary" /> : <FaEye className="text-primary" />}
-                      </div>
-                    </div>
-
-                    <button
-                      onClick={handleResetPassword}
-                      className="w-full py-3 px-4 bg-primary hover:bg-primary-dark text-white font-medium rounded-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center"
-                    >
-                      <FaLock className="mr-2" />
-                      Reset Password
-                    </button>
+              {/* Main Card - Styled exactly like roadmap cards with hover effect */}
+              <div className="relative group cursor-pointer">
+                {/* Hover glow effect behind the card */}
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl blur opacity-0 group-hover:opacity-20 transition-all duration-500"></div>
+                
+                {/* Card with dark background like roadmap cards */}
+                <div className="relative bg-gray-900 border border-gray-800 rounded-2xl p-8 transition-all duration-500 group-hover:border-purple-500/50 group-hover:shadow-2xl group-hover:shadow-purple-500/10 group-hover:scale-[1.02]">
+                  
+                  {/* Bookmark icon in top right like roadmap cards */}
+                  <div className="absolute top-4 right-4">
+                    <FaShieldAlt className="text-gray-600 text-lg" />
                   </div>
-                )}
 
-                <div className="mt-6 text-center">
-                  <p className={isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}>
-                    Remember your password?{' '}
-                    <Link to="/login" className="text-primary hover:underline font-medium">
-                      Back to Login
-                    </Link>
-                  </p>
+                  {/* Icon with colored background like roadmap cards */}
+                  <div className="mb-6">
+                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center mb-4">
+                      {!showReset ? (
+                        <FaEnvelope className="text-white text-xl" />
+                      ) : (
+                        <FaLock className="text-white text-xl" />
+                      )}
+                    </div>
+                    <h3 className="text-white text-2xl font-bold mb-2">
+                      {!showReset ? "Forgot Password" : "New Password"}
+                    </h3>
+                    <p className="text-gray-400 text-sm leading-relaxed">
+                      {!showReset 
+                        ? "Enter your email address to receive a verification code for password reset."
+                        : "Create a strong password to secure your account."
+                      }
+                    </p>
+                  </div>
+
+                  {/* Form Content */}
+                  {!showReset ? (
+                    <div className="space-y-6">
+                      <div>
+                        <label className="block text-gray-300 text-sm font-medium mb-3">
+                          Email Address
+                        </label>
+                        <input
+                          type="email"
+                          required
+                          placeholder="Enter your email address"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all duration-300"
+                        />
+                      </div>
+                      
+                      <button
+                        onClick={handleSendOtp}
+                        className="w-full py-3 px-6 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center group"
+                      >
+                        <FaShieldAlt className="mr-2 group-hover:rotate-12 transition-transform duration-300" />
+                        Send Verification Code
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="space-y-6">
+                      <div className="relative">
+                        <label className="block text-gray-300 text-sm font-medium mb-3">
+                          New Password
+                        </label>
+                        <input
+                          type={showPassword ? "text" : "password"}
+                          placeholder="Enter your new password"
+                          value={newPassword}
+                          onChange={(e) => setNewPassword(e.target.value)}
+                          className="w-full px-4 py-3 pr-12 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all duration-300"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-3 top-[42px] text-gray-400 hover:text-purple-400 transition-colors duration-200"
+                        >
+                          {showPassword ? <FaEyeSlash /> : <FaEye />}
+                        </button>
+                      </div>
+
+                      <button
+                        onClick={handleResetPassword}
+                        className="w-full py-3 px-6 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center group"
+                      >
+                        <FaLock className="mr-2 group-hover:-rotate-12 transition-transform duration-300" />
+                        Reset Password
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Bottom section like roadmap cards */}
+                  <div className="mt-8 pt-6 border-t border-gray-800">
+                    <p className="text-gray-500 text-sm text-center">
+                      Remember your password?{' '}
+                      <span 
+                        onClick={() => console.log('Navigate to login')}
+                        className="text-purple-400 hover:text-purple-300 font-medium cursor-pointer transition-colors duration-200"
+                      >
+                        Sign in here
+                      </span>
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -296,6 +316,23 @@ function ForgotPassword() {
         resending={resending}
         handleResendOtp={handleResendOtp}
       />
+
+      <style jsx>{`
+        @keyframes fadeInUp {
+          0% {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        .group {
+          animation: fadeInUp 0.6s ease-out forwards;
+        }
+      `}</style>
     </>
   );
 }
