@@ -4,7 +4,7 @@ import { useTheme } from "../context/ThemeContext";
 import { toast } from "react-toastify";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { useLoading } from "../components/loadingContext";
-import { FaUser, FaEnvelope, FaPhone, FaLock, FaUserPlus, FaExclamationCircle } from "react-icons/fa";
+import { FaUser, FaEnvelope, FaPhone, FaLock, FaUserPlus, FaExclamationCircle, FaCheck, FaTimes } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import OtpModal from "../components/OtpModal";
 
@@ -27,6 +27,47 @@ function Signup() {
   const [serverOtp, setServerOtp] = useState(null);
   const [showOtpModal, setShowOtpModal] = useState(false);
   const [resending, setResending] = useState(false);
+
+  const getPasswordStrength = (password) => {
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumber = /\d/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+    const hasMinLength = password.length >= 8;
+    
+    return {
+      hasMinLength,
+      hasUpperCase,
+      hasLowerCase,
+      hasNumber,
+      hasSpecialChar,
+      isValid: hasMinLength && hasUpperCase && hasLowerCase && hasNumber && hasSpecialChar
+    };
+  };
+
+  const validatePassword = (password) => {
+    const strength = getPasswordStrength(password);
+    
+    if (!password) {
+      return "Password is required";
+    }
+    if (!strength.hasMinLength) {
+      return "Password must be at least 8 characters long";
+    }
+    if (!strength.hasUpperCase) {
+      return "Password must include at least one uppercase letter";
+    }
+    if (!strength.hasLowerCase) {
+      return "Password must include at least one lowercase letter";
+    }
+    if (!strength.hasNumber) {
+      return "Password must include at least one number";
+    }
+    if (!strength.hasSpecialChar) {
+      return "Password must include at least one special character";
+    }
+    return "";
+  };
 
   const validateField = (name, value) => {
     let error = "";
@@ -51,11 +92,7 @@ function Signup() {
         }
         break;
       case "password":
-        if (!value) {
-          error = "Password is required";
-        } else if (value.length < 6) {
-          error = "Password must be at least 6 characters";
-        }
+        error = validatePassword(value);
         break;
       default:
         break;
@@ -351,6 +388,42 @@ const handleResendOtp = async () => {
                     } border focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-300 ${errors.password ? 'border-red-500' : ''}`}
                   />
                   {errors.password && <p className="text-red-500 text-xs mt-1 flex items-center"><FaExclamationCircle className="mr-1" />{errors.password}</p>}
+                  
+                  {/* Password Strength Indicator */}
+                  {user.password && (
+                    <div className={`mt-3 p-3 rounded-lg border transition-all duration-300 ${
+                      isDark ? 'bg-dark-bg-primary border-dark-border' : 'bg-light-bg-primary border-light-border'
+                    }`}>
+                      <p className={`text-xs font-medium mb-2 ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>
+                        Password Requirements:
+                      </p>
+                      <div className="space-y-1">
+                        {[
+                          { key: 'hasMinLength', text: 'At least 8 characters' },
+                          { key: 'hasUpperCase', text: 'One uppercase letter (A-Z)' },
+                          { key: 'hasLowerCase', text: 'One lowercase letter (a-z)' },
+                          { key: 'hasNumber', text: 'One number (0-9)' },
+                          { key: 'hasSpecialChar', text: 'One special character (!@#$...)' }
+                        ].map((requirement) => {
+                          const strength = getPasswordStrength(user.password);
+                          const isValid = strength[requirement.key];
+                          return (
+                            <div key={requirement.key} className="flex items-center text-xs">
+                              {isValid ? (
+                                <FaCheck className="text-green-500 mr-2 text-[10px]" />
+                              ) : (
+                                <FaTimes className="text-red-500 mr-2 text-[10px]" />
+                              )}
+                              <span className={isValid ? 'text-green-500' : 'text-red-500'}>
+                                {requirement.text}
+                              </span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                  
                   <div
                     className="absolute right-3 top-[42px] cursor-pointer text-xl p-1 rounded-full hover:bg-primary/10 transition-colors"
                     onClick={() => setShow(!show)}
