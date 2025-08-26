@@ -12,11 +12,12 @@ import adminRouter from './routes/adminRouter.js';
 import progressRouter from './routes/progressRoute.js';
 import activityRouter from './routes/activityRoute.js';
 import LearderBoardRouter from './routes/LeaderBoardRoute.js'
+import bookmarkRouter from './routes/bookmarkRoute.js';
 dotenv.config();
 const app= express();
 // Allow all origins
 const corsOption = {
-    origin: "*",   // any domain can access
+    origin: "*",   // any domain can access,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: false
 };
@@ -41,6 +42,7 @@ app.use("/activity",activityRouter);
 app.use("/",router)
 app.use("/admin",adminRouter);
 app.use("/api/v1",LearderBoardRouter);
+app.use("/api/v1/bookmarks", bookmarkRouter);
 // app.get("/",)
 const PORT = process.env.PORT ||5050;
 
