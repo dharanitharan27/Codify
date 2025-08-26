@@ -12,6 +12,16 @@ const Roadmap = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState("all"); // all, roles, skills
 
+  // Handle Loading state 
+  const [loading, setLoading] = useState(false);
+  const handleFilterChange = (filter) => {
+      setLoading(true);
+      setActiveFilter(filter);
+      setTimeout(() => {
+        setLoading(false);
+      }, 400); 
+    };
+
   // Search functionality
   const filteredRoadmaps = useMemo(() => {
     // Normalize property names and filter out any invalid items
@@ -193,10 +203,10 @@ const Roadmap = () => {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: {
-        delay: 1.2,
-        duration: 0.4
-      }
+      // transition: {
+      //   delay: 1.2,
+      //   duration: 0.4
+      // }
     }
   };
 
@@ -204,10 +214,10 @@ const Roadmap = () => {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: {
-        delay: 1.8,
-        duration: 0.4
-      }
+      // transition: {
+      //   delay: 1.8,
+      //   duration: 0.4
+      // }
     }
   };
 
@@ -319,7 +329,7 @@ const Roadmap = () => {
                   initial="initial"
                   whileHover="hover"
                   whileTap="tap"
-                  onClick={() => setActiveFilter(filter.key)}
+                  onClick={() => handleFilterChange(filter.key)}
                   className={`px-4 py-2 rounded-lg font-semibold text-sm sm:text-base transition-all duration-300 ${
                     activeFilter === filter.key
                       ? 'bg-primary text-white shadow-lg'
@@ -390,7 +400,16 @@ const Roadmap = () => {
             </motion.button>
           </motion.div>
         )}
-
+        {loading ? (
+          <div className="flex justify-center items-center py-20">
+            <motion.div 
+              animate={{ rotate: 360 }} 
+              transition={{ repeat: Infinity, duration: 1, ease: "linear" }} 
+              className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full"
+            />
+          </div>
+        ) : (
+          <>
         {/* Enhanced Role-based Roadmaps */}
         {(activeFilter === 'all' || activeFilter === 'roles') && filteredRoadmaps.roles.length > 0 && (
           <motion.section 
@@ -597,7 +616,8 @@ const Roadmap = () => {
             </motion.div>
           </motion.section>
         )}
-
+      </>
+    )}
         {/* Call to Action Section - Only show when not searching or when search has results */}
         {(!searchQuery || (filteredRoadmaps.roles.length > 0 || filteredRoadmaps.skills.length > 0)) && (
           <motion.section 
