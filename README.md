@@ -76,7 +76,7 @@
 
 ### 👤 User Account
 - **Email:** `demo@gmail.com`
-- **Password:** `demo123`
+- **Password:** `demo1234`
 
 ### 👨‍💼 Read Only Admin Account
 - **Email:** `admin@gmail.com`
