@@ -199,13 +199,6 @@ function NavBar() {
                   >
                     Login
                   </NavLink>
-
-                  <NavLink
-                    to="/signup"
-                    className={`px-3 py-2 rounded-md text-lg font-medium ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary '} hover:bg-primary-400 hover:text-white transition-colors`}
-                  >
-                    Sign Up
-                  </NavLink>
                 </>
               )}
             </div>
