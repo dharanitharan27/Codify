@@ -401,11 +401,11 @@ const Roadmap = () => {
           </motion.div>
         )}
         {loading ? (
-          <div className="flex justify-center items-center py-20 h-screen-minus-nav">
-            <motion.div 
+          <div className="flex justify-center items-center py-20 h-[70vh]">
+            <motion.div
               animate={{ rotate: 360 }} 
               transition={{ repeat: Infinity, duration: 1, ease: "linear" }} 
-              className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full"
+              className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full"
             />
           </div>
         ) : (
