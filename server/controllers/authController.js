@@ -15,53 +15,18 @@ const homePage = async (req, res) => {
 const regPage = async (req, res) => {
   try {
     const { email, password, phone, username } = req.body;
-    
-    // Check if email already exists
     const userExist = await User.findOne({ email: email });
     if (userExist) {
-      return res.status(400).json({ message: "Email already exists" });
+      return res.status(400).send({ message: "Email already exist" });
     }
-    
-    // Check if username already exists
-    const usernameExist = await User.findOne({ username: username });
-    if (usernameExist) {
-      return res.status(400).json({ message: "Username already exists" });
-    }
-    
     const userCreated = await User.create({ email, password, phone, username });
     res.status(201).json({
-      message: "User registered successfully",
-      user: {
-        id: userCreated._id.toString(),
-        email: userCreated.email,
-        username: userCreated.username
-      },
+      message: userCreated,
+      userId: userCreated._id.toString(),
       token: await userCreated.generateToken(),
     });
   } catch (error) {
-    console.error("Registration error:", error);
-    
-    // Handle MongoDB validation errors
-    if (error.name === 'ValidationError') {
-      const validationErrors = Object.values(error.errors).map(err => err.message);
-      return res.status(400).json({ 
-        message: "Validation failed", 
-        errors: validationErrors 
-      });
-    }
-    
-    // Handle duplicate key errors
-    if (error.code === 11000) {
-      const field = Object.keys(error.keyPattern)[0];
-      return res.status(400).json({ 
-        message: `${field.charAt(0).toUpperCase() + field.slice(1)} already exists` 
-      });
-    }
-    
-    res.status(500).json({ 
-      message: "Registration failed", 
-      error: "Internal server error" 
-    });
+    res.status(400).send({error});
   }
 };
 const login = async (req, res) => {
@@ -97,6 +62,7 @@ const contact = async (req, res) => {
     res.status(201).json({"hello ":"hello from contact , message sent",
     message: newMessage.message,
       userId: newMessage._id.toString(),
+      token: await userCreated.generateToken(),
     });
   } catch (error) {
     res.status(400).send(error);
