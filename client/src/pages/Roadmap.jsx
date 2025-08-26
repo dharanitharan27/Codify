@@ -1,16 +1,94 @@
 import { motion } from "framer-motion";
-import { useState, useMemo } from "react";
+import { useState, useMemo,useEffect } from "react";
 import roadmap from "../assets/json/roadmap.json";
 import skills from "../assets/json/skillbasedRoadmaps.json";
 import { useTheme } from "../context/ThemeContext";
+import { useAuth } from "../store/auth"; 
+import { FaRegBookmark, FaBookmark } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 const Roadmap = () => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
+  const { API, userdata, isLoggedIn } = useAuth(); //get API
   
   // Search state
   const [searchQuery, setSearchQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState("all"); // all, roles, skills
+  const [bookmarks, setBookmarks] = useState([]);
+
+  useEffect(() => {
+    if (!isLoggedIn) return;
+    const fetchBookmarks = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const res = await fetch(`${API}/api/v1/bookmarks`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          }
+        });
+        const data = await res.json();
+        if (res.ok) {
+          setBookmarks(data.data || []);
+        } else {
+          console.error("Failed to fetch bookmarks:", data.error);
+        }
+      } catch (error) {
+        console.error("Error fetching bookmarks:", error);
+      }
+    };
+
+    fetchBookmarks();
+  }, [API, isLoggedIn]);
+
+
+  const toggleBookmark = async (item) => {
+    if (!isLoggedIn) {
+      toast.info("Please login to bookmark roadmaps");
+      return;
+    }
+
+    const isBookmarked = bookmarks.some(
+      b => b && b.name && item.name && b.name.toLowerCase() === item.name.toLowerCase()
+    );
+    const action = isBookmarked ? "remove" : "add";
+
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return toast.error("Please login again");
+
+      const body = action === "add"
+        ? item // send full object
+        : { name: item.name }; // only name needed for removal
+
+      const res = await fetch(`${API}/api/v1/bookmarks/${isBookmarked ? "remove" : "add"}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify(isBookmarked ? { name: item.name } : item),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setBookmarks(prev =>
+          action === "add"
+            ? [...prev, item]
+            : prev.filter(b => b && b.name && item.name && b.name.toLowerCase() !== item.name.toLowerCase())
+
+        );
+        toast.success(data.message || `Bookmark ${action}ed!`);
+      } else toast.error(data.message || "Failed to update bookmark");
+
+    } catch (err) {
+      console.error(err);
+      toast.error("Something went wrong");
+    }
+  };
 
   // Search functionality
   const filteredRoadmaps = useMemo(() => {
@@ -21,6 +99,7 @@ const Roadmap = () => {
         ...item,
         name: item.roadmap_name || item.name,
         link: item.roadmap_link || item.link,
+        icon: item.icon || "",
         type: 'role' 
       }));
     
@@ -30,6 +109,7 @@ const Roadmap = () => {
         ...item,
         name: item.skill_name || item.name,
         link: item.skill_link || item.link,
+        icon: item.icon || "",
         type: 'skill' 
       }));
 
@@ -50,7 +130,7 @@ const Roadmap = () => {
         if (!item || !item.name || typeof item.name !== 'string') {
           return false;
         }
-        return item.name.toLowerCase().includes(searchQuery.toLowerCase());
+        return typeof item.name === "string" && item.name.toLowerCase().includes(searchQuery.toLowerCase());
       });
     }
 
@@ -329,19 +409,18 @@ const Roadmap = () => {
                   }`}
                 >
                   {filter.label}
-                  <span className={`ml-2 text-xs px-2 py-1 rounded-full ${
-  activeFilter === filter.key
-    ? 'bg-white/20'
-    : isDark
-    ? 'bg-dark-bg-primary text-dark-text-secondary'
-    : 'bg-light-bg-primary text-light-text-secondary'
-}`}>
-  {filter.key === 'all'
-    ? roadmap.length + skills.length
-    : filter.key === 'roles'
-    ? roadmap.length
-    : skills.length}
-</span>
+                  <span className={`ml-2 text-xs px-2 py-1 rounded-full ${activeFilter === filter.key
+                      ? 'bg-white/20'
+                      : isDark
+                        ? 'bg-dark-bg-primary text-dark-text-secondary'
+                        : 'bg-light-bg-primary text-light-text-secondary'
+                    }`}>
+                    {filter.key === 'all'
+                      ? roadmap.length + skills.length
+                      : filter.key === 'roles'
+                        ? roadmap.length
+                        : skills.length}
+                  </span>
 
                 </motion.button>
               ))}
@@ -432,6 +511,16 @@ const Roadmap = () => {
                   whileHover="hover"
                   className={`group relative p-4 sm:p-6 lg:p-8 rounded-2xl shadow-lg flex flex-col justify-between min-h-[200px] hover:border-b-2 hover:border-r-2 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-secondary-1000 backdrop-blur-xl ${isDark ? 'bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-secondary-1000 backdrop-blur-xl' : 'bg-light-bg-secondary border border-light-border hover:border-primary/50'} transition-all duration-300 overflow-hidden`}
                 >
+                  {/* Bookmark Button */}
+                  <button
+                    onClick={() => toggleBookmark(item)}
+                    className="absolute top-4 right-4 z-20 text-primary hover:text-primary-dark"
+                  >
+                    {bookmarks.some(b => b && b.name && item.name && b.name.toLowerCase() === item.name.toLowerCase())
+                      ? <FaBookmark size={22} />
+                      : <FaRegBookmark size={22} />}
+                  </button>
+
                   {/* Animated border on right and bottom */}
                   <motion.div 
                     className="absolute top-0 right-0 w-0 h-full bg-primary rounded-r-2xl"
@@ -535,6 +624,16 @@ const Roadmap = () => {
                   whileHover="hover"
                   className={`group relative p-4 sm:p-6 lg:p-8 rounded-2xl shadow-lg flex flex-col justify-between min-h-[200px] hover:border-b-2 hover:border-r-2 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-secondary-1000 backdrop-blur-xl  ${isDark ? 'bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-secondary-1000 backdrop-blur-xl' : 'bg-light-bg-secondary border border-light-border hover:border-primary/50'} transition-all duration-300 overflow-hidden`}
                 >
+                  {/* Bookmark Button */}
+                  <button
+                    onClick={() => toggleBookmark(item)}
+                    className="absolute top-4 right-4 z-20 text-primary hover:text-primary-dark"
+                  >
+                    {bookmarks.some(b => b && b.name && item.name && b.name.toLowerCase() === item.name.toLowerCase())
+                      ? <FaBookmark size={22} />
+                      : <FaRegBookmark size={22} />}
+                  </button>
+
                   {/* Animated border on right and bottom */}
                   <motion.div 
                     className="absolute top-0 right-0 w-0 h-full bg-primary rounded-r-2xl"

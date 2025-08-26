@@ -26,6 +26,7 @@ const CoursePlayer = lazy(() => import("./pages/CoursePlayer"));
 const Roadmap = lazy(() => import("./pages/Roadmap"));
 const ContributorsGuide = lazy(() => import("./pages/ContributorGuide.jsx"))
 const ContributorsPage = lazy(()=>import("./components/Contributor.jsx"))
+const Bookmarks = lazy(() => import("./pages/Bookmarks"));
 
 // Admin components
 const AdminLayout = lazy(() => import("./layouts/AdminLayout"));
@@ -67,6 +68,7 @@ function App() {
                 <Route path="/courses" element={<Courses />} />
                 <Route path="/courses/:courseId" element={<CoursePlayer />} />
                 <Route path="/roadmap" element={<Roadmap />} />
+                <Route path="/bookmarks" element={<Bookmarks />} />
                 <Route path="/contact" element={<ContactUs />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/login" element={<Login />} />

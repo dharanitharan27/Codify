@@ -32,6 +32,15 @@ const userSchema = mongoose.Schema({
       ref: 'Course',
     },
   ],
+  bookmarkedRoadmaps: [
+    {
+      name: { type: String, required: true },
+      link: { type: String, required: true },
+      icon: { type: String },
+      type: { type: String, enum: ['role', 'skill'], required: true }
+    }
+  ],
+
 });
 
 
