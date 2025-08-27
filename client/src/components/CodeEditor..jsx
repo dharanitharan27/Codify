@@ -6,10 +6,8 @@ import { cpp } from '@codemirror/lang-cpp';
 import { python } from '@codemirror/lang-python';
 import axios from 'axios';
 
-// ================================================================================================
+
 // LANGUAGE CONFIGURATION
-// This central object makes the component dynamic and easy to extend.
-// ================================================================================================
 const languageConfig = {
   javascript: {
     id: 93,
@@ -37,11 +35,15 @@ const languageConfig = {
   },
 };
 
-// ================================================================================================
+
 // HELPER FUNCTION FOR JAVASCRIPT SANDBOX
-// ================================================================================================
-function createSandboxHtml() {
-  return `<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;padding:8px;color:#333;font-family:ui-sans-serif,system-ui;}</style></head><body><pre id="output" style="white-space:pre-wrap"></pre><script>
+
+function createSandboxHtml(isDark) {
+  const styles = isDark
+    ? `html,body{margin:0;padding:8px;background:#020617;color:#fff;font-family:ui-sans-serif,system-ui;}`
+    : `html,body{margin:0;padding:8px;color:#333;font-family:ui-sans-serif,system-ui;}`;
+
+  return `<!doctype html><html><head><meta charset="utf-8"><style>${styles}</style></head><body><pre id="output" style="white-space:pre-wrap"></pre><script>
 (function(){
   const outputEl = document.getElementById('output');
   const write = (msg, type='log') => {
@@ -73,9 +75,9 @@ function createSandboxHtml() {
 </script></body></html>`;
 }
 
-// ================================================================================================
-// UNIVERSAL ALL-IN-ONE PLAYGROUND COMPONENT
-// ================================================================================================
+
+// Code Editor
+
 const UniversalCodePlayground = ({ defaultLanguage = 'javascript', isDark = true }) => {
   const [currentLanguage, setCurrentLanguage] = useState(defaultLanguage);
   const [code, setCode] = useState(languageConfig[defaultLanguage].defaultCode);
@@ -84,22 +86,20 @@ const UniversalCodePlayground = ({ defaultLanguage = 'javascript', isDark = true
 
   const config = languageConfig[currentLanguage];
 
-  // Effect to update the code in the editor when the language changes
   useEffect(() => {
     setCode(languageConfig[currentLanguage].defaultCode);
     setOutput('');
   }, [currentLanguage]);
 
-  // Refs and Memo for the JavaScript iframe sandbox ONLY
   const iframeRef = useRef(null);
   const sandboxUrl = useMemo(() => {
     if (config.executionModel !== 'client') return null;
-    const html = createSandboxHtml();
+    // CHANGED: Pass the `isDark` prop to the sandbox creator
+    const html = createSandboxHtml(isDark);
     const blob = new Blob([html], { type: 'text/html' });
     return URL.createObjectURL(blob);
-  }, [config.executionModel]);
+  }, [config.executionModel, isDark]); 
 
-  // Main function to execute code
   const runCode = async () => {
     if (config.executionModel === 'client') {
       const iframe = iframeRef.current;
@@ -109,11 +109,9 @@ const UniversalCodePlayground = ({ defaultLanguage = 'javascript', isDark = true
       setTimeout(send, 50);
       return;
     }
-
     setIsLoading(true);
     setOutput('Executing...');
     const API_KEY = import.meta.env.VITE_RAPIDAPI_KEY || 'YOUR_RAPIDAPI_KEY_HERE';
-
     const options = {
       method: 'POST',
       url: 'https://judge0-ce.p.rapidapi.com/submissions',
@@ -121,7 +119,6 @@ const UniversalCodePlayground = ({ defaultLanguage = 'javascript', isDark = true
       headers: { 'content-type': 'application/json', 'X-RapidAPI-Key': API_KEY, 'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com' },
       data: { language_id: config.id, source_code: code },
     };
-
     try {
       const submissionResponse = await axios.request(options);
       const token = submissionResponse.data.token;
@@ -136,7 +133,7 @@ const UniversalCodePlayground = ({ defaultLanguage = 'javascript', isDark = true
           else if (result.stderr) setOutput(`Error:\n${result.stderr}`);
           else if (result.compile_output) setOutput(`Compilation Error:\n${result.compile_output}`);
           else setOutput('Execution finished with no output.');
-        } catch (err) { setOutput(`Error fetching result: ${err.message}`); } 
+        } catch (err) { setOutput(`Error fetching result: ${err.message}`); }
         finally { setIsLoading(false); }
       }, 3000);
     } catch (error) {
@@ -147,7 +144,6 @@ const UniversalCodePlayground = ({ defaultLanguage = 'javascript', isDark = true
 
   return (
     <div className="rounded-lg overflow-hidden border border-gray-700">
-      {/* NEW: Language Selector Bar */}
       <div className="bg-[#3a414e] p-2 flex items-center gap-4 border-b border-gray-700">
         <span className="text-white text-sm font-semibold">Language:</span>
         {Object.keys(languageConfig).map((lang) => (
@@ -164,9 +160,7 @@ const UniversalCodePlayground = ({ defaultLanguage = 'javascript', isDark = true
           </button>
         ))}
       </div>
-
       <div className="grid grid-cols-1 lg:grid-cols-2">
-        {/* Editor Pane */}
         <div className="p-2 bg-[#0b0f17]">
           <div className="flex items-center justify-between pb-2">
             <h3 className="text-sm font-semibold capitalize text-white">
@@ -177,10 +171,12 @@ const UniversalCodePlayground = ({ defaultLanguage = 'javascript', isDark = true
               disabled={isLoading}
               className="px-3 py-1.5 rounded-md bg-green-600 text-white text-sm hover:bg-green-700 disabled:bg-gray-500"
             >
-              {isLoading ? 'Running...' : 'Run ▶'}
+              {isLoading ? 'Running...' : 'Run '}
             </button>
           </div>
           <CodeMirror
+            //Added className to change the cursor
+            className="cursor-text"
             value={code}
             height="400px"
             theme={oneDark}
@@ -189,15 +185,13 @@ const UniversalCodePlayground = ({ defaultLanguage = 'javascript', isDark = true
             onChange={(val) => setCode(val)}
           />
         </div>
-
-        {/* Output Pane */}
         <div className="p-2 bg-[#1e293b]">
           <h3 className="text-sm font-semibold pb-2 text-white">Output</h3>
           {config.executionModel === 'client' ? (
             <iframe
               ref={iframeRef}
               title="playground-sandbox"
-              className="w-full h-[400px] rounded border border-gray-700 bg-white"
+              className="w-full h-[400px] rounded border border-gray-700"
               sandbox="allow-scripts"
               src={sandboxUrl}
             />
