@@ -617,7 +617,7 @@ const CoursePlayer = () => {
             <div className={`p-6 rounded-lg ${isDark ? 'bg-dark-bg-secondary' : 'bg-light-bg-secondary'}`}>
               <h3 className="text-xl font-bold mb-4">Try it yourself</h3>
               <p className={`mb-3 ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>
-                Experiment with JavaScript directly below. Write code and click Run to see output instantly.
+                Experiment with them directly below. Write code and click Run to see output instantly.
               </p>
               {/* <CodePlayground isDark={isDark} /> */}
                <UniversalCodePlayground />
