@@ -4,6 +4,7 @@ import { useTheme } from "../context/ThemeContext";
 import { toast } from "react-toastify";
 import { useLoading } from "../components/loadingContext";
 import { FaPaperPlane, FaUser, FaEnvelope, FaCommentAlt } from "react-icons/fa";
+import { motion } from "framer-motion";
 
 function ContactUs() {
   const [user, setUser] = useState({
@@ -123,12 +124,15 @@ function ContactUs() {
 
           {/* Right side - Form */}
           <div className="w-full md:w-1/2">
-            <form
+            <motion.form
               onSubmit={handleSubmit}
-              className={`w-full max-w-md mx-auto p-8 rounded-xl shadow-xl backdrop-blur-sm transition-all duration-300 hover:shadow-2xl ${
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className={`w-full max-w-md mx-auto p-8 rounded-2xl shadow-xl backdrop-blur-sm transition-all duration-300 hover:shadow-2xl border ${
                 isDark 
-                  ? 'bg-dark-bg-secondary/90 border border-dark-border' 
-                  : 'bg-light-bg-secondary/90 border border-light-border'
+                  ? 'bg-dark-bg-secondary/90 border-dark-border' 
+                  : 'bg-light-bg-secondary/90 border-light-border'
               }`}
             >
               <div className="mb-6">
@@ -149,11 +153,11 @@ function ContactUs() {
                   placeholder="Enter your username"
                   value={user.username}
                   onChange={handleChange}
-                  className={`w-full px-4 py-3 rounded-lg ${
+                  className={`w-full px-4 py-3 rounded-xl shadow-sm ${
                     isDark 
                       ? 'bg-dark-bg-tertiary text-dark-text-primary border-dark-border' 
                       : 'bg-light-bg-tertiary text-light-text-primary border-light-border'
-                  } border focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-300`}
+                  } border focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 transition-all duration-300`}
                 />
               </div>
 
@@ -175,11 +179,11 @@ function ContactUs() {
                   placeholder="Enter your email"
                   value={user.email}
                   onChange={handleChange}
-                  className={`w-full px-4 py-3 rounded-lg ${
+                  className={`w-full px-4 py-3 rounded-xl shadow-sm ${
                     isDark 
                       ? 'bg-dark-bg-tertiary text-dark-text-primary border-dark-border' 
                       : 'bg-light-bg-tertiary text-light-text-primary border-light-border'
-                  } border focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-300`}
+                  } border focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 transition-all duration-300`}
                 />
               </div>
 
@@ -201,22 +205,24 @@ function ContactUs() {
                   value={user.message}
                   onChange={handleChange}
                   rows="5"
-                  className={`w-full px-4 py-3 rounded-lg ${
+                  className={`w-full px-4 py-3 rounded-xl shadow-sm ${
                     isDark 
                       ? 'bg-dark-bg-tertiary text-dark-text-primary border-dark-border' 
                       : 'bg-light-bg-tertiary text-light-text-primary border-light-border'
-                  } border focus:outline-none focus:ring-2 focus:ring-primary resize-none transition-all duration-300`}
+                  } border focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 resize-none transition-all duration-300`}
                 ></textarea>
               </div>
 
-              <button
+              <motion.button
                 type="submit"
-                className="w-full py-3 px-4 bg-primary hover:bg-primary-dark text-white font-medium rounded-lg transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center"
+                whileHover={{ scale: 1.02, boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)" }}
+                whileTap={{ scale: 0.98 }}
+                className="w-full py-3 px-6 bg-primary text-white font-semibold rounded-xl shadow-md hover:bg-primary-dark transition-all duration-300 flex items-center justify-center"
               >
                 <FaPaperPlane className="mr-2" />
                 Send Message
-              </button>
-            </form>
+              </motion.button>
+            </motion.form>
           </div>
         </div>
       </div>
