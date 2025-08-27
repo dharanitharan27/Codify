@@ -3,7 +3,7 @@ import { Users, GitPullRequest, Activity, Star, AlertCircle, PlusCircle } from '
 import { useTheme } from '../context/ThemeContext'; // Adjust import path as needed
 import { useAuth } from '../store/auth';
 import Loader from '../components/Loader'
-
+import {motion} from "framer-motion"
 const ContributorsPage = () => {
     
   const [contributors, setContributors] = useState([]);
@@ -80,6 +80,8 @@ const ContributorsPage = () => {
   };
 
   // Stats
+    const backgroundVariants = { hidden: { opacity: 0, scale: 1.05 }, visible: { opacity: 1, scale: 1, transition: { duration: 1, ease: "easeOut" } } };
+
   const totalContributors = contributors.length;
   const totalPRs = contributors.reduce((sum, c) => sum + c.prs, 0);
   const totalContributions = contributors.reduce((sum, c) => sum + c.contributions, 0);
@@ -96,6 +98,17 @@ const ContributorsPage = () => {
       <div className={`min-h-screen flex items-center justify-center ${
         isDark ? 'bg-dark-bg-primary' : 'bg-light-bg-primary'
       }`}>
+         <motion.div 
+    variants={backgroundVariants} 
+    initial="hidden" 
+    animate="visible" 
+    className={`absolute inset-0 -z-8 bg-[size:30px_30px] ${
+      isDark ? 'bg-grid-pattern-dark' : 'bg-grid-pattern-light'
+    }`}
+  >
+    
+    
+  </motion.div>
         <div className="text-center max-w-md mx-auto p-6">
           <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
           <h2 className={`text-xl font-bold mb-2 ${
@@ -118,8 +131,20 @@ const ContributorsPage = () => {
   }
 
   return (
-    <div className={`min-h-screen ${isDark ? 'bg-dark-bg-primary' : 'bg-light-bg-primary'}`}>
+    <div className={`min-h-screen relative overflow-hidden ${isDark ? 'bg-dark-bg-primary' : 'bg-light-bg-primary'}`}>
       {/* Header Section */}
+      <motion.div 
+    variants={backgroundVariants} 
+    initial="hidden" 
+    animate="visible" 
+    className={`absolute inset-0 -z-8 bg-[size:30px_30px] ${
+      isDark ? 'bg-grid-pattern-dark' : 'bg-grid-pattern-light'
+    }`}
+  >
+    
+    
+  </motion.div>
+
       <div className="py-8 sm:py-12 lg:py-16 px-4 sm:px-6 text-center">
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-primary mb-4">
           GSSoC'25 Leaderboard
