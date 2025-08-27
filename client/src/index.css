@@ -19,6 +19,24 @@
   --color-accent-dark: #2ec4b6;
 }
 
+body {
+  cursor: url("/cursor.svg") 4 4, auto;
+}
+
+a, button {
+  cursor: url("/cursor-button.svg") 6 2, pointer;
+}
+
+input, textarea {
+  cursor: url("/cursor-input.svg") 2 12, text;
+}
+
+
+.dark a,
+.dark button {
+  cursor: url("/cursor-white.svg") 6 2, pointer;
+}
+
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;

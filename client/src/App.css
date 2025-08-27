@@ -32,6 +32,15 @@
   --creator:#ffa07a;
 }
 
+body {
+  cursor: url("/cursor.svg") 4 4, auto;
+}
+
+ 
+
+ 
+
+
 /* Light theme variables */
 :root.light-theme {
   --creator:#ea3322;
