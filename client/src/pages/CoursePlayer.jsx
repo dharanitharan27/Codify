@@ -6,6 +6,7 @@ import YouTubePlayer from '../components/YouTubePlayer';
 import CodePlayground from '../components/CodePlayground';
 import YouTubePlaylist from '../components/YouTubePlaylist';
 import CourseModules from '../components/CourseModules';
+import UniversalCodePlayground from '../components/CodeEditor.';
 import { getYouTubeUrlType, extractPlaylistId, extractVideoId } from '../utils/youtubeUtils';
 import { FaArrowLeft, FaBookmark, FaPlay, FaShare, FaEye, FaThumbsUp } from 'react-icons/fa';
 
@@ -618,7 +619,8 @@ const CoursePlayer = () => {
               <p className={`mb-3 ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>
                 Experiment with JavaScript directly below. Write code and click Run to see output instantly.
               </p>
-              <CodePlayground isDark={isDark} />
+              {/* <CodePlayground isDark={isDark} /> */}
+               <UniversalCodePlayground />
             </div>
 
             {/* Course Modules */}
