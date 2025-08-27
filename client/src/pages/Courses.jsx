@@ -314,7 +314,8 @@ const Courses = () => {
                   </div>
                 }
               >
-                <div className={`relative rounded-2xl overflow-hidden ${isDark ? 'bg-dark-bg-secondary border border-dark-border' : 'bg-light-bg-secondary border border-light-border'} backdrop-blur-sm shadow-lg transition-all duration-300`}>
+                {/* THIS IS THE CORRECTED LINE */}
+                <div className={`relative flex items-center h-16 rounded-2xl overflow-hidden ${isDark ? 'bg-dark-bg-secondary border border-dark-border' : 'bg-light-bg-secondary border border-light-border'} backdrop-blur-sm shadow-lg transition-all duration-300`}>
                   <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
                 </div>
               </Suspense>
