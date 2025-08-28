@@ -1,9 +1,7 @@
 import { motion } from 'framer-motion';
-import { FaStickyNote } from 'react-icons/fa';
 import { useTheme } from "../context/ThemeContext";
 import { toast } from "react-toastify";
 import { Link } from 'react-router-dom';
-import { icons } from 'lucide-react';
 import Notes from "../assets/json/notes.json";
 const backgroundVariants = {
     hidden: { opacity: 0, scale: 1.05 },
