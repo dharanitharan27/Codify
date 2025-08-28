@@ -4,6 +4,8 @@ import { useTheme } from '../context/ThemeContext'; // Adjust import path as nee
 import { useAuth } from '../store/auth';
 import Loader from '../components/Loader'
 import {motion} from "framer-motion"
+import { Link } from 'react-router-dom';
+import { FaBookOpen } from 'react-icons/fa';
 const ContributorsPage = () => {
     
   const [contributors, setContributors] = useState([]);
@@ -155,7 +157,6 @@ const ContributorsPage = () => {
           Celebrating the amazing contributions from GSSoC'25 participants.
         </p>
       </div>
-
       {/* Stats Section */}
       <div className="px-4 sm:px-6 mb-8 sm:mb-12">
         <div className="max-w-5xl mx-auto">
@@ -164,6 +165,9 @@ const ContributorsPage = () => {
             <StatCard icon={GitPullRequest} value={`${totalPRs}+`} label="Pull Requests" isDark={isDark} />
             <StatCard icon={PlusCircle} value={`${totalContributions}+`} label="Contributions" isDark={isDark} />
             <StatCard icon={Star} value={`${totalPoints}+`} label="Total Points" isDark={isDark} />
+          </div>
+          <div className='mt-4' >
+          <ContributorsGuideCard isDark={isDark}/>
           </div>
         </div>
       </div>
@@ -351,5 +355,20 @@ const StatCard = ({ icon: Icon, value, label, isDark }) => (
     <div className="text-primary text-xs sm:text-sm">{label}</div>
   </div>
 );
-
+const ContributorsGuideCard = ({isDark}) => {
+  return (
+    <Link 
+      to="/contributorGuide"
+      className="block w-full"
+    >
+      <div className={`p-4 sm:p-6 rounded-xl text-center border bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-secondary-1000 backdrop-blur-xl ${isDark ? 'border-dark-border' : 'border-light-border'} `}>
+        <FaBookOpen className="w-6 h-6 sm:w-8 sm:h-8 text-primary mx-auto mb-2 sm:mb-3" />
+        <div className={`text-xl sm:text-2xl lg:text-3xl font-bold mb-1 ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'}`}>
+          Contributor's Guide
+        </div>
+        <div className="text-primary text-xs sm:text-sm">Learn how to contribute</div>
+      </div>
+    </Link>
+  );
+};
 export default ContributorsPage;
