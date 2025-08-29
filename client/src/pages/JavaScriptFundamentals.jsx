@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTheme } from '../context/ThemeContext';
 
 const JS_FUNDAMENTALS = [
   {
@@ -203,183 +204,70 @@ const JS_FUNDAMENTALS = [
   }
 ];
 
+
 const JavaScriptFundamentals = () => {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
   return (
-    <div className="js-fundamentals-container">
-      <header className="js-header">
-        <h1 className="js-title">JavaScript Fundamentals</h1>
-        <p className="js-subtitle">A comprehensive guide to JavaScript concepts and syntax</p>
-      </header>
-      <div className="js-content">
-        {JS_FUNDAMENTALS.length === 0 ? (
-          <div style={{color: '#ff6b6b', textAlign: 'center', fontSize: '1.2rem', marginTop: '40px'}}>No notes available.</div>
-        ) : (
-          JS_FUNDAMENTALS.map(note => (
-            <div key={note.id} className="js-card">
-              <div className="js-card-header">
-                <h2 className="js-card-title">{note.title}</h2>
-              </div>
-              <div className="js-card-content">
+    <div className={`relative min-h-screen py-12 px-4 z-10 ${isDark ? 'bg-dark-bg-primary text-dark-text-primary' : 'bg-light-bg-primary text-light-text-primary'}`}>
+      {/* Background grid and gradient overlay */}
+      <div className={`absolute top-0 left-0 w-full h-full -z-10 bg-[size:30px_30px] ${isDark ? 'bg-grid-pattern-dark' : 'bg-grid-pattern-light'}`}>
+        <div className={`absolute inset-0 ${isDark ? 'bg-gradient-to-br from-dark-bg-primary/90 via-transparent to-dark-bg-primary/50' : 'bg-gradient-to-br from-light-bg-primary/90 via-transparent to-light-bg-primary/50'}`}></div>
+      </div>
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-12">
+          <h1 className={`text-4xl sm:text-5xl md:text-6xl font-righteous tracking-wider mb-4 transition-colors duration-300 ${isDark ? 'text-dark-text-primary' : 'text-light-text-primary'}`}>
+            JavaScript Fundamentals
+          </h1>
+          <div className={`h-1 w-32 mx-auto rounded-full bg-gradient-to-r ${isDark ? 'from-primary via-primary-dark to-primary' : 'from-primary via-primary-dark to-primary'} mb-4`}></div>
+          <p className={`mt-2 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed ${isDark ? 'text-dark-text-secondary' : 'text-light-text-secondary'}`}>
+            A comprehensive guide to JavaScript concepts and syntax
+          </p>
+        </div>
+        <div className="jsfund-vertical-stack">
+          {JS_FUNDAMENTALS.length === 0 ? (
+            <div style={{color: '#ff6b6b', textAlign: 'center', fontSize: '1.2rem', marginTop: '40px'}}>No notes available.</div>
+          ) : (
+            JS_FUNDAMENTALS.map(note => (
+              <div key={note.id} className={`jsfund-card group relative p-6 rounded-2xl shadow-lg flex flex-col justify-between w-full max-w-2xl mx-auto mb-8 hover:border-b-2 hover:border-r-2 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-secondary-1000 backdrop-blur-xl ${isDark ? 'bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-secondary-1000 backdrop-blur-xl' : 'bg-light-bg-secondary border border-light-border hover:border-primary/50'} transition-all duration-300 overflow-hidden`}>
+                <h2 className="text-xl font-semibold mb-4 text-primary">{note.title}</h2>
                 {note.content && Array.isArray(note.content) ? (
-                  <ul className="js-card-list">
+                  <ul className="list-disc pl-5 mb-2">
                     {note.content.map((item, idx) => (
                       <li key={idx}>{item}</li>
                     ))}
                   </ul>
                 ) : note.content ? (
-                  <p className="js-card-text">{note.content}</p>
+                  <p className="mb-2">{note.content}</p>
                 ) : null}
                 {note.code && (
-                  <pre className="js-card-code">
+                  <pre className="bg-gray-950 text-blue-200 text-sm rounded-lg p-4 mt-2 overflow-x-auto border border-blue-800 font-mono">
                     <code>{note.code}</code>
                   </pre>
                 )}
               </div>
-            </div>
-          ))
-        )}
+            ))
+          )}
+        </div>
       </div>
-      <style jsx>{`
-        .js-fundamentals-container {
-          max-width: 900px;
-          margin: 0 auto;
-          padding: 20px;
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-          background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-          color: #f5f5f5;
-          min-height: 100vh;
+      <style>{`
+        .font-righteous {
+          font-family: 'Righteous', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
-        .js-header {
-          text-align: center;
-          margin-bottom: 40px;
-          padding: 20px;
-          background: rgba(255, 255, 255, 0.05);
-          border-radius: 12px;
-          backdrop-filter: blur(10px);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .js-title {
-          font-size: 2.8rem;
-          margin: 0 0 10px 0;
-          background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
-          -webkit-background-clip: text;
-          background-clip: text;
-          color: transparent;
-          font-weight: 800;
-        }
-        
-        .js-subtitle {
-          font-size: 1.2rem;
-          color: #d1d1d1;
-          margin: 0;
-        }
-        
-        .js-content {
-          display: grid;
-          gap: 20px;
-        }
-        
-        .js-card {
-          background: rgba(255, 255, 255, 0.05);
-          border-radius: 12px;
-          overflow: hidden;
-          backdrop-filter: blur(10px);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          transition: all 0.3s ease;
-        }
-        
-        .js-card:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        }
-        
-        .js-card-header {
+        .jsfund-vertical-stack {
           display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 20px;
-          cursor: pointer;
-          background: rgba(0, 0, 0, 0.2);
-          transition: background 0.3s ease;
+          flex-direction: column;
+          align-items: stretch;
         }
-        
-        .js-card-header:hover {
-          background: rgba(0, 0, 0, 0.3);
+        .jsfund-card {
+          width: 100%;
+          margin-bottom: 2rem;
         }
-        
-        .js-card-title {
-          margin: 0;
-          font-size: 1.4rem;
-          color: #4ecdc4;
-          font-weight: 600;
-        }
-        
-        .js-card-toggle {
-          font-size: 1.5rem;
-          font-weight: bold;
-          color: #ff6b6b;
-        }
-        
-        .js-card-content {
-          padding: 20px;
-          border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .js-card-text {
-          font-size: 1.1rem;
-          line-height: 1.6;
-          margin: 0 0 15px 0;
-          color: #e0e0e0;
-        }
-        
-        .js-card-list {
-          padding-left: 20px;
-          margin: 0 0 15px 0;
-        }
-        
-        .js-card-list li {
-          margin-bottom: 8px;
-          line-height: 1.5;
-          color: #e0e0e0;
-        }
-        
-        .js-card-code {
-          background: rgba(0, 0, 0, 0.3);
-          padding: 15px;
-          border-radius: 8px;
-          overflow-x: auto;
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          margin: 15px 0 0 0;
-        }
-        
-        .js-card-code code {
-          font-family: 'Fira Code', 'Consolas', monospace;
-          font-size: 0.95rem;
-          color: #ffd93d;
-          line-height: 1.5;
-        }
-        
-        @media (max-width: 768px) {
-          .js-fundamentals-container {
-            padding: 15px;
-          }
-          
-          .js-title {
-            font-size: 2.2rem;
-          }
-          
-          .js-card-header {
-            padding: 15px;
-          }
-          
-          .js-card-title {
-            font-size: 1.2rem;
-          }
-          
-          .js-card-content {
-            padding: 15px;
+        @media (max-width: 600px) {
+          .jsfund-card {
+            min-width: 95vw;
+            max-width: 99vw;
+            padding: 1rem;
           }
         }
       `}</style>
