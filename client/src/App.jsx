@@ -30,6 +30,9 @@ const ContributorsGuide = lazy(() => import("./pages/ContributorGuide.jsx"))
 const ContributorsPage = lazy(()=>import("./components/Contributor.jsx"))
 const Bookmarks = lazy(() => import("./pages/Bookmarks"));
 const GitNotes = lazy(() => import("./pages/GitNotes"));
+const JavaScriptFundamentals = lazy(() =>
+  import("./pages/JavaScriptFundamentals")
+);
 
 // Admin components
 const AdminLayout = lazy(() => import("./layouts/AdminLayout"));
@@ -92,6 +95,7 @@ function App() {
                   <Route path="courses/update/:id" element={<CourseUpdate />} />
                 </Route>
                 <Route path="/notes/git" element={<GitNotes />} />
+                <Route path="/notes/javascript-fundamentals" element={<JavaScriptFundamentals />} />
               </Routes>
             </Suspense>
           </main>
