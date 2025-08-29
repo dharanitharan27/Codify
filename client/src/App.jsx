@@ -29,7 +29,6 @@ const Notes = lazy(() => import("./pages/NotesComponent.jsx"));
 const ContributorsGuide = lazy(() => import("./pages/ContributorGuide.jsx"))
 const ContributorsPage = lazy(()=>import("./components/Contributor.jsx"))
 const Bookmarks = lazy(() => import("./pages/Bookmarks"));
-const GitNotes = lazy(() => import("./pages/GitNotes"));
 const JavaScriptFundamentals = lazy(() =>
   import("./pages/JavaScriptFundamentals")
 );
@@ -94,7 +93,6 @@ function App() {
                   <Route path="courses/add" element={<AddNewCourse />} />
                   <Route path="courses/update/:id" element={<CourseUpdate />} />
                 </Route>
-                <Route path="/notes/git" element={<GitNotes />} />
                 <Route path="/notes/javascript-fundamentals" element={<JavaScriptFundamentals />} />
               </Routes>
             </Suspense>
