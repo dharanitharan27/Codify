@@ -1,0 +1,83 @@
+[
+  {
+    "course_category": "Spring Boot",
+    "course_image": "https://i.ytimg.com/vi/35EQXmHKZYs/hqdefault.jpg",
+    "course_title": "Spring Boot Tutorial for Beginners",
+    "creator_image": "https://yt3.ggpht.com/ytc/AMLnZu8Qb9xzFpgDNV9og-9q98lsbkGuKUsNfA5pDPU=s88-c-k-c0x00ffffff-no-rj",
+    "creator_name": "Telusko",
+    "creator_youtube_link": "https://www.youtube.com/watch?v=35EQXmHKZYs",
+    "description": "Beginner-friendly introduction to Spring Boot covering REST APIs, dependency injection, and project setup."
+  },
+  {
+    "course_category": "Spring Boot",
+    "course_image": "https://i.ytimg.com/vi/vtPkZShrvXQ/hqdefault.jpg",
+    "course_title": "Spring Boot Crash Course",
+    "creator_image": "https://yt3.ggpht.com/ytc/AMLnZu8i9fWvdp9D_g4cC0WjISzGpzzmK9vSShx3lw=s88-c-k-c0x00ffffff-no-rj",
+    "creator_name": "Amigoscode",
+    "creator_youtube_link": "https://www.youtube.com/watch?v=vtPkZShrvXQ",
+    "description": "Learn Spring Boot by building a RESTful API in this crash course by Amigoscode."
+  },
+  {
+    "course_category": "Spring Boot",
+    "course_image": "https://i.ytimg.com/vi/9SGDpanrc8U/hqdefault.jpg",
+    "course_title": "Spring Boot Full Course [2023]",
+    "creator_image": "https://yt3.ggpht.com/ytc/AMLnZu9sIY5RLmP9CCbRyGKY0cvGJ1u9gq-8eM9wVg=s88-c-k-c0x00ffffff-no-rj",
+    "creator_name": "Java Brains",
+    "creator_youtube_link": "https://www.youtube.com/watch?v=9SGDpanrc8U",
+    "description": "Comprehensive Spring Boot full course including REST APIs, JPA, security, and deployment."
+  },
+  {
+    "course_category": "Spring Boot",
+    "course_image": "https://i.ytimg.com/vi/ugFIHHOM_Ts/hqdefault.jpg",
+    "course_title": "Spring Boot REST API Tutorial",
+    "creator_image": "https://yt3.ggpht.com/ytc/AMLnZu-7F9XYLr1Pf3dfR1pR4rUyfpwJ4l7kzKmr9g=s88-c-k-c0x00ffffff-no-rj",
+    "creator_name": "Java Guides",
+    "creator_youtube_link": "https://www.youtube.com/watch?v=ugFIHHOM_Ts",
+    "description": "Step-by-step guide to building REST APIs with Spring Boot, JPA, and Hibernate."
+  },
+  {
+    "course_category": "Spring Boot",
+    "course_image": "https://i.ytimg.com/vi/hHMK7uPj3II/hqdefault.jpg",
+    "course_title": "Spring Boot and Spring MVC Full Course",
+    "creator_image": "https://yt3.ggpht.com/ytc/AMLnZu9IhsZQnE9xE1P-9p7H0Mo7hdH1VbUIfE0rzw=s88-c-k-c0x00ffffff-no-rj",
+    "creator_name": "Programming with Mosh",
+    "creator_youtube_link": "https://www.youtube.com/watch?v=hHMK7uPj3II",
+    "description": "Learn Spring Boot and Spring MVC from scratch in this full-length tutorial by Mosh."
+  },
+  {
+    "course_category": "Spring Boot",
+    "course_image": "https://i.ytimg.com/vi/Ke7Tr4RgRTs/hqdefault.jpg",
+    "course_title": "Spring Boot + Spring Security Crash Course",
+    "creator_image": "https://yt3.ggpht.com/ytc/AMLnZu-PzxSnCMuOpgDWJb1p6E9AqxwOQwhnQjX8VQ=s88-c-k-c0x00ffffff-no-rj",
+    "creator_name": "Java Techie",
+    "creator_youtube_link": "https://www.youtube.com/watch?v=Ke7Tr4RgRTs",
+    "description": "Crash course on securing REST APIs with Spring Boot and Spring Security."
+  },
+  {
+    "course_category": "Spring Boot",
+    "course_image": "https://i.ytimg.com/vi/X8ipUgXJxN4/hqdefault.jpg",
+    "course_title": "Spring Boot JPA + Hibernate Full Tutorial",
+    "creator_image": "https://yt3.ggpht.com/ytc/AMLnZu_RZpX_f0jK7DnbEhx5Xt9n0-KR7Jb9yP9yoA=s88-c-k-c0x00ffffff-no-rj",
+    "creator_name": "Java Techie",
+    "creator_youtube_link": "https://www.youtube.com/watch?v=X8ipUgXJxN4",
+    "description": "Learn JPA and Hibernate with Spring Boot by building CRUD applications."
+  },
+  {
+    "course_category": "Spring Boot",
+    "course_image": "https://i.ytimg.com/vi/9SGDpanrc8U/hqdefault.jpg",
+    "course_title": "Spring Boot Microservices Tutorial",
+    "creator_image": "https://yt3.ggpht.com/ytc/AMLnZu8b7_3RytxM7rkZ8dR7qUwPvh2h8NMI7_XcSg=s88-c-k-c0x00ffffff-no-rj",
+    "creator_name": "Java Brains",
+    "creator_youtube_link": "https://www.youtube.com/watch?v=9SGDpanrc8U&t=1543s",
+    "description": "Learn microservices architecture using Spring Boot with real-world examples."
+  },
+  {
+    "course_category": "Spring Boot",
+    "course_image": "https://i.ytimg.com/vi/6Sw-19q_jCI/hqdefault.jpg",
+    "course_title": "Spring Boot with MySQL and JPA",
+    "creator_image": "https://yt3.ggpht.com/ytc/AMLnZu-49J8MCe5N3g_PMBNfrUw9gjTr9MI47QWjAA=s88-c-k-c0x00ffffff-no-rj",
+    "creator_name": "Code With Durgesh",
+    "creator_youtube_link": "https://www.youtube.com/watch?v=6Sw-19q_jCI",
+    "description": "Learn how to integrate MySQL database with Spring Boot and perform CRUD operations using JPA."
+  }
+]
