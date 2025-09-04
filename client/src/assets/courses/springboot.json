@@ -28,39 +28,12 @@
   },
   {
     "course_category": "Spring Boot",
-    "course_image": "https://i.ytimg.com/vi/ugFIHHOM_Ts/hqdefault.jpg",
-    "course_title": "Spring Boot REST API Tutorial",
-    "creator_image": "https://yt3.ggpht.com/ytc/AMLnZu-7F9XYLr1Pf3dfR1pR4rUyfpwJ4l7kzKmr9g=s88-c-k-c0x00ffffff-no-rj",
-    "creator_name": "Java Guides",
-    "creator_youtube_link": "https://www.youtube.com/watch?v=ugFIHHOM_Ts",
-    "description": "Step-by-step guide to building REST APIs with Spring Boot, JPA, and Hibernate."
-  },
-  {
-    "course_category": "Spring Boot",
-    "course_image": "https://i.ytimg.com/vi/hHMK7uPj3II/hqdefault.jpg",
-    "course_title": "Spring Boot and Spring MVC Full Course",
-    "creator_image": "https://yt3.ggpht.com/ytc/AMLnZu9IhsZQnE9xE1P-9p7H0Mo7hdH1VbUIfE0rzw=s88-c-k-c0x00ffffff-no-rj",
-    "creator_name": "Programming with Mosh",
-    "creator_youtube_link": "https://www.youtube.com/watch?v=hHMK7uPj3II",
-    "description": "Learn Spring Boot and Spring MVC from scratch in this full-length tutorial by Mosh."
-  },
-  {
-    "course_category": "Spring Boot",
     "course_image": "https://i.ytimg.com/vi/Ke7Tr4RgRTs/hqdefault.jpg",
     "course_title": "Spring Boot + Spring Security Crash Course",
     "creator_image": "https://yt3.ggpht.com/ytc/AMLnZu-PzxSnCMuOpgDWJb1p6E9AqxwOQwhnQjX8VQ=s88-c-k-c0x00ffffff-no-rj",
     "creator_name": "Java Techie",
     "creator_youtube_link": "https://www.youtube.com/watch?v=Ke7Tr4RgRTs",
     "description": "Crash course on securing REST APIs with Spring Boot and Spring Security."
-  },
-  {
-    "course_category": "Spring Boot",
-    "course_image": "https://i.ytimg.com/vi/X8ipUgXJxN4/hqdefault.jpg",
-    "course_title": "Spring Boot JPA + Hibernate Full Tutorial",
-    "creator_image": "https://yt3.ggpht.com/ytc/AMLnZu_RZpX_f0jK7DnbEhx5Xt9n0-KR7Jb9yP9yoA=s88-c-k-c0x00ffffff-no-rj",
-    "creator_name": "Java Techie",
-    "creator_youtube_link": "https://www.youtube.com/watch?v=X8ipUgXJxN4",
-    "description": "Learn JPA and Hibernate with Spring Boot by building CRUD applications."
   },
   {
     "course_category": "Spring Boot",
@@ -79,5 +52,14 @@
     "creator_name": "Telusko",
     "creator_youtube_link": "https://www.youtube.com/watch?v=gJrjgg1KVL4",
     "description": "Up-to-date (2025) Spring Boot tutorial—learn basics to advanced concepts and build real-world apps."
-  }
+  },{
+  "course_category": "Spring Boot",
+  "course_image": "https://i.ytimg.com/vi/52YKZV_Qj3o/hqdefault.jpg",
+  "course_title": "Spring Boot Full Course with Project | Tamil | Code io",
+  "creator_image": "https://yt3.ggpht.com/ytc/UC6g0-HULUz5qCk2xLMxMPRw=s88-c-k-c0x00ffffff-no-rj", 
+  "creator_name": "Code io - Tamil",
+  "creator_youtube_link": "https://www.youtube.com/watch?v=52YKZV_Qj3o",
+  "description": "This course is specially designed for college students, beginners, and freshers who want to start their journey with Spring Boot. Learn basics, REST APIs, database integration, and real-world project building, all explained in a beginner-friendly way."
+}
+
 ]
