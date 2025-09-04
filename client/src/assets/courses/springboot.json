@@ -20,11 +20,11 @@
   {
     "course_category": "Spring Boot",
     "course_image": "https://i.ytimg.com/vi/9SGDpanrc8U/hqdefault.jpg",
-    "course_title": "Spring Boot Full Course [2023]",
+    "course_title": "Spring Boot Full Course [2021]",
     "creator_image": "https://yt3.ggpht.com/ytc/AMLnZu9sIY5RLmP9CCbRyGKY0cvGJ1u9gq-8eM9wVg=s88-c-k-c0x00ffffff-no-rj",
-    "creator_name": "Java Brains",
+    "creator_name": "Telusko",
     "creator_youtube_link": "https://www.youtube.com/watch?v=9SGDpanrc8U",
-    "description": "Comprehensive Spring Boot full course including REST APIs, JPA, security, and deployment."
+    "description": "Comprehensive Spring Boot full course by Telusko covering REST APIs, MVC framework, and advanced configurations."
   },
   {
     "course_category": "Spring Boot",
@@ -64,20 +64,20 @@
   },
   {
     "course_category": "Spring Boot",
-    "course_image": "https://i.ytimg.com/vi/9SGDpanrc8U/hqdefault.jpg",
-    "course_title": "Spring Boot Microservices Tutorial",
-    "creator_image": "https://yt3.ggpht.com/ytc/AMLnZu8b7_3RytxM7rkZ8dR7qUwPvh2h8NMI7_XcSg=s88-c-k-c0x00ffffff-no-rj",
-    "creator_name": "Java Brains",
-    "creator_youtube_link": "https://www.youtube.com/watch?v=9SGDpanrc8U&t=1543s",
-    "description": "Learn microservices architecture using Spring Boot with real-world examples."
+    "course_image": "https://i.ytimg.com/vi/jl9OKQ92SJU/hqdefault.jpg",
+    "course_title": "Spring Framework & Spring Boot Tutorial with Project",
+    "creator_image": "https://yt3.ggpht.com/ytc/AMLnZu8Qb9xzFpgDNV9og-9q98lsbkGuKUsNfA5pDPU=s88-c-k-c0x00ffffff-no-rj",
+    "creator_name": "Telusko",
+    "creator_youtube_link": "https://www.youtube.com/watch?v=Jl9OKQ92SJU",
+    "description": "In-depth project-based Spring Framework and Spring Boot tutorial by Telusko."
   },
   {
     "course_category": "Spring Boot",
-    "course_image": "https://i.ytimg.com/vi/6Sw-19q_jCI/hqdefault.jpg",
-    "course_title": "Spring Boot with MySQL and JPA",
-    "creator_image": "https://yt3.ggpht.com/ytc/AMLnZu-49J8MCe5N3g_PMBNfrUw9gjTr9MI47QWjAA=s88-c-k-c0x00ffffff-no-rj",
-    "creator_name": "Code With Durgesh",
-    "creator_youtube_link": "https://www.youtube.com/watch?v=6Sw-19q_jCI",
-    "description": "Learn how to integrate MySQL database with Spring Boot and perform CRUD operations using JPA."
+    "course_image": "https://i.ytimg.com/vi/gJrjgg1KVL4/hqdefault.jpg",
+    "course_title": "Spring Boot Tutorial for Beginners [2025]",
+    "creator_image": "https://yt3.ggpht.com/ytc/AMLnZu8Qb9xzFpgDNV9og-9q98lsbkGuKUsNfA5pDPU=s88-c-k-c0x00ffffff-no-rj",
+    "creator_name": "Telusko",
+    "creator_youtube_link": "https://www.youtube.com/watch?v=gJrjgg1KVL4",
+    "description": "Up-to-date (2025) Spring Boot tutorial—learn basics to advanced concepts and build real-world apps."
   }
 ]
